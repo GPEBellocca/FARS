@@ -1,4 +1,4 @@
-#Multi-Level Dynamic Factor Model
+# Multi-Level Dynamic Factor Model
 
 MLDFM <- function(data, outlier = TRUE, r = 2) {
   
