@@ -12,7 +12,7 @@ GaR <- function(dep_variable, factors, QTAU=0.05) {
   LagY<-shift(Y,lag)
   
   shifted_factors <- matrix(NA, nrow = nrow(factors), ncol = r)
-  for (i in 1:2) {
+  for (i in 1:r) {
     shifted_factors[,i] <- shift( factors[,i],lag)
   }
 
