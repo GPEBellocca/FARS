@@ -28,10 +28,15 @@ GaR <- function(dep_variable, factors, QTAU=0.05) {
   formula_str <- paste("Y ~ LagY", factor_names_concat, sep = " + ")
   formula <- as.formula(formula_str)
   
+  
+  ################################################
+  ########  QUANTILE QTAU  ##########
+  ################################################
+  
   # run Qregression
   GaRfit <- rq(formula, tau = QTAU, data = reg_data)
   
-  # prediction
+  # prediction 
   coefficients <- coef(GaRfit)
   PredGaR <- as.numeric(coefficients[1])
   PredGaR <- PredGaR + as.numeric(coefficients[2]) * Y[]
@@ -42,7 +47,42 @@ GaR <- function(dep_variable, factors, QTAU=0.05) {
   #print(PredGaR)
   #print(PredGaR[dim(reg_data)[1]])
   
+  # Box test
+  rho <- function(u,tau=QTAU)u*(tau - (u < 0))
+  Bfit<-rq(Y~1 ,tau = QTAU) # baseline model -> Solution may be non unique
+  X_squared <- Box.test(GaRfit$residuals, lag = 4, type = c("Box-Pierce", "Ljung-Box"), fitdf = 0)
+  V1 <- sum(rho(GaRfit$resid, GaRfit$tau))
+  V2 <- sum(rho(Bfit$resid, Bfit$tau))
+  R1<-1-V1/V2
   
+  
+  ################################################
+  ######## ALL QUINTILES ##########
+  ################################################
+  
+  quintiles <- c(0.05, 0.25, 0.50, 0.75, 0.95)
+  AllQuintiles_df <- data.frame(Y = reg_data$Y)  
+  
+  for (q in quintiles) {
+    GaRfit_q <- rq(formula, tau = q, data = reg_data)
+    
+    coefficients <- coef(GaRfit_q)
+    
+    PredGaR_q <- as.numeric(coefficients[1])
+    PredGaR_q <- PredGaR_q + as.numeric(coefficients[2]) * LagY[] 
+    for (i in 1:r) {
+      PredGaR_q <- PredGaR_q + as.numeric(coefficients[i+2]) * shifted_factors[, i]
+    }
+    
+    # save results
+    column_name <- sprintf("GaR.%02d", q * 100)  
+    AllQuintiles_df[[column_name]] <- PredGaR_q
+  }
+  
+  
+  ################################################
+  ############ DENSITY GaR   #####################
+  ################################################
   
 }
 

@@ -16,6 +16,7 @@ MLDFM <- function(data, outlier = TRUE, r = 2) {
   # Scale data
   X<-scale(data,TRUE,TRUE)
   
+  
   # Compute dimensions
   t<-nrow(X)
   N<-ncol(X)
