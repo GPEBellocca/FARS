@@ -1,9 +1,9 @@
 # Multi-Level Dynamic Factor Model
 
-MLDFM <- function(data, outlier = TRUE, r = 2) {
+MLDFM <- function(data, outlier = TRUE, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001) {
   
   ##### OUTLIERS #####
-  
+  outliers <- NULL
   # Handle outliers
   if (outlier) {
     OutlierResult <- HandleOutliers(data,r)
@@ -11,26 +11,19 @@ MLDFM <- function(data, outlier = TRUE, r = 2) {
     outliers <- OutlierResult$outliers
   }
   
-  ##### PRINCIPAL COMPONENTS #####
   
-  # Scale data
-  X<-scale(data,TRUE,TRUE)
+  ##### FACTOR EXTRACTION #####
+  
+  result <- switch(blocks,
+                   "1" = MutiLevelFactor1Block(data,r=r[1]),
+                   "2" = MutiLevelFactors2Blocks(data,r=r, block_ind = block_ind),
+                   "3" = MutiLevelFactor3Blocks(data, r=r,block_ind = block_ind, tol = tol),
+                   "Unknown choice"
+  )
   
   
-  # Compute dimensions
-  t<-nrow(X)
-  N<-ncol(X)
   
-  # Compute first r eigenvalues and eigenvectors
-  eR<-eigen(X%*%t(X))
-  values<-eR$values[c(1:r)]
-  vectors<-matrix(eR$vectors[,c(1:r)],t,r)
-  
-  # Compute PC and loadings
-  F_hat<-sqrt(t)*vectors
-  P_hat<-(1/t)*t(F_hat)%*%X
-  
-  return(list(data = data, outliers = outliers, factors = F_hat))
+  return(list(Data = data, Outliers = outliers, Factors = result$Factors, Loadings = result$Loadings ))
 }
 
 

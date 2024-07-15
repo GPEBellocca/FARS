@@ -43,7 +43,7 @@ Density <- function(All_q, est_points = 512, random_samples = 5000) {
     #skt_q<-qst(quintiles,xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
     
     # generate n random sample from skew-t distribution 
-    skt<-rst(n=random_samples, xi=skewt$par[1], omega=skewt$par[2], alpha= skewt$par[3], nu=4, dp=NULL)
+    skt<-rst(n=random_samples, xi=skewt$par[1], omega=skewt$par[2], alpha= skewt$par[3], nu=4, dp=NULL) #delet nu=4
    
     # store samples 
     distribution[tt,]<-skt
@@ -56,10 +56,13 @@ Density <- function(All_q, est_points = 512, random_samples = 5000) {
     
   }
   
+  plotDensity(density)
   
-  return(list(density = density_matrix, distribution = distribution))
+  return(list(density = density, density_matrix = density_matrix, distribution = distribution))
   
 }
+
+
 
 
 

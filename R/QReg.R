@@ -6,6 +6,7 @@ QReg <- function(dep_variable, factors, h=1,  QTAU=0.05, edge = 0.05) {
   t<- dim(factors)[1]
   r <- dim(factors)[2]
   
+  
   # prepare regression data
   Y <- dep_variable
   LagY<-shift(Y,h)
@@ -17,6 +18,7 @@ QReg <- function(dep_variable, factors, h=1,  QTAU=0.05, edge = 0.05) {
 
   reg_data <- data.frame(Y = Y, LagY = LagY)
   reg_data <- cbind(reg_data, shifted_factors)  
+  
   
   names(reg_data)[1:2] <- c("Y", "LagY")
   new_factor_names <- paste("factor", 1:r, sep = "")  
@@ -47,6 +49,8 @@ QReg <- function(dep_variable, factors, h=1,  QTAU=0.05, edge = 0.05) {
     for (i in 1:r) {
       Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
     }
+    
+    
     
     # save results
     column_name <- sprintf("Q.%02d", q * 100)  
