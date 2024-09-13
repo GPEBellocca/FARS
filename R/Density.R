@@ -7,10 +7,10 @@ Density <- function(All_q, est_points = 512, random_samples = 5000) {
   # drop QTAU
   All_q <- All_q[,1:5]
   
-  # extract quintiles list
+  # extract quantiles list
   quintiles <- as.numeric(sub("Q.", "", colnames(All_q)))/100
   
-  # convert quintiles data frame to matrix
+  # convert quantiles data frame to matrix
   All_q_matrix <- as.matrix(All_q)
   
   # extract number of observations
@@ -26,12 +26,12 @@ Density <- function(All_q, est_points = 512, random_samples = 5000) {
     # Initial values
     iqn=qnorm(0.75)-qnorm(0.25) # Interquartile range of standard normal distr
     l0=All_q_matrix[tt,3]  # Location
-    s0=(All_q_matrix[tt,4] - All_q_matrix[tt,2]) / iqn; # Scale
+    s0=(All_q_matrix[tt,4] - All_q_matrix[tt,2]) / iqn # Scale
     sh0=0 # Shape
     
     # Lower and Upper bounds
-    LB = c(   -10+l0,     1,   -100); #Omega must positive >=1
-    UB = c(   +20+l0,    50,    100);
+    LB = c(   -10+l0,     1,   -100) #Omega must positive >=1
+    UB = c(   +20+l0,    50,    100)
     
     # optim minimize the squared differences between the q of the obs and the q of a skew-t distribution
     # qst compute the q of skew-t distribution
@@ -43,16 +43,17 @@ Density <- function(All_q, est_points = 512, random_samples = 5000) {
     #skt_q<-qst(quintiles,xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
     
     # generate n random sample from skew-t distribution 
-    skt<-rst(n=random_samples, xi=skewt$par[1], omega=skewt$par[2], alpha= skewt$par[3], nu=4, dp=NULL) #delet nu=4
+    skt<-rst(n=random_samples, xi=skewt$par[1], omega=skewt$par[2], alpha= skewt$par[3], dp=NULL) #delet nu=4
    
     # store samples 
     distribution[tt,]<-skt
   
     # compute density of generated samples
-    # dst(x,xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
-    fit<-density(skt,from=-30,to=10,nseq=512)
-    density<-c(density,fit$y)
-    density_matrix[tt, ] <- fit$y
+    fit<-dst(seq(-30,10,length.out = est_points),xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
+    
+    #fit<-density(skt,from=-30,to=10,nseq=est_points)
+    density<-c(density,fit)
+    density_matrix[tt, ] <- fit
     
   }
   

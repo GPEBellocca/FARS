@@ -1,6 +1,6 @@
 # Multi-Level Dynamic Factor Model
 
-MLDFM <- function(data, outlier = TRUE, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001) {
+MLDFM <- function(data, outlier = TRUE, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001, max_iter = 1000) {
   
   ##### OUTLIERS #####
   outliers <- NULL
@@ -13,15 +13,13 @@ MLDFM <- function(data, outlier = TRUE, r = c(1), blocks = 1, block_ind = NULL, 
   
   
   ##### FACTOR EXTRACTION #####
-  
   result <- switch(blocks,
                    "1" = MutiLevelFactor1Block(data,r=r[1]),
                    "2" = MutiLevelFactors2Blocks(data,r=r, block_ind = block_ind),
-                   "3" = MutiLevelFactor3Blocks(data, r=r,block_ind = block_ind, tol = tol),
+                   "3" = MutiLevelFactor3Blocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter),
+                   "4" = MutiLevelFactor4Blocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter),
                    "Unknown choice"
   )
-  
-  
   
   return(list(Data = data, Outliers = outliers, Factors = result$Factors, Loadings = result$Loadings ))
 }

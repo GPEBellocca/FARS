@@ -1,296 +1,241 @@
-# Multi-Level Dynamic Factor Model - 3 blocks
+# Multi-Level Dynamic Factor Model - 3 blocks full
 
 
-beta_ols<-function(X,Y){
-  t(Y) %*% X %*% solve(t(X) %*% X)
+# beta_ols<-function(X,Y){
+#   t(Y) %*% X %*% solve(t(X) %*% X)
+# }
+
+
+beta_ols <- function(X, Y) {
+  solve(t(X) %*% X) %*% t(X) %*% Y
 }
 
-MutiLevelFactor3Blocks<-function(Yorig,r,block_ind,tol){
-  #r_glob=c(1),r_reg=c(1,1,1)
-  #Check function
-  # Yorig <- openxlsx::read.xlsx("DataBase.xlsx",sheet = "fulldata",cols =2:625)
-  # r1<-1:63
-  # r2<-64:311
-  # r3<-312:519
-  # tol=0.000001
+MutiLevelFactor3Blocks<-function(Yorig,r,block_ind,tol,max_iter){
+
+  # Standardize the original data
+  Yorig <- scale(Yorig)
+  
+  # Initialize variables
+  results <- list()  # List to save results
+  num_blocks <- 3 # Number of blocks
+  num_vars <- ncol(Yorig) # Total number of variables in Yorig
+  num_obs <- nrow(Yorig) # Total number of observations
+  num_factors <- 2^num_blocks-1 # Total number of factors
+  
+  # Define block ranges based on input indices
+  range1 <- 1:block_ind[1]
+  range2 <- (block_ind[1] + 1):block_ind[2]
+  range3 <- (block_ind[2] + 1):block_ind[3]
   
   
-  r1 <- 1:block_ind[1]
-  r2 <- (block_ind[1]+1):block_ind[2]
-  r3 <- (block_ind[2]+1):block_ind[3]
-  
-  Yorig <- scale(Yorig) # Standarize
-  R<-list() # where everything is saved
-  names_Yorig<-colnames(Yorig)       # Get names
+  # Get number of variables in each block
+  num_vars_block1 <- length(range1)
+  num_vars_block2 <- length(range2)
+  num_vars_block3 <- length(range3)
   
   
-  ##################################################################
-  ##                    Get groups for level 2                    ##
-  ##################################################################
+  ### STEP 1 ###
+  
+  # a)
+  # Canonical Correlation Analysis (CCA)
+  GlobalFactors <- blockfact0(Yorig, c(num_vars_block1, num_vars_block2, num_vars_block3), 1, c(1, 1, 1))
+  GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
+  
+  # b)
+  # Remove global component to get pairwise residuals
+  
+  Block12 <- cbind(Yorig[,range1],Yorig[,range2])
+  Block13 <- cbind(Yorig[,range1],Yorig[,range3])
+  Block23 <- cbind(Yorig[,range2],Yorig[,range3])
+  
+  Beta12 <-  beta_ols(GlobalFactors, Block12)
+  Beta13 <-  beta_ols(GlobalFactors, Block13)
+  Beta23 <-  beta_ols(GlobalFactors, Block23)
+  
+  Residuals12 <- Block12 - GlobalFactors %*% Beta12
+  Residuals13 <- Block13 - GlobalFactors %*% Beta13
+  Residuals23 <- Block23 - GlobalFactors %*% Beta23
+  
+  # c)
+  # Apply CCA for lower-level block factors
+  Factors12 <- blockfact0(Residuals12, c(num_vars_block1, num_vars_block2), 1, c(1, 1))
+  Factors13 <- blockfact0(Residuals13, c(num_vars_block1, num_vars_block3), 1, c(1, 1))
+  Factors23 <- blockfact0(Residuals23, c(num_vars_block2, num_vars_block3), 1, c(1, 1))
+  
+  # d)
+  # Calculate residuals for each block using the lower-level factors
+  
+  Block1 <- Yorig[, range1]
+  Block2 <- Yorig[, range2]
+  Block3 <- Yorig[, range3]
+  
+  Beta1 <- beta_ols(cbind(Factors12, Factors13), Block1)
+  Beta2 <- beta_ols(cbind(Factors12, Factors23), Block2)
+  Beta3 <- beta_ols(cbind(Factors13, Factors23), Block3)
+  
+  Residuals1 <- Block1 - cbind(Factors12, Factors13) %*% Beta1
+  Residuals2 <- Block2 - cbind(Factors12, Factors23) %*% Beta2
+  Residuals3 <- Block3 - cbind(Factors13, Factors23) %*% Beta3
+ 
+  # f)
+  # Estimate initial factors for each single block using eigenvalue decomposition (PCA)
+  number_of_factor = 1
+  
+  eig_vectors1 <- eigrs2(t(Residuals1) %*% Residuals1)$evec
+  Factors1 <-  Residuals1 %*% eig_vectors1[, (ncol(eig_vectors1) - number_of_factor + 1):ncol(eig_vectors1)]
+  Factors1 <- Factors1 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors1) %*% Factors1))))
+  
+  
+  eig_vectors2 <- eigrs2(t(Residuals2) %*% Residuals2)$evec
+  Factors2 <-  Residuals2 %*% eig_vectors2[, (ncol(eig_vectors2) - number_of_factor + 1):ncol(eig_vectors2)]
+  Factors2 <- Factors2 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors2) %*% Factors2))))
+  
+  eig_vectors3 <- eigrs2(t(Residuals3) %*% Residuals3)$evec
+  Factors3 <-  Residuals3 %*% eig_vectors3[, (ncol(eig_vectors3) - number_of_factor + 1):ncol(eig_vectors3)]
+  Factors3 <- Factors3 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors3) %*% Factors3))))
+  
+  # Store all initial factors
+  Factors <- cbind(GlobalFactors, Factors12, Factors13, Factors23, Factors1, Factors2, Factors3)
+  InitialFactors <- Factors
+  
+  # g)
+  # Compute initial loadings
+  
+  #Lambda <- beta_ols(InitialFactors, Yorig)
+  
+  GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
+  Loadings12 <- beta_ols(Factors12, Block12)
+  Loadings13 <- beta_ols(Factors13, Block13)
+  Loadings23 <- beta_ols(Factors23, Block23)
+  Loadings1 <- beta_ols(Factors1, Block1)
+  Loadings2 <- beta_ols(Factors2, Block2)
+  Loadings3 <- beta_ols(Factors3, Block3)
+  
+  Lambda <- matrix(0, nrow = num_factors, ncol = num_vars)
+  Lambda[1,] <- GlobalLoadings
+  Lambda[2,c(range1,range2)] <- Loadings12
+  Lambda[3,c(range1,range3)] <- Loadings13
+  Lambda[4,c(range2,range3)] <- Loadings23
+  Lambda[5,range1] <- Loadings1
+  Lambda[6,range2] <- Loadings2
+  Lambda[7,range3] <- Loadings3
+  
+  InitialLoadings <- Lambda
+
+
+  
+  ### STEP 2 ###
+  
+  # Initialize residual sum of squares (RSS) for convergence
+  iteration <- 0
+  Residuals <- Yorig - Factors %*% Lambda
+  RSS_previous <- sum(diag(t(Residuals) %*% Residuals))
   
 
-  R1 = Yorig[,r1] 
-  NR1 = ncol(R1)
-  R2 = Yorig[,r2] 
-  NR2 = ncol(R2)
-  R3 = Yorig[,r3] 
-  NR3 = ncol(R3)
+  
+  # Iterative procedure for convergence
+  while (iteration < max_iter) {
+    
+    
+    
+    iteration <- iteration + 1
+    
+    #cat("Iteration:", iteration, "\n")
+    
+    # Run least squares to estimate global factors 
+    GlobalFactors <- t(beta_ols(t(GlobalLoadings), t(Yorig)))
+    
+    
+    # Regress to filter out the global component
+    Beta12 <-  beta_ols(GlobalFactors, Block12)
+    Beta13 <-  beta_ols(GlobalFactors, Block13)
+    Beta23 <-  beta_ols(GlobalFactors, Block23)
+    
+    Residuals12 <- Block12 - GlobalFactors %*% Beta12
+    Residuals13 <- Block13 - GlobalFactors %*% Beta13
+    Residuals23 <- Block23 - GlobalFactors %*% Beta23
+    
+    # Run least squares to estimate pairwise factors
+    Factors12 <- t(beta_ols(t(Loadings12), t(Residuals12)))
+    Factors13 <- t(beta_ols(t(Loadings13), t(Residuals13)))
+    Factors23 <- t(beta_ols(t(Loadings23), t(Residuals23)))
+    
+    # Regress to filter out the pairwise component
+    Beta1 <-  beta_ols(cbind(Factors12,Factors13), Block1)
+    Beta2 <-  beta_ols(cbind(Factors12,Factors23), Block2)
+    Beta3 <-  beta_ols(cbind(Factors13,Factors23), Block3)
 
-  
-  ###########################################################################
-  ###########################################################################
-  ###                                                                     ###
-  ###                 OBTAIN ESTIMATES OF INITIAL FACTORS                 ###
-  ###                                                                     ###
-  ###########################################################################
-  ###########################################################################
-  
-  ##################################################################
-  ##                    Global Factor                    ##
-  ##################################################################
-  
-  # Order data and inputs for CCA
-  y = cbind(R1,R2,R3)
-  Nregio=c(NR1,NR2,NR3)
-  sum(c(NR1,NR2,NR3))
-  G0 = blockfact0(y, c(NR1,NR2,NR3),1,c(1,1,1))
-  R[["GO"]]=scale(G0);  #CCA GLOBAL FACTOR
-  t = nrow(y)
-  yG0 = y-G0 %*% t(beta_ols(G0,y)) #Resid Global
-  colnames(y)
-  
-  ##################################################################
-  ##                    Semipervasive                    ##
-  ##################################################################
-  
-  y_r12=yG0[,1:(NR1+NR2)] 
-  y_r13=cbind(yG0[,1:NR1],yG0[,(NR1+NR2+1):(NR1+NR2+NR3)])
-  y_r23=yG0[,(NR1+1):(NR1+NR2+NR3)]
+    Residuals1 <- Block1 - cbind(Factors12, Factors13) %*% Beta1
+    Residuals2 <- Block2 - cbind(Factors12, Factors23) %*% Beta2
+    Residuals3 <- Block3 - cbind(Factors13, Factors23) %*% Beta3
+    
+    
+    # Run least squares to estimate single block factors
+    Factors1 <- t(beta_ols(t(Loadings1), t(Residuals1)))
+    Factors2 <- t(beta_ols(t(Loadings2), t(Residuals2)))
+    Factors3 <- t(beta_ols(t(Loadings3), t(Residuals3)))
+    
+    # Update and normalize factors 
+    GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
 
-  #F12 = blockfact0(y=y_r12,Nregio=c(NR1,NR2),r_glob=1,r_reg=c(1,1))  
-  F13 = blockfact0(y_r13,c(NR1,NR3),1,c(1,1))  
-  #F23 = blockfact0(y_r23,c(NR2,NR3),1,c(1,1))  
-  
-  y_r1=R1 
-  y_r2=R2 
-  y_r3=R3 
-  
-  lamR1 = beta_ols(F13,y_r1) 
-  uR1L2 = y_r1-F13 %*% t(beta_ols(F13,y_r1))
-  
-  # lamR2 = beta_ols(cbind(F12,F23),y_r2) 
-  # uR2L2 = y_r2-cbind(F12,F23) %*% t(beta_ols(cbind(F12,F23),y_r2))
-  
-  uR2L2 = y_r2
-  
-  lamR3 = beta_ols(F13,y_r3) 
-  uR3L2 = y_r3-F13 %*% t(beta_ols(F13,y_r3))
-  
-  # lamR3 = beta_ols(cbind(F13,F23),y_r3) 
-  # uR3L2 = y_r3-cbind(F13,F23) %*% t(beta_ols(cbind(F13,F23),y_r3))
+    Factors12 <- Factors12 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors12) %*% Factors12))))
+    Factors13 <- Factors13 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors13) %*% Factors13))))
+    Factors23 <- Factors23 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors23) %*% Factors23))))
 
-  u=cbind(uR1L2,uR2L2,uR3L2)
-  # 
-  Nregio=c(NR1,NR2,NR3)
-  r_reg=c(1,1,1)
-  g = length(Nregio)
-  RegInd = c(0, cumsum(Nregio))
-  fhatreg = c() 
-  for(i in 1:g){
-    evec<-eigrs2(t(u[,(RegInd[i]+1):RegInd[i+1]]) %*% u[,(RegInd[i]+1):RegInd[i+1]])$evec
-    fhatreg<-cbind(fhatreg,u[,(RegInd[i]+1):RegInd[i+1]]%*%evec[,(ncol(evec)-r_reg[i]+1):ncol(evec)])
+    Factors1 <- Factors1 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors1) %*% Factors1))))
+    Factors2 <- Factors2 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors2) %*% Factors2))))
+    Factors3 <- Factors3 / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors3) %*% Factors3))))
+    
+    Factors <- cbind(GlobalFactors, Factors12, Factors13, Factors23, Factors1, Factors2, Factors3)
+    
+    # Compute and update loadings
+    #Lambda <- beta_ols(Factors, Yorig)
+    
+    GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
+    Loadings12 <- beta_ols(Factors12, Block12)
+    Loadings13 <- beta_ols(Factors13, Block13)
+    Loadings23 <- beta_ols(Factors23, Block23)
+    Loadings1 <- beta_ols(Factors1, Block1)
+    Loadings2 <- beta_ols(Factors2, Block2)
+    Loadings3 <- beta_ols(Factors3, Block3)
+    
+    Lambda[1,] <- GlobalLoadings
+    Lambda[2,c(range1,range2)] <- Loadings12
+    Lambda[3,c(range1,range3)] <- Loadings13
+    Lambda[4,c(range2,range3)] <- Loadings23
+    Lambda[5,range1] <- Loadings1
+    Lambda[6,range2] <- Loadings2
+    Lambda[7,range3] <- Loadings3
+    
+
+    # Check RSS
+    Residuals <- Yorig - Factors %*% Lambda
+    RSS_new <- sum(diag(t(Residuals) %*% Residuals))
+    
+  
+    #print(RSS_previous)
+    #print(RSS_new)
+    
+
+    if (abs(RSS_previous - RSS_new) < tol) {
+      break  # Converged
+    }
+    
+    RSS_previous <- RSS_new
+    
+   
+   
   }
   
-  fhatreg<-fhatreg / kronecker(matrix(1,nrow = nrow(fhatreg),ncol=1),t(matrix(sqrt(diag(t(fhatreg)%*%fhatreg)))))
-  
-  # Initial values  for while
-  uu1 = sum(diag(t(u) %*%  u))
-  uu0 = 10000000
-  conteo = 0
-  
-  while ((log(uu0)-log(uu1))> tol){
-    conteo = conteo+1
-    lamG = beta_ols(G0,y)
-    uB = y-G0 %*% t(beta_ols(G0,y))
-    
-    
-    #ur12=uB[,1:(NR1+NR2)]
-    ur13=cbind(uB[,1:NR1],uB[,(NR1+NR2+1):(NR1+NR2+NR3)]) 
-    #ur23=uB[,(NR1+1):(NR1+NR2+NR3)]
-    
-    
-    # lam12=beta_ols(F12,ur13)
-    lam13=beta_ols(F13,ur13)
-    # lam23=beta_ols(F23,ur13)
-    
-    
-    lamR1 = beta_ols(F13,uB[,1:NR1]) 
-    ur1 = uB[,1:NR1]-F13 %*% t(beta_ols(F13,uB[,1:NR1]))
-    
-    # lamR2 = beta_ols(cbind(F12,F23),uB[,(NR1+1):(NR1+NR2)]) 
-    # ur2 = uB[,(NR1+1):(NR1+NR2)]-cbind(F12,F23) %*% t(beta_ols(cbind(F12,F23),uB[,(NR1+1):(NR1+NR2)]))
-    
-    
-    ur2 = uB[,(NR1+1):(NR1+NR2)]
-    
-    # lamR3 = beta_ols(cbind(F13,F23),uB[,(NR1+NR2+1):(NR1+NR2+NR3)]) 
-    # ur3 = uB[,(NR1+NR2+1):(NR1+NR2+NR3)]-cbind(F13,F23) %*% t(beta_ols(cbind(F13,F23),uB[,(NR1+NR2+1):(NR1+NR2+NR3)]))
-    
-    lamR3 = beta_ols(F13,uB[,(NR1+NR2+1):(NR1+NR2+NR3)]) 
-    ur3 = uB[,(NR1+NR2+1):(NR1+NR2+NR3)]-F13 %*% t(beta_ols(F13,uB[,(NR1+NR2+1):(NR1+NR2+NR3)]))
-
-    lamr1 = beta_ols(fhatreg[,1],ur1) 
-    lamr2 = beta_ols(fhatreg[,2],ur2) 
-    lamr3 = beta_ols(fhatreg[,3],ur3)
-    
-    lam = cbind(lamG,c(lam13[1:NR1],rep(0,NR2),lam13[(NR1+1):(NR1+NR3)]),
-                #c(lam12[1:(NR1+NR2)],rep(0,NR3)),
-                #c(rep(0,NR1),lam23[1:(NR2+NR3)]),
-                c(lamr1,rep(0,NR2+NR3)),
-                c(rep(0,NR1),lamr2,rep(0,NR3)),
-                c(rep(0,NR1+NR2),lamr3))
-    
-    #################################################################
-    ##                      Orthogonalization                      ##
-    #################################################################
-    
-    fhat = beta_ols(lam,t(y))
-    G0 = as.matrix(fhat[,1])
-    F13 = as.matrix(fhat[,2])
-    #F12 = as.matrix(fhat[,3])
-    #F23 = as.matrix(fhat[,4])
-    fhatreg = fhat[,3:5]
-    
-    F13 = F13-G0 %*% t(beta_ols(G0,F13))
-    
-    
-    # R1x = fhatreg[,1]-c(F12,F13) %*% t(beta_ols(c(F12,F13),fhatreg[,1]))
-    R1x = fhatreg[,1]-F13 %*% t(beta_ols(F13,fhatreg[,1]))
-    fhatreg[,1] = R1x
-    # R2x = fhatreg[,2]-c(F12,F23) %*% t(beta_ols(c(F12,F23),fhatreg[,2]))
-    #fhatreg[,2] = R2x
-    fhatreg[,2] = fhatreg[,2]
-    # R3x = fhatreg[,3]-cbind(F13,F23) %*% t(beta_ols(cbind(F13,F23),fhatreg[,3]))
-    R3x = fhatreg[,3]-F13 %*% t(beta_ols(F13,fhatreg[,3]))
-    fhatreg[,3] = R3x
-    
-    
-    #################################################################
-    ##                          Residuals                          ##
-    #################################################################
-    
-    uu0 = uu1
-    e = (y - fhat %*%  t(lam)) 
-    uu1 = sum(diag(t(e) %*%  e))
-    cat("Iteración:",conteo,"\n")
-  }
-  
-  ###########################################################################
-  ###########################################################################
-  ###                                                                     ###
-  ###                      ORTHO., LOADINGS, FACTORS                      ###
-  ###                                                                     ###
-  ###########################################################################
-  ###########################################################################
-  
-  # GLOBAL 
-  V = (lam[,1]%*% (t(G0) %*%  G0)%*% t(lam[,1]))/t
-  evec = eigrs2(V)$evec
-  evec=t(lam[,1]) %*% evec[,ncol(evec)]
-  G0 = G0 %*% evec
-  
-  V = (lam[,2]%*% (t(F13) %*%  F13)%*% t(lam[,2]))/t
-  evec = eigrs2(V)$evec
-  evec=t(lam[,2]) %*% evec[,ncol(evec)]
-  F13 = F13 %*% evec
-  
-  # V = (lam[,3]%*% (t(F12) %*%  F14)%*% t(lam[,3]))/t
-  # evec = eigrs2(V)$evec
-  # evec=t(lam[,1]) %*% evec[,ncol(evec)]
-  # F12 = F12 %*% evec
-  # 
-  # V = (lam[,4]%*% (t(F23) %*%  F23)%*% t(lam[,4]))/t
-  # evec = eigrs2(V)$evec
-  # evec=t(lam[,2]) %*% evec[,ncol(evec)]
-  # F23 = F23 %*% evec
   
   
-  # for(i in 1:1){
-  #   evec<-eigrs2(t(fhatreg[,((i-1)*r_reg+1):(i*r_reg)]) %*% fhatreg[,((i-1)*r_reg+1):(i*r_reg)])$evec
-  #   fhatreg[,((i-1)*r_reg+1):(i*r_reg)] <-fhatreg[,((i-1)*r_reg+1):(i*r_reg)]%*%evec
-  # }
-  # 
-
-  #ORTHOGONALIZATION
-  
-  G0  = G0 -cbind(F13,fhatreg[,1],fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(F13,fhatreg[,1],fhatreg[,2],fhatreg[,3]),G0))
-  F13 = F13-cbind(G0,fhatreg[,1],fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(G0,fhatreg[,1],fhatreg[,2],fhatreg[,3]),F13))
-  F1   = fhatreg[,1] - cbind(G0,F13,fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(G0,F13,fhatreg[,2],fhatreg[,3]),fhatreg[,1]))
-  F2   = fhatreg[,2] - cbind(G0,F13,F1,fhatreg[,3]) %*% t(beta_ols(cbind(G0,F13,F1,fhatreg[,3]),fhatreg[,2]))
-  F3   = fhatreg[,3] - cbind(G0,F13,F1,F2) %*% t(beta_ols(cbind(G0,F13,F1,F2),fhatreg[,3]))
-  
-  # G0  = G0 -cbind(F13,fhatreg[,1],fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(F13,fhatreg[,1],fhatreg[,2],fhatreg[,3]),G0))
-  # F13 = F13-cbind(G0,F24,F34,fhatreg[,1],fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(G0,F24,F34,fhatreg[,1],fhatreg[,2],fhatreg[,3]),F13))
-  # F12 = F24-cbind(G0,F13,F34,fhatreg[,1],fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(G0,F13,F34,fhatreg[,1],fhatreg[,2],fhatreg[,3]),F24))
-  # F23 = F34-cbind(G0,F13,F24,fhatreg[,1],fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(G0,F13,F24,fhatreg[,1],fhatreg[,2],fhatreg[,3]),F34))
-  # F1   = fhatreg[,1] - cbind(G0,F13,F24,F34,fhatreg[,2],fhatreg[,3]) %*% t(beta_ols(cbind(G0,F13,F24,F34,fhatreg[,2],fhatreg[,3]),fhatreg[,1]))
-  # F2   = fhatreg[,2] - cbind(G0,F13,F24,F1,fhatreg[,3]) %*% t(beta_ols(cbind(G0,F13,F24,F1,fhatreg[,3]),fhatreg[,2]))
-  # F3   = fhatreg[,3] - cbind(G0,F13,F24,F34,F1,F2) %*% t(beta_ols(cbind(G0,F13,F24,F34,F1,F2),fhatreg[,3]))
-  # 
-  
-  ur13=cbind(y[,1:NR1],y[,(NR1+NR2+1):(NR1+NR2+NR3)])
-  ur12=y[,1:(NR1+NR2)] 
-  ur23=y[,(NR1+1):(NR1+NR2+NR3)]
-  
-  ur1=R1 
-  ur2=R2 
-  ur3=R3 
-  
-  lamG = beta_ols(G0,y) 
-  lamr13 = beta_ols(F13,ur13)
-  # lamr12 = beta_ols(F12,ur12) 
-  # lamr23 = beta_ols(F23,ur23) 
-  lamr1 = beta_ols(F1,ur1)
-  lamr2 = beta_ols(F2,ur2)
-  lamr3 = beta_ols(F3,ur3)
+  results[["Factors"]] <- Factors
+  results[["Loadings"]] <- Lambda
   
   
-  lam = cbind(lamG,
-              c(lamr13[1:NR1],rep(0,NR2),lamr13[(NR1+1):(NR1+NR3)]),
-              #c(lam12[1:(NR1+NR2)],rep(0,NR3)),
-              #c(rep(0,NR1),lam23[1:(NR2+NR3)]),
-              c(lamr1,rep(0,NR2+NR3)),
-              c(rep(0,NR1),lamr2,rep(0,NR3)),
-              c(rep(0,NR1+NR2),lamr3))
+  return(results)
   
   
-  ###########################################################################
-  ###########################################################################
-  ###                                                                     ###
-  ###                     Save                                            ###
-  ###                                                                     ###
-  ###########################################################################
-  ###########################################################################
-  
-  R[["Factors"]] <- cbind(G0,F13,F1,F2,F3)
-  R[["Loadings"]] <- lam
-  
-  colnames(R[["Factors"]])<-c("G0","F13","F1","F2","F3")
-  
-  colnames(R[["Loadings"]])<-c("G0","F13","F1","F2","F3")
-  
-  return(R)
 }
 
-# No differences with Matlab code
-# factors<-openxlsx::read.xlsx("Factors3B.xlsx",colNames = F)
-# round(cor(R$Factors,factors),5)
-# lambdas<-openxlsx::read.xlsx("Lambda3B.xlsx",colNames = F)
-# round(cor(R$Loadings,lambdas),5)
-# lambdas[,1:4]<-lambdas[,1:4]*-1
-# factors[,1:4]<-factors[,1:4]*-1
-# round(tail(R$Loadings-lambdas,5),10)
-# plot(c(R$Factors[,5]),t="l")
-# lines(factors[,5],col="red",type = "c")
-# round(cor(R$Factors,factors),1)
 

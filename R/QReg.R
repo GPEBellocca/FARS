@@ -29,7 +29,7 @@ QReg <- function(dep_variable, factors, h=1,  QTAU=0.05, edge = 0.05) {
   formula_str <- paste("Y ~ LagY", factor_names_concat, sep = " + ")
   formula <- as.formula(formula_str)
   
-  # prepare quintiles list
+  # prepare quantiles list
   quintiles <- c(0.00, 0.25, 0.50, 0.75, 1)
   quintiles[1] <- quintiles[1]+edge # adjust left edge
   quintiles[5] <- quintiles[5]-edge # adjust right edge
