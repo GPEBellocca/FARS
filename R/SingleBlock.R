@@ -1,6 +1,6 @@
-# Multi-Level Dynamic Factor Model - 1 block
+# Multi-Level Dynamic Factor Model - Single block
 
-MutiLevelFactor1Block <- function(data, r) {
+SingleBlock <- function(data, r) {
   
   ##### PRINCIPAL COMPONENTS #####
   

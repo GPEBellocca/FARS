@@ -13,13 +13,14 @@ MLDFM <- function(data, outlier = TRUE, r = c(1), blocks = 1, block_ind = NULL, 
   
   
   ##### FACTOR EXTRACTION #####
-  result <- switch(blocks,
-                   "1" = MutiLevelFactor1Block(data,r=r[1]),
-                   "2" = MutiLevelFactors2Blocks(data,r=r, block_ind = block_ind),
-                   "3" = MutiLevelFactor3Blocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter),
-                   "4" = MutiLevelFactor4Blocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter),
-                   "Unknown choice"
-  )
+  
+  if (blocks==1){
+    result <- SingleBlock(data,r=r)
+  }else if(blocks>1){
+    result <- MultipleBlocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter)
+  }else{
+    print('Error - Invalid number of block')
+  }
   
   return(list(Data = data, Outliers = outliers, Factors = result$Factors, Loadings = result$Loadings ))
 }

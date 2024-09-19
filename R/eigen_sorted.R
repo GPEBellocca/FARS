@@ -1,0 +1,16 @@
+eigen_sorted <- function(matrix_y) {
+  # Compute eigenvalues and eigenvectors
+  eigen_result <- eigen(matrix_y)
+  
+  # Extract eigenvalues and eigenvectors
+  eigenvalues <- eigen_result$values
+  eigenvectors <- eigen_result$vectors
+  
+  # Sort by eigenvalues (ascending order) 
+  sorted_indices <- order(eigenvalues)
+  sorted_eigenvalues <- eigenvalues[sorted_indices]
+  sorted_eigenvectors <- eigenvectors[, sorted_indices]
+  
+  # Return as list
+  return(list(eigenvalues = sorted_eigenvalues, eigenvectors = sorted_eigenvectors))
+}
