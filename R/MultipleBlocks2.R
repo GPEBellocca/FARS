@@ -51,7 +51,7 @@ get_Factors <- function(Factor_list, combination) {
 }
 
 
-MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
+MultipleBlocks2<-function(Yorig,r,block_ind,tol,max_iter){
 
   # Standardize the original data
   Yorig <- scale(Yorig)
@@ -83,14 +83,22 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   
   Loadings_list <- list()
   Lambda <- matrix(0, nrow = num_factors, ncol =  ncol(Yorig))
+  
   counter <- 1
   
   
   ### STEP 1 ###
+  factor_index <- 1
   
   # Compute Global factors
-  GlobalFactors <- blockfact0(Yorig, num_vars, 2, rep(1, length(num_vars)))
-  GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
+  if(r[factor_index]==0){
+    GlobalFactors <- matrix(nrow = num_obs, ncol = 1) 
+    GlobalFactors[] <- 0
+  }else{
+    GlobalFactors <- blockfact0(Yorig, num_vars, 1, rep(1, length(num_vars)))
+    GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
+  }
+ 
   
   # Store Global factors
   key <- paste(seq(1, num_blocks), collapse = "-")  
@@ -98,7 +106,14 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   InitialFactors <- cbind(InitialFactors, GlobalFactors)
   
   # Compute Global Loadings
-  Loadings <- beta_ols(GlobalFactors, Yorig)
+  if(r[factor_index]==0){
+    Loadings <- matrix(0, nrow = 1, ncol = ncol(Yorig))
+  }else{
+    Loadings <- beta_ols(GlobalFactors, Yorig)
+  }
+  
+  factor_index <- factor_index + 1
+  
   
   # Store Global Loadings
   Loadings_list[[key]] <- Loadings  
@@ -107,6 +122,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   counter <- counter + 1
   
   
+ 
   # Loop on lower levels to compute Factors and Loadings
   for (i in 1:(num_blocks-1)) {
     k <-  num_blocks - i
@@ -120,10 +136,19 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
       
       # Compute beta
       Factors <- get_Factors(Factor_list,combination) # extract previous level factors
-      Beta <-  beta_ols(Factors, Block)
+     
+      
+    
       
       # Compute residuals
-      Residuals <- Block - Factors %*% Beta
+      if (all(Factors == 0)){
+        Residuals <- Block
+      }else{
+        Factors <- Factors[, colSums(Factors != 0) > 0]
+        Beta <-  beta_ols(Factors, Block)
+        Residuals <- Block - Factors %*% Beta
+      }
+      
       
       # Compute factors
       if (i < num_blocks -1){
@@ -137,18 +162,31 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
         Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
       }
      
+      # Force factor to zero i flag = 0
+      if(r[factor_index]==0){
+        Factors[]<-0
+      }
+      
+      
       # Store Factors
       key <- paste(combination, collapse = "-")
       Factor_list[[key]] <- Factors  
       InitialFactors <- cbind(InitialFactors, Factors)
       
       # Compute Loadings
-      Loadings <- beta_ols(Factors, Block)
+      if(r[factor_index]==0){
+        Loadings <- matrix(0, nrow = 1, ncol = ncol(Block))
+      }else{
+        Loadings <- beta_ols(Factors, Block)
+      }
+      
       
       # Store Loadings
       Loadings_list[[key]] <- Loadings  
       Lambda[counter, unlist(ranges[combination])] <- Loadings
       counter <- counter + 1
+      
+      factor_index = factor_index + 1
      
     }
     
@@ -157,6 +195,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   InitialLoadings <- Lambda
   
  
+  
   ### STEP 2 ###
   
   # Initialize residual sum of squares (RSS) for convergence
@@ -164,8 +203,12 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   Residuals <- Yorig - InitialFactors %*% Lambda
   RSS_previous <- sum(diag(t(Residuals) %*% Residuals))
   
+ 
+  
   # Iterative procedure for convergence
   while (iteration < max_iter) {
+    
+    factor_index <- 1
     
     iteration <- iteration + 1
     FinalFactors <- matrix(nrow = num_obs, ncol = 0)  
@@ -174,21 +217,36 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
     key <- paste(seq(1, num_blocks), collapse = "-")
     Loadings <- Loadings_list[[key]]
     
+   
     
     # Compute new Global Factors 
-    Factors <- t(beta_ols(t(Loadings), t(Yorig)))
-    Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
+    if(r[factor_index]==0){
+      Factors <- matrix(nrow = num_obs, ncol = 1)  
+      Factors[] <- 0
+    }else{
+      Factors <- t(beta_ols(t(Loadings), t(Yorig)))
+      Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
+    }
+    
     
     # Store new Global Factors
     Factor_list[[key]] <- Factors 
     FinalFactors <- cbind(FinalFactors, Factors)
     
     # Compute new Global Loadings
-    Loadings <- beta_ols(Factors, Yorig)
+    if(r[factor_index]==0){
+      Loadings <- matrix(0, nrow = 1, ncol = ncol(Yorig))
+    }else{
+      Loadings <- beta_ols(Factors, Yorig)
+    }
+    
+    factor_index = factor_index + 1
+    
     
     # Store new Global Loadings
     Loadings_list[[key]] <- Loadings
     Lambda[1,] <- Loadings
+    
     
     # Lower levels
     counter <- 2
@@ -204,32 +262,55 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
         # Get previous level Factors 
         Factors <- get_Factors(Factor_list,combination)
         
-        # Compute beta
-        Beta <-  beta_ols(Factors, Block)
         
         # Compute residuals
-        Residuals <- Block - Factors %*% Beta
+        if (all(Factors == 0)){
+          Residuals <- Block
+        }else{
+          Factors <- Factors[, colSums(Factors != 0) > 0]
+          Beta <-  beta_ols(Factors, Block)
+          Residuals <- Block - Factors %*% Beta
+        }
+        
+       
         
         # Extract Loadings
         key <- paste(combination, collapse = "-")
         Loadings <- Loadings_list[[key]]
         
         # Compute new Factors
-        Factors <- t(beta_ols(t(Loadings), t(Residuals)))
-        Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
         
+        # Force factor to zero i flag = 0
+        if(r[factor_index]==0){
+          Factors <- matrix(nrow = num_obs, ncol = 1)  
+          Factors[]<-0
+        }else{
+          Factors <- t(beta_ols(t(Loadings), t(Residuals)))
+          Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
+        }
+        
+       
         # Store new Factors
         key <- paste(combination, collapse = "-")
         Factor_list[[key]] <- Factors  
         FinalFactors <- cbind(FinalFactors, Factors)
         
         # Compute new Loadings
-        Loadings <- beta_ols(Factors, Block)
+        if(r[factor_index]==0){
+          Loadings <- matrix(0, nrow = 1, ncol = ncol(Block))
+        }else{
+          Loadings <- beta_ols(Factors, Block)
+        }
+        
+       
         
         #Store new Loadings
         Loadings_list[[key]] <- Loadings
         Lambda[counter, unlist(ranges[combination])] <- Loadings
         counter <- counter + 1
+        
+        factor_index = factor_index + 1
+        
         
       }
     }
