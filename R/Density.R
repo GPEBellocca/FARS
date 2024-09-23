@@ -1,17 +1,23 @@
 # Density
 library(sn)
 
-Density <- function(All_q, est_points = 512, random_samples = 5000) {
+Density <- function(dep_variable, Factors, h = 1,   edge = 0.05, est_points = 512, random_samples = 5000) {
  
   
-  # drop QTAU
-  All_q <- All_q[,1:5]
+  # prepare quantiles
+  quintiles <- c(0.00, 0.25, 0.50, 0.75, 1)
+  quintiles[1] <- quintiles[1]+edge # adjust left edge
+  quintiles[5] <- quintiles[5]-edge # adjust right edge
   
-  # extract quantiles list
-  quintiles <- as.numeric(sub("Q.", "", colnames(All_q)))/100
   
-  # convert quantiles data frame to matrix
-  All_q_matrix <- as.matrix(All_q)
+  All_q_matrix <- matrix(nrow = length(dep_variable), ncol = length(quintiles))
+  
+  # Loop through each quantile and comoute Qreg
+  for (i in seq_along(quintiles)) {
+    q <- quintiles[i]
+    Pred_q <- QReg(dep_variable, Factors, h=h, QTAU = q)
+    All_q_matrix[, i] <- Pred_q  
+  }
   
   # extract number of observations
   n_obs = nrow(All_q_matrix) 

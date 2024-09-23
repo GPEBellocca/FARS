@@ -1,7 +1,7 @@
 # QReg
 
 
-QReg <- function(dep_variable, factors, h=1,  QTAU=0.05, edge = 0.05) {
+QReg <- function(dep_variable, factors, h=1,  QTAU=0.05) {
   
   t<- dim(factors)[1]
   r <- dim(factors)[2]
@@ -28,40 +28,22 @@ QReg <- function(dep_variable, factors, h=1,  QTAU=0.05, edge = 0.05) {
   # build formula
   formula_str <- paste("Y ~ LagY", factor_names_concat, sep = " + ")
   formula <- as.formula(formula_str)
+
   
-  # prepare quantiles list
-  quintiles <- c(0.00, 0.25, 0.50, 0.75, 1)
-  quintiles[1] <- quintiles[1]+edge # adjust left edge
-  quintiles[5] <- quintiles[5]-edge # adjust right edge
-  quintiles <- c(quintiles, QTAU) # add QTAU
-  
-  # final df
-  All_q <- data.frame(matrix(ncol = 0, nrow = t))
-  
-  
-  for (q in quintiles) {
-    fit_q <- rq(formula, tau = q, data = reg_data)
+  # qreg
+  fit_q <- rq(formula, tau = QTAU, data = reg_data)
     
-    coefficients <- coef(fit_q)
+  coefficients <- coef(fit_q)
     
-    Pred_q <- as.numeric(coefficients[1])
-    Pred_q <- Pred_q + as.numeric(coefficients[2]) * Y[] 
-    for (i in 1:r) {
-      Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
-    }
-    
-    
-    
-    # save results
-    column_name <- sprintf("Q.%02d", q * 100)  
-    All_q[[column_name]] <- Pred_q
+  Pred_q <- as.numeric(coefficients[1])
+  Pred_q <- Pred_q + as.numeric(coefficients[2]) * Y[] 
+  for (i in 1:r) {
+    Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
   }
-  
-  All_q <- as.data.frame(lapply(All_q, as.numeric))
-  In_q <- head(All_q, (t-h)) # in sample
-  Out_q <- tail(All_q, h) # out of sample
-  
-  return(list(All_q = All_q, In_q = In_q, Out_q = Out_q))
+    
+    
+  # return
+  return(Pred_q)
 
 }
 
