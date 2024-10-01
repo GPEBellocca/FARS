@@ -18,7 +18,7 @@ MLDFM <- function(data, outlier = TRUE, r = c(1), blocks = 1, block_ind = NULL, 
     result <- SingleBlock(data,r=r)
   }else if(blocks>1){
     #result <- MultipleBlocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter)
-    result <- MultipleBlocks4(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter)
+    result <- MultipleBlocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter)
     
   }else{
     print('Error - Invalid number of block')
