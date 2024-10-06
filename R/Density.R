@@ -63,7 +63,6 @@ Density <- function(dep_variable, Factors, h = 1,   edge = 0.05, est_points = 51
     
   }
   
-  plotDensity(density)
   
   return(list(density = density, density_matrix = density_matrix, distribution = distribution))
   

@@ -24,7 +24,7 @@ MLDFM <- function(data, outlier = TRUE, r = c(1), blocks = 1, block_ind = NULL, 
     print('Error - Invalid number of block')
   }
   
-  return(list(Data = data, Outliers = outliers, Factors = result$Factors, Loadings = result$Loadings ))
+  return(list(Data = data, Outliers = outliers, Factors = result$Factors, Loadings = result$Loadings, Residuals = result$Residuals ))
 }
 
 

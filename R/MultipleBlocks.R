@@ -340,6 +340,8 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   # Store results
   results[["Factors"]] <- orthogonal_FinalFactors
   results[["Loadings"]] <- Lambda
+  results[["Residuals"]] <- Yorig - orthogonal_FinalFactors %*% Lambda
+  
   
   # Return
   return(results)
