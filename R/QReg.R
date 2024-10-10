@@ -1,7 +1,7 @@
 # QReg
 
 
-QReg <- function(dep_variable, factors, h=1,  QTAU=0.05) {
+QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min = TRUE) {
   
   t<- dim(factors)[1]
   r <- dim(factors)[2]
@@ -16,6 +16,7 @@ QReg <- function(dep_variable, factors, h=1,  QTAU=0.05) {
     shifted_factors[,i] <- shift( factors[,i],h)
   }
 
+  
   reg_data <- data.frame(Y = Y, LagY = LagY)
   reg_data <- cbind(reg_data, shifted_factors)  
   
@@ -41,9 +42,35 @@ QReg <- function(dep_variable, factors, h=1,  QTAU=0.05) {
     Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
   }
     
+  
+  # qreg scenario
+  Scenario_Pred_q <- vector(mode = "numeric", length = t)
+  
+  for (tt in 1:t){
+    ellips <- scenario[[tt]]
+    points <- nrow(ellips)
+    pred <- vector(mode = "numeric", length = points)
+    
+    for(p in 1:points){
+      pred[p] <- as.numeric(coefficients[1])
+      pred[p] <- pred[p] + as.numeric(coefficients[2]) * Y[tt] 
+      
+      for (j in 1:r) {
+        pred[p] <- pred[p] + as.numeric(coefficients[j+2]) * ellips[p,j]
+      }
+    }
+    
+    
+    if(min == TRUE){
+      value <- min(pred)
+    }else{
+      value <- max(pred)
+    }
+    Scenario_Pred_q[tt] <- value
+  }
     
   # return
-  return(Pred_q)
+  return(list(Pred_q = Pred_q, Scenario_Pred_q = Scenario_Pred_q))
 
 }
 

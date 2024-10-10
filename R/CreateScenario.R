@@ -1,4 +1,4 @@
-StressedFactors <- function(Factors, MLDFM_SubSampling,n_samples,alpha=0.95) {
+CreateScenario <- function(Factors, MLDFM_SubSampling,n_samples,alpha=0.95) {
   
   n_obs <- nrow(Factors)
   n_factors <- ncol(Factors)
