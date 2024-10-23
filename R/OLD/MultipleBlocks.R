@@ -60,9 +60,7 @@ get_Factors <- function(Factor_list, combination, len) {
 MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
 
   # Standardize the original data
-  Yorig <- scale(Yorig,TRUE,TRUE)
-  
-  
+  Yorig <- scale(Yorig)
   
   # Initialize variables
   results <- list()  # List to save results
@@ -92,8 +90,6 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   
   
   Loadings_list <- list()
-  Residuals_list <- list()
-  Factor_hat_list <- list()
   Lambda <- matrix(0, nrow = num_factors, ncol =  ncol(Yorig))
   counter <- 1 # Lambda matrix index
   
@@ -104,8 +100,6 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   # Compute Global factors
   if(r[factor_index]>0){
     GlobalFactors <- blockfact0(Yorig, num_vars, r[factor_index], rep(1, length(num_vars)))
-    print(GlobalFactors)
-    return(1)
     GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
     
     # Store Global factors
@@ -124,12 +118,6 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
     combination <- seq(1, num_blocks)
     Lambda[counter:(counter+r[factor_index]-1), unlist(ranges[combination])] <- Loadings
     counter <- counter + r[factor_index]
-    
-    
-    # Compute and Store Global Residuals
-    resid <- Yorig - GlobalFactors %*% Loadings
-    Residuals_list[[key]] <- resid  
-    
   }
   
   
@@ -166,7 +154,6 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
         # Compute residuals
         Beta <-  beta_ols(Factors, Block)
         Residuals <- Block - Factors %*% Beta
-        
           
         # Compute factors
         if (i < num_blocks -1){
@@ -188,17 +175,13 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
         
         
         # Compute Loadings
+        
         Loadings <- beta_ols(Factors, Block)
         
         # Store Loadings
         Loadings_list[[key]] <- Loadings  
         Lambda[counter:(counter+r[factor_index]-1), unlist(ranges[combination])] <- Loadings
         counter <- counter + r[factor_index]
-        
-        
-        # Compute and Store Residuals
-        resid <- Block - Factors %*% Loadings
-        Residuals_list[[key]] <- resid  
       
       }
      
@@ -209,9 +192,9 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
     
   }
   
-  InitialLambda <- Lambda
+  InitialLoadings <- Lambda
   
-  
+
   
   
   ### STEP 2 ###
@@ -256,10 +239,6 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
       Loadings_list[[key]] <- Loadings
       Lambda[counter:(counter+r[factor_index]-1),] <- Loadings
       counter <- counter + r[factor_index]
-      
-      # Compute and Store Global Residuals
-      resid <- Yorig - Factors %*% Loadings
-      Residuals_list[[key]] <- resid  
       
     }
     
@@ -330,10 +309,6 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
           
           counter <- counter + r[factor_index]
           
-          # Compute and Store Global Residuals
-          resid <- Block - Factors %*% Loadings
-          Residuals_list[[key]] <- resid  
-          
           
         }
     
@@ -358,56 +333,19 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   #Final RSS
   print(RSS_previous)
   
-  # # Factor Orthogonalization
-  # orthogonal_FinalFactors <- orthogonalize_factors(FinalFactors)
-  # 
-  # 
-  # # Loop over the keys of the list
-  # r_filtered <- r[r != 0] # eliminate empty combination
-  # r_index <- 1
-  # f_index <- 1
-  # 
-  # for (key in names(Factor_list)) {
-  #   combination <- as.numeric(unlist(strsplit(key, "-")))
-  #   Block <- do.call(cbind, lapply(combination, function(idx) Yorig[, ranges[[idx]]]))
-  # 
-  # 
-  #   select_r <- r_filtered[r_index]
-  #   
-  #   new_factor <- orthogonal_FinalFactors[,f_index:(f_index+select_r-1)]
-  #   
-  #   
-  #   f_index <- f_index + select_r
-  #   r_index <- r_index + 1
-  #   
-  #   #P_tilde<-(1/t)*t(F_tilde)%*%X
-  #   new_loadings <- beta_ols(new_factor, Block)
-  #   new_resid <- Block - new_factor %*% new_loadings
-  #   
-  #   Factor_list[[key]] <- new_factor
-  #   Loadings_list[[key]] <- new_loadings
-  #   Residuals_list[[key]] <- new_resid
-  #   
-  #   N <- ncol(new_loadings)
-  #   F_hat<-(1/N)*Block%*%t(new_loadings)
-  #   Factor_hat_list[[key]] <- F_hat
-  #   
-  #   
-  # 
-  # }
-  # 
-  # 
+  # Factor Orthogonalization
+  orthogonal_FinalFactors <- orthogonalize_factors(FinalFactors)
+  
   
   # Store results
-  #results[["Factors"]] <- orthogonal_FinalFactors
-  results[["Factors"]] <- Factor_list
-  results[["Factors_hat"]] <- Factor_hat_list
-  results[["Lambda"]] <- Lambda
-  results[["Loadings"]] <- Loadings_list
-  results[["Residuals"]] <- Residuals_list
-  #results[["Residuals"]] <- Yorig - orthogonal_FinalFactors %*% Lambda
+  results[["Factors"]] <- orthogonal_FinalFactors
+  results[["Loadings"]] <- Lambda
+  results[["Residuals"]] <- Yorig - orthogonal_FinalFactors %*% Lambda
   
- 
+  # results[["Factors"]] <- Factor_list
+  # results[["Loadings"]] <- Loadings_list
+  # results[["Residuals"]] <- 1
+  # Return
   return(results)
 }
 

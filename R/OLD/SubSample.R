@@ -1,5 +1,5 @@
 #sub_sample <- function(data, block_ind, n, sample_size) {
-SubSample <- function(data, block_ind, n,r) {
+SubSample <- function(data, block_ind, n, sample_size) {
   new_data <- list()
   new_block_ind <- numeric(n)  # Will store the new block indices for the reduced data
   
@@ -12,21 +12,10 @@ SubSample <- function(data, block_ind, n,r) {
     block_data <- data[, start_idx:end_idx]
     
     # Randomly select 80% of the columns from the current block
-    n_vars <- ncol(block_data)
-    n_obs <- nrow(block_data)
-    #portion=1-235/((n_vars+25)^2)-0.2*(sqrt(n_vars)/n_obs)-(r/(n_obs*n_vars)) 
-    portion=1-235/((n_vars+25)^2)-0.2*(sqrt(n_vars)/n_obs)-(1/(n_obs*n_vars))
-    
-    
-    #set.seed(123)
-    selected_cols <- sample(n_vars, size = round(n_vars*portion,0)
-                            ,replace =FALSE ,prob = NULL)
-    
-   
+    selected_cols <- sample(ncol(block_data), size = floor(0.8 * ncol(block_data)))
     
     # Store the reduced block data
     new_data[[i]] <- block_data[, selected_cols]
-    
     
     # Update the new block index
     if (i == 1) {

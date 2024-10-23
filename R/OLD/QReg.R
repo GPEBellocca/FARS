@@ -1,24 +1,10 @@
 # QReg
 
 
-QReg <- function(dep_variable, factor_list, scenario=scenario, h=1,  QTAU=0.05, min = TRUE) {
-  
-  
-  factors <- factor_list[[1]]
-  
-  if(length(factor_list)>1){
-    for (i in 2:length(factor_list)) {
-      factors <- cbind(factors, factor_list[[i]])
-    }
-    
-  }
-  
-  
+QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min = TRUE) {
   
   t<- dim(factors)[1]
   r <- dim(factors)[2]
-  
-  
   
   
   # prepare regression data
@@ -47,8 +33,8 @@ QReg <- function(dep_variable, factor_list, scenario=scenario, h=1,  QTAU=0.05, 
   
   # qreg
   fit_q <- rq(formula, tau = QTAU, data = reg_data)
+    
   coefficients <- coef(fit_q)
-  
     
   Pred_q <- as.numeric(coefficients[1])
   Pred_q <- Pred_q + as.numeric(coefficients[2]) * Y[] 
@@ -56,7 +42,6 @@ QReg <- function(dep_variable, factor_list, scenario=scenario, h=1,  QTAU=0.05, 
     Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
   }
     
- 
   
   # qreg scenario
   Scenario_Pred_q <- vector(mode = "numeric", length = t)
@@ -84,7 +69,6 @@ QReg <- function(dep_variable, factor_list, scenario=scenario, h=1,  QTAU=0.05, 
     Scenario_Pred_q[tt] <- value
   }
     
- 
   # return
   return(list(Pred_q = Pred_q, Scenario_Pred_q = Scenario_Pred_q))
 

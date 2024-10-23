@@ -1,7 +1,7 @@
 
 
 
-ComputeQuantiles <- function(dep_variable, Factors, scenario = NULL, h = 1,   edge = 0.05, min = TRUE) {
+ComputeQuantiles <- function(dep_variable, factor_list, scenario = NULL, h = 1,   edge = 0.05, min = TRUE) {
  
   
   # prepare quantiles
@@ -16,7 +16,7 @@ ComputeQuantiles <- function(dep_variable, Factors, scenario = NULL, h = 1,   ed
   # Loop through each quantile and compute Qreg
   for (i in seq_along(quintiles)) {
     q <- quintiles[i]
-    QReg_result <- QReg(dep_variable, Factors, scenario, h=h, QTAU = q, min = min)
+    QReg_result <- QReg(dep_variable, factor_list = factor_list, scenario, h=h, QTAU = q, min = min)
     Quantiles[, i] <- QReg_result$Pred_q  
     Scenario_Quantiles[, i] <- QReg_result$Scenario_Pred_q  
   }
