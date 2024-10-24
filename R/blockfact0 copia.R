@@ -10,14 +10,10 @@ blockfact0 <- function(y, Nregio,r_glob,r_reg){
   fi=c()
   #i=1
     
-  
   for (i in 1:g){
     evec<-eigen_sorted(t(y[,(RegInd[i]+1):RegInd[i+1]]) %*% y[,(RegInd[i]+1):RegInd[i+1]])$eigenvectors
     fi<-cbind(fi,y[,(RegInd[i]+1):RegInd[i+1]]%*%evec[,(ncol(evec)-r[i]+1):ncol(evec)])
   }
-  
- 
-  
   
   # scale factors by their SD
   fi<-fi / kronecker(matrix(1,nrow = nrow(fi),ncol=1),t(matrix(sqrt(diag(t(fi)%*%fi)))))
