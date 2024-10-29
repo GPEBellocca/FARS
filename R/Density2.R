@@ -1,5 +1,6 @@
 # Density
 library(sn)
+#library(geoR)
 
 Density2 <- function(All_q_matrix,  edge = 0.05, est_points = 512, random_samples = 5000) {
  
@@ -26,29 +27,29 @@ Density2 <- function(All_q_matrix,  edge = 0.05, est_points = 512, random_sample
     # minimization function
 
 
-    # miniGaR<-function(xx){((All_q_matrix[tt,5]-qst(quintiles[5], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,4]-qst(quintiles[4], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,3]-qst(quintiles[3], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,2]-qst(quintiles[2], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,1]-qst(quintiles[1], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3])))^2}
-    # 
+    miniGaR<-function(xx){((All_q_matrix[tt,5]-qst(quintiles[5], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
+                             (All_q_matrix[tt,4]-qst(quintiles[4], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
+                             (All_q_matrix[tt,3]-qst(quintiles[3], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
+                             (All_q_matrix[tt,2]-qst(quintiles[2], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3]))+
+                             (All_q_matrix[tt,1]-qst(quintiles[1], xi=xx[1], omega=max(xx[2], 0.0001), alpha=xx[3])))^2}
 
-  
-    
-    miniGaR<-function(xx){((All_q_matrix[tt,5]-qst(quintiles[5], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
-                             (All_q_matrix[tt,4]-qst(quintiles[4], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
-                             (All_q_matrix[tt,3]-qst(quintiles[3], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
-                             (All_q_matrix[tt,2]-qst(quintiles[2], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
-                             (All_q_matrix[tt,1]-qst(quintiles[1], xi=xx[1], omega=abs(xx[2]), alpha=xx[3])))^2}
+# 
+#   
+#     
+#     miniGaR<-function(xx){((All_q_matrix[tt,5]-qst(quintiles[5], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
+#                              (All_q_matrix[tt,4]-qst(quintiles[4], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
+#                              (All_q_matrix[tt,3]-qst(quintiles[3], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
+#                              (All_q_matrix[tt,2]-qst(quintiles[2], xi=xx[1], omega=abs(xx[2]), alpha=xx[3]))+
+#                              (All_q_matrix[tt,1]-qst(quintiles[1], xi=xx[1], omega=abs(xx[2]), alpha=xx[3])))^2}
 
 
-    # 
-    # miniGaR<-function(xx){((All_q_matrix[tt,5]-qst(quintiles[5], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,4]-qst(quintiles[4], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,3]-qst(quintiles[3], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,2]-qst(quintiles[2], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
-    #                          (All_q_matrix[tt,1]-qst(quintiles[1], xi=xx[1], omega=(xx[2]), alpha=xx[3])))^2}
-
+# 
+#       miniGaR<-function(xx){((All_q_matrix[tt,5]-qst(quintiles[5], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
+#                          (All_q_matrix[tt,4]-qst(quintiles[4], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
+#                          (All_q_matrix[tt,3]-qst(quintiles[3], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
+#                          (All_q_matrix[tt,2]-qst(quintiles[2], xi=xx[1], omega=(xx[2]), alpha=xx[3]))+
+#                          (All_q_matrix[tt,1]-qst(quintiles[1], xi=xx[1], omega=(xx[2]), alpha=xx[3])))^2}
+# 
 
     
     # parameters

@@ -1,23 +1,14 @@
 # QReg
 
 
-QReg <- function(dep_variable, factor_list, scenario=scenario, h=1,  QTAU=0.05, min = TRUE) {
-  
-  
-  factors <- factor_list[[1]]
-  
-  if(length(factor_list)>1){
-    for (i in 2:length(factor_list)) {
-      factors <- cbind(factors, factor_list[[i]])
-    }
-    
-  }
+QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min = TRUE) {
   
   
   
   t<- dim(factors)[1]
   r <- dim(factors)[2]
   
+
   
   
   
@@ -56,6 +47,7 @@ QReg <- function(dep_variable, factor_list, scenario=scenario, h=1,  QTAU=0.05, 
     Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
   }
     
+  
  
   
   # qreg scenario

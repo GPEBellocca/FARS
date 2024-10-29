@@ -29,19 +29,11 @@ SingleBlock <- function(data, r) {
   # compute residuals
   Residuals <- X - F_tilde %*% P_tilde
   
-  Factors_list <- list()
-  Factors_hat_list <- list()
-  Loadings_list <- list()
-  Residuals_list <- list()
-  
-  Factors_list[[1]] <- F_tilde
-  Factors_hat_list[[1]] <- F_hat
-  Loadings_list[[1]] <- P_tilde
-  Residuals_list[[1]] <- Residuals
+  Final_list <- list()
+  Final_list['1'] <- r
   
   
-  return(list(Factors = Factors_list, Factors_hat = Factors_hat_list,  
-              Lambda = P_tilde, Loadings = Loadings_list, Residuals = Residuals_list))
+  return(list(Factors = F_tilde, Factors_hat = F_hat, Factors_list= Final_list))
 }
 
 

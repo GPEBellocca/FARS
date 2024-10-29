@@ -9,13 +9,20 @@ CreateScenario <- function(MLDFM_result, Sub_sampling_result,n_factors, n_sample
   
   
   
-  #first_key <- names(Factors)[1]
+  
+  
  
   #n_obs <- ifelse(!is.null(nrow(Factors[[first_key]])), nrow(Factors[[first_key]]), length(Factors[[first_key]]))
+  
+  first_key <- names(Factors)[1]
+  
+  #print(Factors[[first_key]])
+  
+  #n_obs <- nrow(Factors[[first_key]])
   n_obs <- nrow(Factors[[1]])
   n_keys <- length(Factors)
   
-  
+ 
   
   # Compute ellipsoid center for each obs
   #CenterHE_list <- list()
@@ -42,6 +49,7 @@ CreateScenario <- function(MLDFM_result, Sub_sampling_result,n_factors, n_sample
   }
   
  
+  
  
   
   

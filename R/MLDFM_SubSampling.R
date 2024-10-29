@@ -28,12 +28,14 @@ MLDFM_SubSampling <- function(data, r = c(1), blocks = 1, block_ind = NULL, tol 
     
     sub_sampling_factors[[i]] <- MLDFM_result$Factors
     sub_sampling_factors_hat[[i]] <- MLDFM_result$Factors_hat
-    sub_sampling_lambda[[i]] <- MLDFM_result$Lambda
+    #sub_sampling_lambda[[i]] <- MLDFM_result$Lambda
     
     #sub_sampling_residuals[[i]] <- MLDFM_result$Residuals
   }
   
   
-  return(list(Factors_s= sub_sampling_factors, Factors_hat_s= sub_sampling_factors_hat, Lambda_s = sub_sampling_lambda))
+  #return(list(Factors_s= sub_sampling_factors, Factors_hat_s= sub_sampling_factors_hat, Lambda_s = sub_sampling_lambda))
+  return(list(Factors_samples = sub_sampling_factors, Factors_hat_samples = sub_sampling_factors_hat))
+  
 }
   
