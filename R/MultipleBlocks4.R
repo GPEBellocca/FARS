@@ -199,7 +199,6 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter){
   }
   
  
-  #print(round(cor(InitialFactors),2))
   
   
   RSS_previous <- 1000000000000
@@ -326,8 +325,7 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter){
   print(RSS_new)
   
  
-  
-  
+
  
   # Factor Orthogonalization
   #orthogonal_FinalFactors <- orthogonalize_factors(FinalFactors)
@@ -349,6 +347,15 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter){
     
   }
   
+  
+  
+  
+  #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,-1)) #hcpi
+  #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,-1)) #ccpi
+  #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,1)) #ecpi
+  #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,-1)) #fcpi
+  
+  orthogonal_FinalFactors <- scale(orthogonal_FinalFactors,TRUE,TRUE)
   
   
   # Compute factor hat 
@@ -374,6 +381,7 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter){
     Lambda[factor_index:(factor_index+n_factors-1), unlist(ranges[combination])] <- Loads
    
     
+    
     # Compute Residuals
     Resid <- Block - Facts %*% Loads
     
@@ -398,11 +406,7 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter){
   results[['Residuals']] <- Residuals
   results[['Factors_list']] <- Final_list
   
-  # results[["Factors"]] <- Factor_list
-  # results[["Factors_hat"]] <- Factor_hat_list
-  # results[["Lambda"]] <- Lambda
-  # results[["Loadings"]] <- Loadings_list
-  # results[["Residuals"]] <- Residuals_list
+  
   
   #results[["Residuals"]] <- Yorig - orthogonal_FinalFactors %*% Lambda
   
