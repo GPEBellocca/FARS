@@ -5,9 +5,9 @@ Density <- function(All_q_matrix,  edge = 0.05, est_points = 512, random_samples
  
   
   # prepare quantiles
-  quintiles <- c(0.00, 0.25, 0.50, 0.75, 1)
-  quintiles[1] <- quintiles[1]+edge # adjust left edge
-  quintiles[5] <- quintiles[5]-edge # adjust right edge
+  quantiles <- c(0.00, 0.25, 0.50, 0.75, 1)
+  quantiles[1] <- quantiles[1]+edge # adjust left edge
+  quantiles[5] <- quantiles[5]-edge # adjust right edge
   
   
   # extract number of observations
@@ -26,24 +26,19 @@ Density <- function(All_q_matrix,  edge = 0.05, est_points = 512, random_samples
     s0=(All_q_matrix[tt,4] - All_q_matrix[tt,2]) / iqn # Scale
     sh0=0 # Shape
     
-    # Lower and Upper bounds
-    # LB = c(   -300+l0,     1,   -100) #Omega must positive >=1
-    # UB = c(   +300+l0,    50,    100)
     
-    LB = c(   -10+l0,     1,   -100) #Omega must positive >=1
+    LB = c(   -10+l0,     1,   -100) 
     UB = c(   +20+l0,    50,    100)
     
-    # optim minimize the squared differences between the q of the obs and the q of a skew-t distribution
-    # qst compute the q of skew-t distribution
+   
     skewt<-optim(c(l0, s0, sh0),fn=function(x){
-      sum((as.numeric(All_q_matrix[tt,])-qst(quintiles,xi=x[1],omega=x[2],alpha=x[3]))^2)
+      sum((as.numeric(All_q_matrix[tt,])-qst(quantiles,xi=x[1],omega=x[2],alpha=x[3]))^2)
     }, lower=LB,upper=UB,  method="L-BFGS-B")
     
     
-    #skt_q<-qst(quintiles,xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
     
     # generate n random sample from skew-t distribution 
-    skt<-rst(n=random_samples, xi=skewt$par[1], omega=skewt$par[2], alpha= skewt$par[3], dp=NULL) #delet nu=4
+    skt<-rst(n=random_samples, xi=skewt$par[1], omega=skewt$par[2], alpha= skewt$par[3], dp=NULL) 
    
     # store samples 
     distribution[tt,]<-skt
@@ -51,12 +46,7 @@ Density <- function(All_q_matrix,  edge = 0.05, est_points = 512, random_samples
     # compute density of generated samples
     fit<-dst(seq(-30,10,length.out = est_points),xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
     
-    
-    #abc <- qst(0.05,xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
-    #print(abc)
-    
-    
-    #fit<-density(skt,from=-30,to=10,nseq=est_points)
+    # fit density
     density<-c(density,fit)
     density_matrix[tt, ] <- fit
     

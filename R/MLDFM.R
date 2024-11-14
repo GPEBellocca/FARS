@@ -1,19 +1,23 @@
 # Multi-Level Dynamic Factor Model
 
+
+source("./FARS/R/SingleBlock.R")
+source("./FARS/R/MultipleBlocks.R")
+
+
 MLDFM <- function(data, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001, max_iter = 1000) {
-  
   
   
   ##### FACTOR EXTRACTION #####
   
   if (blocks==1){
+    # one block
     result <- SingleBlock(data,r=r)
   }else if(blocks>1){
-    #result <- MultipleBlocks2(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter)
-    result <- MultipleBlocks4(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter)
-    
-    
+    # multiple blocks
+    result <- MultipleBlocks(data, r=r,block_ind = block_ind, tol = tol, max_iter = max_iter)
   }else{
+    # invalid
     print('Error - Invalid number of block')
   }
   
@@ -23,14 +27,7 @@ MLDFM <- function(data, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001, 
               Lambda = result$Lambda,
               Residuals = result$Residuals,
               Factors_list = result$Factors_list
-             
-              
               )) 
-              #Factors_hat = result$Factors_hat, 
-              #Lambda = result$Lambda,  
-              #Loadings = result$Loadings, 
-              #Residuals = result$Residuals 
-              
 }
 
 

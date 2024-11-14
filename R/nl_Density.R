@@ -2,12 +2,12 @@
 library(sn)
 library(nloptr)
 
-Density3 <- function(All_q_matrix, edge = 0.05, est_points = 512, random_samples = 5000) {
+nl_Density <- function(All_q_matrix, edge = 0.05, est_points = 512, random_samples = 5000) {
   
   # Prepare quantiles
-  quintiles <- c(0.00, 0.25, 0.50, 0.75, 1)
-  quintiles[1] <- quintiles[1] + edge 
-  quintiles[5] <- quintiles[5] - edge 
+  quantiles <- c(0.00, 0.25, 0.50, 0.75, 1)
+  quantiles[1] <- quantiles[1] + edge 
+  quantiles[5] <- quantiles[5] - edge 
   
   # Extract number of obs
   n_obs <- nrow(All_q_matrix)
@@ -23,18 +23,17 @@ Density3 <- function(All_q_matrix, edge = 0.05, est_points = 512, random_samples
     iqn <- qnorm(0.75) - qnorm(0.25) # Interquartile range of standard normal distribution
     l0 <- All_q_matrix[tt, 3]  # Location
     s0 <- log(max(1, (All_q_matrix[tt, 4] - All_q_matrix[tt, 2]) / iqn)) # Log of scale to use with exp
-    sh0 <- 0 # Shape, no transformation needed here
+    sh0 <- 0 # Shape
     
-    # Initial parameters for optimization
+    # Starting parameters for optimization
     x0 <- c(l0, s0, sh0)
     
-    # Bounds
     LB <- c(l0 - 10, -Inf, -Inf) 
     UB <- c(l0 + 20, Inf, Inf)
     
-    # Objective func
+    # Objective function
     objective_fn <- function(x) {
-      transformed_values <- qst(quintiles, xi = x[1], omega = exp(x[2]), alpha = tanh(x[3]))
+      transformed_values <- qst(quantiles, xi = x[1], omega = exp(x[2]), alpha = tanh(x[3]))
       return(sum((as.numeric(All_q_matrix[tt, ]) - transformed_values)^2))
     }
     
@@ -50,10 +49,10 @@ Density3 <- function(All_q_matrix, edge = 0.05, est_points = 512, random_samples
       )
     )
     
-    # Extract optimized parameters and apply transformations
+    # Extract optimized parameters 
     xi_opt <- result$solution[1]
-    omega_opt <- exp(result$solution[2]) # Use exp to ensure omega is positive
-    alpha_opt <- tanh(result$solution[3]) # Use tanh to keep alpha bounded
+    omega_opt <- exp(result$solution[2]) 
+    alpha_opt <- tanh(result$solution[3]) 
     
     # Generate n random samples from skew-t distribution 
     skt <- rst(n = random_samples, xi = xi_opt, omega = omega_opt, alpha = alpha_opt)
@@ -61,10 +60,8 @@ Density3 <- function(All_q_matrix, edge = 0.05, est_points = 512, random_samples
     # Store samples
     distribution[tt, ] <- skt
     
-    # Compute density of generated samples
+    # Compute density and store density
     fit <- dst(seq(-30, 10, length.out = est_points), xi = xi_opt, omega = omega_opt, alpha = alpha_opt)
-    
-    # Store density
     density <- c(density, fit)
     density_matrix[tt, ] <- fit
   }

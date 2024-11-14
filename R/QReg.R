@@ -4,13 +4,9 @@
 QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min = TRUE) {
   
   
-  
   t<- dim(factors)[1]
   r <- dim(factors)[2]
-  
 
-  
-  
   
   # prepare regression data
   Y <- dep_variable
@@ -35,11 +31,9 @@ QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min 
   formula_str <- paste("Y ~ LagY", factor_names_concat, sep = " + ")
   formula <- as.formula(formula_str)
 
-  
   # qreg
   fit_q <- rq(formula, tau = QTAU, data = reg_data)
   coefficients <- coef(fit_q)
-  
     
   Pred_q <- as.numeric(coefficients[1])
   Pred_q <- Pred_q + as.numeric(coefficients[2]) * Y[] 
@@ -47,8 +41,6 @@ QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min 
     Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
   }
     
-  
- 
   
   # qreg scenario
   Scenario_Pred_q <- vector(mode = "numeric", length = t)

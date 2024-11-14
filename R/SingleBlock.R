@@ -2,15 +2,12 @@
 
 SingleBlock <- function(data, r) {
   
-  ##### PRINCIPAL COMPONENTS #####
-  
   # Scale data
   X<-scale(data,TRUE,TRUE)
   
   # Compute dimensions
   t<-nrow(X)
   N<-ncol(X)
-  
   
   # Compute first r eigenvalues and eigenvectors
   eR<-eigen(X%*%t(X))
@@ -33,7 +30,7 @@ SingleBlock <- function(data, r) {
   Final_list['1'] <- r
   
   
-  return(list(Factors = F_tilde, Factors_hat = F_hat, Factors_list= Final_list))
+  return(list(Factors = F_tilde, Lambda = P_tilde, Residuals = Residuals , Factors_hat = F_hat, Factors_list= Final_list))
 }
 
 
