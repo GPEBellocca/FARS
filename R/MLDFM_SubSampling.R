@@ -1,6 +1,5 @@
 # Multi-Level Dynamic Factor Model with subsampling procedure
-source("./FARS/R/MLDFM.R")
-source("./FARS/R/SubSample.R")
+
 
 MLDFM_SubSampling <- function(data, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001, max_iter = 1000, n_sample = 10, sample_size = 1) {
   

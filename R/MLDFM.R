@@ -1,8 +1,7 @@
 # Multi-Level Dynamic Factor Model
 
 
-source("./FARS/R/SingleBlock.R")
-source("./FARS/R/MultipleBlocks.R")
+
 
 
 MLDFM <- function(data, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001, max_iter = 1000) {

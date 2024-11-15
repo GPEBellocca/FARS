@@ -1,8 +1,7 @@
 # Multi-Level Dynamic Factor Model - Multiple blocks
 
 library(MASS)
-source("./FARS/R/eigen_sorted.R") # Eigen with ascending order
-source("./FARS/R/blockfact0.R") # CCA
+
 
 beta_ols <- function(X, Y) {
   solve(t(X) %*% X) %*% t(X) %*% Y

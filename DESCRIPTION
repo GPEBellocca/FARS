@@ -1,0 +1,10 @@
+Package: FARS
+Type: Package
+Title: Factor-augmented regression scenarios
+Version: 0.1.0
+Author: Gian Pietro Bellocca [aut, cre]
+Maintainer: Gian Pietro Bellocca <gbellocc@est-econ.uc3m.es>
+Description: A brief description of your package.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true

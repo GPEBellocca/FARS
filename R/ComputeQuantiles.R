@@ -1,6 +1,5 @@
 
 
-source("./FARS/R/QReg.R")
 ComputeQuantiles <- function(dep_variable, factors, scenario, h = 1,   edge = 0.05, min = TRUE) {
  
   
