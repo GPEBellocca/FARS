@@ -282,10 +282,11 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter){
   # Factor Orthogonalization
   orthogonal_FinalFactors <- orthogonalize_factors(FinalFactors)
   
-  #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,-1)) #hcpi
+  #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,1)) #hcpi
   #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,-1)) #ccpi
   #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,1)) #ecpi
   #orthogonal_FinalFactors <- orthogonal_FinalFactors %*% diag(c(-1,-1,-1)) #fcpi
+  
   
   # Scale factors
   orthogonal_FinalFactors <- scale(orthogonal_FinalFactors,TRUE,TRUE)

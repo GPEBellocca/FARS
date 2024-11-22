@@ -1,7 +1,7 @@
 # QReg
 
 
-QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min = TRUE) {
+QReg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario = scenario, min = TRUE) {
   
   
   t<- dim(factors)[1]
@@ -23,7 +23,9 @@ QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min 
   
   
   names(reg_data)[1:2] <- c("Y", "LagY")
-  new_factor_names <- paste("factor", 1:r, sep = "")  
+  #new_factor_names <- paste("factor", 1:r, sep = "")  
+  keys <- names(Factors_list)
+  new_factor_names <- paste0("F", gsub("-", "", keys))
   names(reg_data)[3:(2 + r)] <- new_factor_names  
   factor_names_concat <- paste(new_factor_names, collapse = " + ")
   
@@ -33,7 +35,16 @@ QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min 
 
   # qreg
   fit_q <- rq(formula, tau = QTAU, data = reg_data)
-  coefficients <- coef(fit_q)
+  #coefficients <- coef(fit_q)
+  
+  
+  summary_fit <- summary(fit_q, se = "ker",covariance=TRUE)
+  coefficients <- summary_fit$coefficients[, 1]
+  pvalues <- summary_fit$coefficients[, 4] 
+  
+ 
+  
+  
     
   Pred_q <- as.numeric(coefficients[1])
   Pred_q <- Pred_q + as.numeric(coefficients[2]) * Y[] 
@@ -41,6 +52,12 @@ QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min 
     Pred_q <- Pred_q + as.numeric(coefficients[i+2]) * factors[, i]
   }
     
+  
+  # return here is scenario quantiles are not needed
+  if (is.null(scenario)) {
+    return(list(Pred_q = Pred_q, Coeff = coefficients, Pvalues = pvalues))
+  }
+  
   
   # qreg scenario
   Scenario_Pred_q <- vector(mode = "numeric", length = t)
@@ -70,7 +87,7 @@ QReg <- function(dep_variable, factors, scenario=scenario, h=1,  QTAU=0.05, min 
     
  
   # return
-  return(list(Pred_q = Pred_q, Scenario_Pred_q = Scenario_Pred_q))
+  return(list(Pred_q = Pred_q, Coeff = coefficients, Pvalues = pvalues, Scenario_Pred_q = Scenario_Pred_q))
 
 }
 
