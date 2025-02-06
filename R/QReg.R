@@ -23,9 +23,12 @@ QReg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario
   
   
   names(reg_data)[1:2] <- c("Y", "LagY")
-  #new_factor_names <- paste("factor", 1:r, sep = "")  
-  keys <- names(Factors_list)
-  new_factor_names <- paste0("F", gsub("-", "", keys))
+  new_factor_names <- paste("factor", 1:r, sep = "")  
+  
+  
+  
+  # keys <- names(Factors_list)
+  # new_factor_names <- paste0("F", gsub("-", "", keys))
   names(reg_data)[3:(2 + r)] <- new_factor_names  
   factor_names_concat <- paste(new_factor_names, collapse = " + ")
   
