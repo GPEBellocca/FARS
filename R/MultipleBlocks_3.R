@@ -55,7 +55,7 @@ get_Factors <- function(Factor_list, combination, level) {
 
 
 
-MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
+MultipleBlocks_3<-function(Yorig,r,block_ind,tol,max_iter,method){
 
   # Standardize the original data
   Yorig <- scale(Yorig,TRUE,TRUE)
@@ -85,6 +85,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
   
   # Define Factors data structures
   Factor_list <- list()
+  Loading_list <- list()
   InitialFactors <- matrix(nrow = num_obs, ncol = 0)  
   
   # Loadings 
@@ -93,12 +94,12 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
   counter <- 1
   
   ### STEP 1 ###
-  factor_index <- 1
+  
   
   # Compute Global factors
-  if(r[factor_index]>0){
+  if(r[r_index]>0){
     
-    number_of_factor <- r[factor_index] # number of factor to be extracted with PCA
+    number_of_factor <- r[r_index] # number of factor to be extracted with PCA
     if (method == 0){
       # CCA
       GlobalFactors <- blockfact0(Yorig, num_vars, number_of_factor, rep(1, length(num_vars)))
@@ -118,6 +119,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
     
     # Compute Global Loadings
     GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
+    Loading_list[[key]] <- GlobalLoadings  
     
     # Update Lambda
     combination <- seq(1, num_blocks)
@@ -134,12 +136,11 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
     for (j in 1:nrow(combinations_matrix)) {
       combination <- combinations_matrix[j, ]
       
-      factor_index = factor_index + 1
       
       r_index <- r_index + 1
       
       # Skip blocks where Factors are not needed
-      if (r[factor_index] == 0){
+      if (r[r_index] == 0){
         next
       }
         
@@ -162,7 +163,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
 
       }
           
-      number_of_factor <- r[factor_index] # number of factor to be extracted with PCA
+      number_of_factor <- r[r_index] # number of factor to be extracted with PCA
       
       # Compute factors
       if (i < num_blocks - 1 && method == 0) {
@@ -183,6 +184,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
       
       # Compute Loadings
       Loadings <- beta_ols(Factors, Residuals)
+      Loading_list[[key]] <- Loadings  
       
       
       # Update Lambda
@@ -193,10 +195,16 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
     
   }
   
+  
+  
+ 
+  
+  
+  
+  
+  
  
 
-  Initial_Lambda <- Lambda
-  
   
   
 
@@ -208,28 +216,39 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
   # Iterative procedure for convergence
   while (iteration < max_iter) {
     iteration <- iteration + 1
-    print(iteration)
 
-    r_index <- 1
+    FinalFactors <- matrix(nrow = num_obs, ncol = 0)  
+    
+    r_index <- 1 
     counter <- 1
     
     
-
-    # Initialize Lambda
-    Lambda <- matrix(0, nrow = num_factors, ncol =  ncol(Yorig))
-
-    # Extract Global Factors
+    # Extract Global Loadings
     key <- paste(seq(1, num_blocks), collapse = "-")
-    GlobalFactors <- Factor_list[[key]]
+    GlobalLoadings <- Loading_list[[key]]
     
-
+    # Compute Global Factors
+    GlobalFactors <- t(beta_ols(t(GlobalLoadings), t(Yorig)))
+    #GlobalFactors <- Yorig %*% t(GlobalLoadings) %*% solve(GlobalLoadings %*% t(GlobalLoadings))
+    #GlobalFactors <- t(solve(GlobalLoadings %*% t(GlobalLoadings)) %*% GlobalLoadings %*% t(Yorig))
+    
+    # Store Global factors
+    key <- paste(seq(1, num_blocks), collapse = "-")  
+    Factor_list[[key]] <- GlobalFactors  
+    FinalFactors <- cbind(FinalFactors, GlobalFactors)
+    
+    
     # Compute Global Loadings
     GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
-
+    Loading_list[[key]] <- GlobalLoadings  
+   
+    
     # Update Lambda
     combination <- seq(1, num_blocks)
     Lambda[counter:(counter+r[r_index]-1), unlist(ranges[combination])] <- GlobalLoadings
     counter <- counter + r[r_index]
+    
+    
 
 
     # Loop on lower levels
@@ -266,15 +285,26 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
 
         }
 
-        # Extract current block factors
-        key <- paste(combination, collapse = "-")
-        Factors <- Factor_list[[key]]
         
 
+        
+        # Extract current block Loadings
+        key <- paste(combination, collapse = "-")
+        Loadings <- Loading_list[[key]]
+        
+        
+        # Compute new Factors
+        Factors <- t(beta_ols(t(Loadings), t(Residuals)))
+        
+        # Store Factors
+        Factor_list[[key]] <- Factors  
+        FinalFactors <- cbind(FinalFactors, Factors)
+        
         # Compute Loadings
         Loadings <- beta_ols(Factors, Residuals)
-
-
+        Loading_list[[key]] <- Loadings  
+        
+        
         # Update Lambda
         Lambda[counter:(counter+r[r_index]-1), unlist(ranges[combination])] <- Loadings
         counter <- counter + r[r_index]
@@ -282,35 +312,17 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
       }
     }
 
-
     
-    # Compute new factors
-    FinalFactors <- t(solve(Lambda %*% t(Lambda)) %*% Lambda %*% t(Yorig))
-    # FinalFactors <- t(qr.solve(Lambda %*% t(Lambda), Lambda %*% t(Yorig)))
     
-   
-
-    r_index <- 1
-    counter <- 1
-
-    filtered_r <- r[r != 0]
-    # Update  Factors list
-    for (key in names(Factor_list)) {
-
-      select_factors <- FinalFactors[,counter:(counter+filtered_r[r_index]-1)]
-
-      Factor_list[[key]] <- matrix(select_factors, ncol = filtered_r[r_index])
-
-      counter <- counter + filtered_r[r_index]
-      r_index <- r_index + 1
-    }
+  
 
 
     # Check RSS
     FinalResiduals <- Yorig - FinalFactors %*% Lambda
     #RSS_new <- sum(diag(t(FinalResiduals) %*% FinalResiduals))
     RSS_new <- sum(FinalResiduals^2)
-    print(RSS_new)
+    #print(RSS_new)
+    
     rss_values <- c(rss_values,RSS_new)
     
     
@@ -326,6 +338,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
   }
 
   #Final RSS
+  #print('Final RSS')
   #print(RSS_new)
   
   

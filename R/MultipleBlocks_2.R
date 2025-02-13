@@ -55,7 +55,7 @@ get_Factors <- function(Factor_list, combination, level) {
 
 
 
-MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
+MultipleBlocks_2<-function(Yorig,r,block_ind,tol,max_iter,method){
 
   # Standardize the original data
   Yorig <- scale(Yorig,TRUE,TRUE)
@@ -195,7 +195,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
   
  
 
-  Initial_Lambda <- Lambda
+  
   
   
   
@@ -210,9 +210,39 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
     iteration <- iteration + 1
     print(iteration)
 
+    
+    
+    # Compute new factors
+    #FinalFactors <- t(solve(Lambda %*% t(Lambda)) %*% Lambda %*% t(Yorig))
+    
+    #FinalFactors <- t(qr.solve(Lambda %*% t(Lambda), Lambda %*% t(Yorig)))
+    
+    inv_approx <- ginv(Lambda %*% t(Lambda))
+    FinalFactors <- t(inv_approx %*% (Lambda %*% t(Yorig)))
+    
+    
+    #FinalFactors <- t(beta_ols(t(Lambda), t(Yorig)))
+
     r_index <- 1
     counter <- 1
+
+    filtered_r <- r[r != 0]
+    # Update  Factors list
+    for (key in names(Factor_list)) {
+
+      select_factors <- FinalFactors[,counter:(counter+filtered_r[r_index]-1)]
+
+      Factor_list[[key]] <- matrix(select_factors, ncol = filtered_r[r_index])
+
+      counter <- counter + filtered_r[r_index]
+      r_index <- r_index + 1
+    }
     
+    
+    
+    
+    r_index <- 1
+    counter <- 1
     
 
     # Initialize Lambda
@@ -222,7 +252,6 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
     key <- paste(seq(1, num_blocks), collapse = "-")
     GlobalFactors <- Factor_list[[key]]
     
-
     # Compute Global Loadings
     GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
 
@@ -270,10 +299,8 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
         key <- paste(combination, collapse = "-")
         Factors <- Factor_list[[key]]
         
-
         # Compute Loadings
         Loadings <- beta_ols(Factors, Residuals)
-
 
         # Update Lambda
         Lambda[counter:(counter+r[r_index]-1), unlist(ranges[combination])] <- Loadings
@@ -282,34 +309,12 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
       }
     }
 
-
     
-    # Compute new factors
-    FinalFactors <- t(solve(Lambda %*% t(Lambda)) %*% Lambda %*% t(Yorig))
-    # FinalFactors <- t(qr.solve(Lambda %*% t(Lambda), Lambda %*% t(Yorig)))
-    
-   
-
-    r_index <- 1
-    counter <- 1
-
-    filtered_r <- r[r != 0]
-    # Update  Factors list
-    for (key in names(Factor_list)) {
-
-      select_factors <- FinalFactors[,counter:(counter+filtered_r[r_index]-1)]
-
-      Factor_list[[key]] <- matrix(select_factors, ncol = filtered_r[r_index])
-
-      counter <- counter + filtered_r[r_index]
-      r_index <- r_index + 1
-    }
-
-
     # Check RSS
     FinalResiduals <- Yorig - FinalFactors %*% Lambda
-    #RSS_new <- sum(diag(t(FinalResiduals) %*% FinalResiduals))
-    RSS_new <- sum(FinalResiduals^2)
+    RSS_new <- sum(diag(t(FinalResiduals) %*% FinalResiduals))
+    #RSS_new <- sum(FinalResiduals^2)
+    
     print(RSS_new)
     rss_values <- c(rss_values,RSS_new)
     
@@ -399,6 +404,7 @@ MultipleBlocks<-function(Yorig,r,block_ind,tol,max_iter,method){
     
   }
  
+  
   # Compute final residuals
   Residuals <- Yorig - orthogonal_FinalFactors %*% Lambda
   
