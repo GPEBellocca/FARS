@@ -2,7 +2,6 @@
 
 library(MASS)
 
-
 beta_ols <- function(X, Y) {
   solve(t(X) %*% X) %*% t(X) %*% Y
 }

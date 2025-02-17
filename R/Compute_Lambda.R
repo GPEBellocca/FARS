@@ -1,3 +1,57 @@
+# check_factor_orthonormality <- function(factors) {
+#   T <- nrow(factors)
+#   cov_matrix <- t(factors) %*% factors / T
+#   cat("\nFactor Covariance (F'F/T):\n")
+#   print(round(cov_matrix, 4))
+#   
+#   diag_ok <- all(abs(diag(cov_matrix) - 1) < 1e-6)
+#   offdiag_ok <- all(abs(cov_matrix[upper.tri(cov_matrix)]) < 1e-6)
+#   
+#   if (diag_ok && offdiag_ok) {
+#     cat("✅ Factors are properly orthonormalized (F'F/T = I).\n")
+#   } else {
+#     cat("❌ Factors are NOT orthonormalized.\n")
+#   }
+#   
+#   return(diag_ok && offdiag_ok)
+# }
+
+
+# Function to check F'F/T = I
+check_factor_orthonormality <- function(factors) {
+  T <- nrow(factors)
+  cov_matrix <- t(factors) %*% factors / T
+  #print("Factor Covariance (F'F/T):")
+  #print(round(cov_matrix, 4))
+  return(all(abs(diag(cov_matrix) - 1) < 1e-6) && all(abs(cov_matrix[upper.tri(cov_matrix)]) < 1e-6))
+}
+
+
+
+
+# Function to check if LAMBDA'LAMBDA is diagonal
+check_loadings_diagonal <- function(loadings) {
+  cov_matrix <- t(loadings) %*% loadings  # Compute covariance
+  
+  # Check if off-diagonal elements are effectively zero
+  off_diag <- cov_matrix[upper.tri(cov_matrix) | lower.tri(cov_matrix)]
+  is_diagonal <- all(abs(off_diag) < 1e-6)
+  
+  # Print results
+  cat("\nLAMBDA'LAMBDA Covariance Matrix:\n")
+  
+  
+  if (is_diagonal) {
+    cat("✅ LAMBDA'LAMBDA is diagonal.\n")
+  } else {
+    cat("❌ LAMBDA'LAMBDA is NOT diagonal.\n")
+  }
+  
+  return(is_diagonal)
+}
+
+
+
 # Compute Lambda
 Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_list) {
   
@@ -12,8 +66,14 @@ Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_lis
   GlobalFactors <- Factor_list[[key]]
   
   
+  
   # Compute Global Loadings
   GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
+  #GlobalLoadings <- t(Yorig) %*% GlobalFactors / nrow(GlobalFactors)
+  
+  
+  
+  check_loadings_diagonal(t(GlobalLoadings))
   
   # Update Lambda
   combination <- seq(1, num_blocks)
@@ -60,8 +120,13 @@ Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_lis
       Factors <- Factor_list[[key]]
       
       
+      
       # Compute Loadings
       Loadings <- beta_ols(Factors, Residuals)
+      #Loadings <- t(Residuals) %*% Factors / nrow(Factors)
+      
+      
+      check_loadings_diagonal(t(Loadings))
       
       
       # Update Lambda
