@@ -41,18 +41,19 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter,method){
   res <- Compute_Initial_Factors(Yorig, num_vars, num_obs, num_blocks, ranges, num_factors, r, method)
   InitialFactors <- res$InitialFactors
   Factor_list <- res$Factor_list
-  
+ 
   
   ### STEP 2 - ITERATIVE PROCEDURE ###
   RSS_previous <- 1000000000000
   rss_values <- c()
   iteration <- 0
 
-
+  
+  
   # Iterative procedure for convergence
   while (iteration < max_iter) {
     iteration <- iteration + 1
-    print(iteration)
+    #print(iteration)
 
     
     # Compute Lambda
@@ -68,7 +69,7 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter,method){
     # Check RSS
     FinalResiduals <- Yorig - FinalFactors %*% Lambda
     RSS_new <- sum(FinalResiduals^2)
-    print(RSS_new)
+    #print(RSS_new)
     rss_values <- c(rss_values,RSS_new)
     
     if ((log(RSS_previous) - log(RSS_new)) < tol) {
@@ -110,10 +111,8 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter,method){
   # Factor list
   Final_list <- list()
   for (key in names(Factor_list)) {
-    
     factors <- Factor_list[[key]]
     n_factors <-  ncol(factors)
-    
     Final_list[[key]] <- n_factors
   }
   
@@ -121,8 +120,6 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter,method){
   
   # Compute factor hat 
   Factors_hat <- matrix(nrow = num_obs, ncol = 0) 
-  
-  
   factor_index <- 1
  
   for (key in names(Final_list)){
@@ -150,7 +147,6 @@ MultipleBlocks4<-function(Yorig,r,block_ind,tol,max_iter,method){
     
     
     Factors_hat <- cbind(Factors_hat, Facts_hat)
-    
     factor_index <- factor_index + n_factors
     
   }

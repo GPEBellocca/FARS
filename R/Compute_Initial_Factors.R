@@ -1,52 +1,22 @@
-
-
-orthonormalize_factors <- function(factors) {
-  factors <- as.matrix(factors)
-  qr_decomp <- qr(factors)
-  Q <- qr.Q(qr_decomp)
-  Q <- Q * sqrt(nrow(factors))  # Scale to ensure F'F/T = I
-  return(Q)
-}
-
-
-check_orthonormality <- function(factors) {
- 
-  # Compute orthonormality: (F'F) / T
-  #orthonormality_matrix <- t(factors) %*% factors / nrow(factors)
-  cov_matrix <- t(factors) %*% factors
+normalize_factors <- function(Factors) {
+  # Ensure Factors is a matrix
+  Factors <- as.matrix(Factors)  
+  k <- ncol(Factors)  # Number of factors
   
-  # Check if matrix is identity
-  identity_matrix <- diag(ncol(factors))
-  if (all(round(cov_matrix, 4) == identity_matrix)) {
-    cat("\n✅ Factors are orthonormal (F'F/T = I)\n")
+  # Compute standard deviation of each factor
+  factor_sd <- sqrt(diag(t(Factors) %*% Factors)) 
+  
+  if (k == 1) {
+    # Special case: Only one factor (avoid using sweep)
+    Factors <- Factors / factor_sd  # Direct scalar division
   } else {
-    cat("\n❌ Factors are NOT orthonormal.\n")
+    # Multiple factors case: Use sweep for column-wise division
+    Factors <- sweep(Factors, 2, factor_sd, "/")
   }
   
-  # Return the matrix
-  return(cov_matrix)
+  return(Factors)
 }
 
-# Function to check if LAMBDA'LAMBDA is diagonal
-check_loadings_diagonal <- function(loadings) {
-  cov_matrix <- t(loadings) %*% loadings  # Compute covariance
-  
-  # Check if off-diagonal elements are effectively zero
-  off_diag <- cov_matrix[upper.tri(cov_matrix) | lower.tri(cov_matrix)]
-  is_diagonal <- all(abs(off_diag) < 1e-6)
-  
-  # Print results
-  cat("\nLAMBDA'LAMBDA Covariance Matrix:\n")
-  
-  
-  if (is_diagonal) {
-    cat("✅ LAMBDA'LAMBDA is diagonal.\n")
-  } else {
-    cat("❌ LAMBDA'LAMBDA is NOT diagonal.\n")
-  }
-  
-  return(is_diagonal)
-}
 
 
 
@@ -66,30 +36,27 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
   
   if (method == 0){
     # CCA
-    GlobalFactors <- blockfact0(Yorig, num_vars, number_of_factor, rep(1, length(num_vars)))
+    GlobalFactors <- blockfact0(Yorig, num_vars, number_of_factor, rep(1, num_blocks))
+    #GlobalFactors <- blockfact_cca(Yorig, num_vars, number_of_factor, rep(1, num_blocks))
+    
+    
+    
   }else{
     # PCA 
     pca_result <- prcomp(Yorig, scale. = FALSE)
     GlobalFactors <- pca_result$x[, 1:number_of_factor]
-    GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
+    #GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
   }
-  #GlobalFactors <- orthonormalize_factors(GlobalFactors)
-  
-  check_orthonormality(GlobalFactors)
   
   
   
+  GlobalFactors <- normalize_factors(GlobalFactors)
+  #check_orthonormality(GlobalFactors)
   GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
-  #GlobalLoadings <- pca_result$rotation[, 1:number_of_factor]
-  
-  
-  check_loadings_diagonal(t(GlobalLoadings))
-  
-  
-  
+  #check_loadings(t(GlobalLoadings))
   
  
-  #print(check_factor_orthonormality(GlobalFactors))
+  
   
   # Store Global factors
   key <- paste(seq(1, num_blocks), collapse = "-")  
@@ -138,19 +105,21 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
       number_of_factor <- r[r_index] # number of factor to be extracted with PCA
       if (i < num_blocks - 1 && method == 0) {
         # Use CCA for middle level
-        Factors <- blockfact0(Residuals, num_vars[combination], number_of_factor, rep(1, length(combination)))
+        Factors <- blockfact0(Residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
+        #Factors <- blockfact_cca(Residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
+       
       }else{
         # Use PCA
         pca_result <- prcomp(Residuals, scale. = FALSE)
         Factors <- pca_result$x[, 1:number_of_factor]
-        Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
-        
       }
       
-      #Factors <- orthonormalize_factors(Factors)
-      check_orthonormality(Factors)
+      
+      
+      Factors <- normalize_factors(Factors)
+      #check_orthonormality(Factors)
       Loadings <- beta_ols(Factors, Residuals)
-      check_loadings_diagonal(t(Loadings))
+      #check_loadings(t(Loadings))
       
       # Store Factors
       key <- paste(combination, collapse = "-")
@@ -160,7 +129,7 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
     
   }
   
-  return(1)
+  
   
   results <- list()
   results[["InitialFactors"]] <- InitialFactors

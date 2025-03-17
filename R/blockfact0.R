@@ -8,6 +8,8 @@
 
 blockfact0 <- function(y, Nregio,r_glob,r_reg){
   
+  
+  
   g=length(Nregio) # number of groups
   RegInd = c(0, cumsum(Nregio)) # cumulative sum of group size to determine start and end indices
   r = r_glob + r_reg # tot number of factors in each group (global + local) WHY??????
@@ -46,7 +48,7 @@ blockfact0 <- function(y, Nregio,r_glob,r_reg){
   
   # compute covariance matrix of fhat factors
   C = t(fhat) %*% fhat 
-  # perform pca
+  # perform pca 
   evec = eigen_sorted(t(C) %*% C)$eigenvectors
   # select final principal components as final global factors
   #if((g-1)>1) fhatblock = fhat %*% evec[,(ncol(evec)-r_glob+1):ncol(evec)] 
