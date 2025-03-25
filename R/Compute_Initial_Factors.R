@@ -1,123 +1,80 @@
-normalize_factors <- function(Factors) {
-  
-  Factors <- as.matrix(Factors)  
-  k <- ncol(Factors)  # number of factors
-  
-  # Compute factors standard dev
-  factor_sd <- sqrt(diag(t(Factors) %*% Factors)) 
-  
-  if (k == 1) {
-    # only one factor
-    Factors <- Factors / factor_sd  # Direct scalar division
-  } else {
-    # multiple factors 
-    Factors <- sweep(Factors, 2, factor_sd, "/")
-  }
-  
-  return(Factors)
-}
+#' Compute Initial Factors (Multilevel Dynamic Factor Model)
+#'
+#' @keywords internal
+#' 
+#' 
 
-
-
-
-
-# Compute Initial Factors
-Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges, num_factors, r, method) {
+compute_initial_factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges, num_factors, r, method) {
   
-  # Define Factors data structures
+  # Initialize
   Factor_list <- list()
   InitialFactors <- matrix(nrow = num_obs, ncol = 0)  
   
   
-  # Compute Global factors
+  # --- STEP 1: GLOBAL FACTORS ---
   r_index <- 1 
-  number_of_factor <- r[r_index] # number of factor to be extracted with PCA
+  number_of_factor <- r[r_index] 
   
   if (method == 0){
-    # CCA
-    GlobalFactors <- blockfact0(Yorig, num_vars, number_of_factor, rep(1, num_blocks))
+    # Canonical Correlation Analysis
+    GlobalFactors <- canonical_correlation_analysis(Yorig, num_vars, number_of_factor, rep(1, num_blocks))
   }else{
-    # PCA 
+    # Principal Component Analysis
     pca_result <- prcomp(Yorig, scale. = FALSE)
     GlobalFactors <- pca_result$x[, 1:number_of_factor]
-    #GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
   }
   
- 
   GlobalFactors<- scale(GlobalFactors,TRUE,TRUE)
   
-  #check_identification_condition_1(GlobalFactors)
-  # GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
-  # check_identification_condition_2(GlobalLoadings)
-  
-
-  
-  # Store Global factors
+  # Store global factors
   key <- paste(seq(1, num_blocks), collapse = "-")  
   Factor_list[[key]] <- GlobalFactors  
   InitialFactors <- cbind(InitialFactors, GlobalFactors)
     
   
-  
-  
-  # Loop on lower levels to compute Factors 
+  # --- STEP 2: LOWER-LEVEL FACTORS ---
   for (i in 1:(num_blocks-1)) {
     k <-  num_blocks - i
     combinations_matrix <- t(combn(num_blocks,k))
+    
     for (j in 1:nrow(combinations_matrix)) {
       combination <- combinations_matrix[j, ]
       
     
       r_index <- r_index + 1
-      
-      # Skip blocks where Factors are not needed
-      if (r[r_index] == 0){
-        next
-      }
+      if (r[r_index] == 0) next  # Skip if no factors to extract in this node
       
       
-      #Extract Residuals filtering out upper levels factors (start with global factors)
+      # Step 2a: Initialize residuals using blocks data
+      Residuals <- do.call(cbind, lapply(combination, function(idx) Yorig[, ranges[[idx]]]))
+      
+      # Step 2b: Remove higher-level factors (orthogonal projection)
       level <- num_blocks
-      
-      Residuals <- do.call(cbind, lapply(combination, function(idx) Yorig[, ranges[[idx]]])) # initialize with block data
-      
       while (level > length(combination)) {
-        Factors <- get_Factors(Factor_list, combination, level)
-        
-        # filter out
+        Factors <- get_factors(Factor_list, combination, level)
         if(!is.null(Factors)){
           ols_result <- beta_ols(Factors, Residuals)
           Residuals <- Residuals - Factors %*% ols_result
         }
-        
         level <- level - 1
-        
       }
       
       
-      # Compute factors
-      number_of_factor <- r[r_index] # number of factor to be extracted with PCA
+      # Step 2c: Compute new factors 
+      number_of_factor <- r[r_index] 
       if (i < num_blocks - 1 && method == 0) {
-        # Use CCA for middle level
-        Factors <- blockfact0(Residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
+        # Use CCA for intermediate levels
+        Factors <- canonical_correlation_analysis(Residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
       }else{
         # Use PCA
         pca_result <- prcomp(Residuals, scale. = FALSE)
         Factors <- pca_result$x[, 1:number_of_factor]
-        #Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
-        
+
       }
       
-      
-     
       Factors<- scale(Factors,TRUE,TRUE)
-      
-      #check_identification_condition_1(Factors)
-      # Loadings <- beta_ols(Factors, Residuals)
-      # check_identification_condition_2(Loadings)
-      
-      
-      # Store Factors
+     
+      # Step 2d: Store factors
       key <- paste(combination, collapse = "-")
       Factor_list[[key]] <- Factors  
       InitialFactors <- cbind(InitialFactors, Factors)
@@ -126,10 +83,9 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
   }
   
   
-  results <- list()
-  results[["InitialFactors"]] <- InitialFactors
-  results[["Factor_list"]] <- Factor_list
-  
-  return(results)
+  return(list(
+    InitialFactors = InitialFactors,
+    Factor_list = Factor_list
+  ))
 }
 

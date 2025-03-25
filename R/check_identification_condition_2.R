@@ -7,7 +7,7 @@ check_identification_condition_2 <- function(loadings) {
   is_diagonal <- all(abs(off_diag) < 1e-6)
   
   if (is_diagonal) {
-    cat("✅ Identification (ii)satisfied?  YES \n")
+    cat("✅ Identification (ii) satisfied?  YES \n")
   } else {
     cat("❌ Identification (ii) satisfied?  NO\n")
   }

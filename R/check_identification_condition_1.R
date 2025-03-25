@@ -12,17 +12,12 @@ check_identification_condition_1 <- function(Factors, tol = 1e-8) {
   
   # Result
   is_orthonormal <- max_dev < tol
-  
-  # Print diagnostic
-  #cat("Covariance matrix of factors:\n")
-  #print(round(cov_matrix, 4))
-  #cat("\nMax deviation from identity matrix:", round(max_dev, 8), "\n")
-  
+
   
   if (is_orthonormal) {
-    cat("✅ Identification (i) satisfied?  YES \n")
+    cat("✅ Identification (i) satisfied? YES \n")
   } else {
-    cat("❌ Identification (i) satisfied? NO\n")
+    cat("❌ Identification (i) satisfied? NO \n")
   }
   
   

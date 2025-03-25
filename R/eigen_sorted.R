@@ -1,3 +1,10 @@
+#' Eigen Decomposition (Descending Order)
+#'
+#' Computes the eigenvalues and eigenvectors of a symmetric matrix, returning them in descending order (default behavior of `eigen()`).
+#'
+#' @keywords internal
+#' 
+
 eigen_sorted <- function(matrix_y) {
   # Compute eigenvalues and eigenvectors
   eigen_result <- eigen(matrix_y)

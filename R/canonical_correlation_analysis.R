@@ -1,18 +1,22 @@
+#' Canonical Correlation Analysis (for MLDFM)
+#'
+#' Computes factors using CCA across blocks, based on local PCA-extracted factors.
+#'
+#' @keywords internal
+#' 
+#' y: matrix containing all variables 
+#' Nregio: vector containing the number of variables in each node
+#' r_global: number of global factor to be extracted (final output)
+#' r_reg: vector which specify the number of regional factors to be extracted in each node
+#' 
 
-# input
-# y: matrix containing all variables (all groups)
-# Nregio: vector containing the number of variables in each group
-# r_global: number of global factor to be extracted (final output)
-# r_reg: vector which specify the number of regional factors to be extracted in each group
-
-
-blockfact0 <- function(y, Nregio,r_glob,r_reg){
+canonical_correlation_analysis <- function(y, Nregio,r_glob,r_reg){
   
   
   
-  g=length(Nregio) # number of groups
-  RegInd = c(0, cumsum(Nregio)) # cumulative sum of group size to determine start and end indices
-  r = r_glob + r_reg # tot number of factors in each group (global + local) WHY??????
+  g=length(Nregio) # number of node
+  RegInd = c(0, cumsum(Nregio)) # cumulative sum of block size to determine start and end indices
+  r = r_glob + r_reg # tot number of factors in each node (global + local) 
   rsum = cumsum(r) # cumulative number of factors
   
   # extract regional factors
@@ -25,7 +29,6 @@ blockfact0 <- function(y, Nregio,r_glob,r_reg){
     # extract r[i] largest eigen vectors (pca)
     # compute regional factors as f=y_region*evec
     # concatenate extracted factors into fi
-    #fi<-cbind(fi,y[,(RegInd[i]+1):RegInd[i+1]]%*%evec[,(ncol(evec)-r[i]+1):ncol(evec)])
     fi<-cbind(fi,y[,(RegInd[i]+1):RegInd[i+1]]%*%evec[, 1:r[i]])
   }
  
@@ -42,7 +45,6 @@ blockfact0 <- function(y, Nregio,r_glob,r_reg){
     # perform eigen-decomposition
     evec = eigen_sorted(t(C) %*% C)$eigenvectors
     # extract r_global principal components from the regional factors and store in fhat
-    #fhat = cbind(fhat,fi[,(rsum[i]+1):rsum[i+1]] %*% evec[,(ncol(evec)-r_glob+1):ncol(evec)])
     fhat = cbind(fhat,fi[,(rsum[i]+1):rsum[i+1]] %*% evec[,1:r_glob])
   }
   
@@ -51,7 +53,6 @@ blockfact0 <- function(y, Nregio,r_glob,r_reg){
   # perform pca 
   evec = eigen_sorted(t(C) %*% C)$eigenvectors
   # select final principal components as final global factors
-  #if((g-1)>1) fhatblock = fhat %*% evec[,(ncol(evec)-r_glob+1):ncol(evec)] 
   if((g-1)>1) fhatblock = fhat %*% evec[,1:r_glob] 
   if((g-1)==1) fhatblock = fhat %*% evec 
 

@@ -1,91 +1,75 @@
-#library(GPArotation)
+#' Compute Loadings (Lambda Matrix)
+#'
+#' Computes the full loadings matrix (Lambda) for the multilevel dynamic factor model,
+#' including global and lower-level block-specific loadings, by regressing observed data
+#' on previously extracted factors.
+#'
+#' @keywords internal
 
 
-# Compute Lambda
-Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_list,Loadings_list) {
+compute_lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_list,Loadings_list) {
   
-  # Initialize Lambda
+  # Initialize 
   Lambda <- matrix(0, nrow = num_factors, ncol =  ncol(Yorig))
   
   r_index <- 1
   counter <- 1
   
-  # Extract Global Factors
+  # --- Step 1: GLOBAL LEVEL ---
   key <- paste(seq(1, num_blocks), collapse = "-")
   GlobalFactors <- Factor_list[[key]]
   
-  
-  
-  # Compute Global Loadings
-  #check_orthonormality(GlobalFactors)
   GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
   Loadings_list[[key]] <- GlobalLoadings
-  #check_loadings(t(GlobalLoadings))
   
-  # Update Lambda
   combination <- seq(1, num_blocks)
   Lambda[counter:(counter+r[r_index]-1), unlist(ranges[combination])] <- GlobalLoadings
   counter <- counter + r[r_index]
   
   
-  # Loop on lower levels
+  # --- Step 2: LOWER LEVELS ---
   for (i in 1:(num_blocks-1)) {
     k <-  num_blocks - i
     combinations_matrix <- t(combn(num_blocks,k))
+    
     for (j in 1:nrow(combinations_matrix)) {
       combination <- combinations_matrix[j,]
       
       r_index <- r_index + 1
       
-      # Skip blocks where Factors are not needed
-      if (r[r_index] == 0){
-        next
-      }
+      if (r[r_index] == 0) next  # Skip if no factors in the node
       
-      
-      # Extract Residuals filtering out upper levels factors
-      level <- num_blocks
-      
+      # Step 2a: Initialize residuals using blocks data
       Residuals <- do.call(cbind, lapply(combination, function(idx) Yorig[, ranges[[idx]]]))
       
       
+      # Step 2b: Remove higher-level factors (orthogonal projection)
+      level <- num_blocks
       while (level > length(combination)) {
-        Factors <- get_Factors(Factor_list, combination, level)
-        
-        # filter out
+        Factors <- get_factors(Factor_list, combination, level)
         if(!is.null(Factors)){
           ols_result <- beta_ols(Factors, Residuals)
           Residuals <- Residuals - Factors %*% ols_result
         }
-        
         level <- level - 1
-        
       }
       
-      # Extract current block factors
+      # Step 2c: Regress residuals on current node factors to compute loadings
       key <- paste(combination, collapse = "-")
       Factors <- Factor_list[[key]]
       
-      
-      
-      # Compute Loadings
-      #check_orthonormality(Factors)
       Loadings <- beta_ols(Factors, Residuals)
       Loadings_list[[key]] <- Loadings
-      #check_loadings(t(Loadings))
       
-      
-      # Update Lambda
       Lambda[counter:(counter+r[r_index]-1), unlist(ranges[combination])] <- Loadings
       counter <- counter + r[r_index]
       
     }
   }
   
-  # Store results
-  results <- list()  
-  results[["Lambda"]] <- Lambda
-  results[["Loadings_list"]] <- Loadings_list
-  return(results)
+  return(list(
+    Lambda = Lambda,
+    Loadings_list = Loadings_list
+  ))
 }
 
