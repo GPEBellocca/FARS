@@ -24,7 +24,7 @@ update_factor_list <- function(Factor_list, FinalFactors, r) {
     select_factors <- FinalFactors[,counter:(counter+filtered_r[r_index]-1)]
     
     factor_matrix <- matrix(select_factors, ncol = filtered_r[r_index])
-    factor_matrix <- prewhiten_factors(factor_matrix)
+    #factor_matrix <- prewhiten_factors(factor_matrix)
     #check_orthonormality(factor_matrix)
    
     

@@ -23,13 +23,7 @@ MLDFM <- function(data, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001, 
     
   }else if(blocks>1){
     # multiple blocks
-    # result <- MultipleBlocks(data, r=r,block_ind = block_ind, tol = tol,
-    #                               max_iter = max_iter, method = method)
-    # result <- MultipleBlocks_2(data, r=r,block_ind = block_ind, tol = tol,
-    #                          max_iter = max_iter, method = method)
-    # result <- MultipleBlocks_3(data, r=r,block_ind = block_ind, tol = tol,
-    #                          max_iter = max_iter, method = method)
-    result <- MultipleBlocks4(data, r=r,block_ind = block_ind, tol = tol,
+    result <- MultipleBlocks(data, r=r,block_ind = block_ind, tol = tol,
                                max_iter = max_iter, method = method)
     
     return(list(Initial_Factors = result$Initial_Factors,
@@ -47,15 +41,6 @@ MLDFM <- function(data, r = c(1), blocks = 1, block_ind = NULL, tol = 0.000001, 
     return()
   }
   
- 
-  # return(list(Initial_Factors = result$Initial_Factors,
-  #             Factors = result$Factors,
-  #             Factors_hat = result$Factors_hat,
-  #             Lambda = result$Lambda,
-  #             Residuals = result$Residuals,
-  #             Factors_list = result$Factors_list,
-  #             RSS_list = result$RSS_list
-  #             )) 
 }
 
 

@@ -1,16 +1,16 @@
 normalize_factors <- function(Factors) {
-  # Ensure Factors is a matrix
-  Factors <- as.matrix(Factors)  
-  k <- ncol(Factors)  # Number of factors
   
-  # Compute standard deviation of each factor
+  Factors <- as.matrix(Factors)  
+  k <- ncol(Factors)  # number of factors
+  
+  # Compute factors standard dev
   factor_sd <- sqrt(diag(t(Factors) %*% Factors)) 
   
   if (k == 1) {
-    # Special case: Only one factor (avoid using sweep)
+    # only one factor
     Factors <- Factors / factor_sd  # Direct scalar division
   } else {
-    # Multiple factors case: Use sweep for column-wise division
+    # multiple factors 
     Factors <- sweep(Factors, 2, factor_sd, "/")
   }
   
@@ -29,7 +29,6 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
   InitialFactors <- matrix(nrow = num_obs, ncol = 0)  
   
   
-  
   # Compute Global factors
   r_index <- 1 
   number_of_factor <- r[r_index] # number of factor to be extracted with PCA
@@ -37,10 +36,6 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
   if (method == 0){
     # CCA
     GlobalFactors <- blockfact0(Yorig, num_vars, number_of_factor, rep(1, num_blocks))
-    #GlobalFactors <- blockfact_cca(Yorig, num_vars, number_of_factor, rep(1, num_blocks))
-    
-    
-    
   }else{
     # PCA 
     pca_result <- prcomp(Yorig, scale. = FALSE)
@@ -48,15 +43,14 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
     #GlobalFactors <- GlobalFactors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(GlobalFactors) %*% GlobalFactors))))
   }
   
-  
-  
-  GlobalFactors <- normalize_factors(GlobalFactors)
-  #check_orthonormality(GlobalFactors)
-  GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
-  #check_loadings(t(GlobalLoadings))
-  
  
+  GlobalFactors<- scale(GlobalFactors,TRUE,TRUE)
   
+  #check_identification_condition_1(GlobalFactors)
+  # GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
+  # check_identification_condition_2(GlobalLoadings)
+  
+
   
   # Store Global factors
   key <- paste(seq(1, num_blocks), collapse = "-")  
@@ -106,20 +100,22 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
       if (i < num_blocks - 1 && method == 0) {
         # Use CCA for middle level
         Factors <- blockfact0(Residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
-        #Factors <- blockfact_cca(Residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
-       
       }else{
         # Use PCA
         pca_result <- prcomp(Residuals, scale. = FALSE)
         Factors <- pca_result$x[, 1:number_of_factor]
+        #Factors <- Factors / kronecker(matrix(1, nrow = num_obs, ncol = 1), t(sqrt(diag(t(Factors) %*% Factors))))
+        
       }
       
       
+     
+      Factors<- scale(Factors,TRUE,TRUE)
       
-      Factors <- normalize_factors(Factors)
-      #check_orthonormality(Factors)
-      Loadings <- beta_ols(Factors, Residuals)
-      #check_loadings(t(Loadings))
+      #check_identification_condition_1(Factors)
+      # Loadings <- beta_ols(Factors, Residuals)
+      # check_identification_condition_2(Loadings)
+      
       
       # Store Factors
       key <- paste(combination, collapse = "-")
@@ -128,7 +124,6 @@ Compute_Initial_Factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges
     }
     
   }
-  
   
   
   results <- list()

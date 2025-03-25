@@ -1,8 +1,8 @@
-library(GPArotation)
+#library(GPArotation)
 
 
 # Compute Lambda
-Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_list) {
+Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_list,Loadings_list) {
   
   # Initialize Lambda
   Lambda <- matrix(0, nrow = num_factors, ncol =  ncol(Yorig))
@@ -19,6 +19,7 @@ Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_lis
   # Compute Global Loadings
   #check_orthonormality(GlobalFactors)
   GlobalLoadings <- beta_ols(GlobalFactors, Yorig)
+  Loadings_list[[key]] <- GlobalLoadings
   #check_loadings(t(GlobalLoadings))
   
   # Update Lambda
@@ -70,6 +71,7 @@ Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_lis
       # Compute Loadings
       #check_orthonormality(Factors)
       Loadings <- beta_ols(Factors, Residuals)
+      Loadings_list[[key]] <- Loadings
       #check_loadings(t(Loadings))
       
       
@@ -79,6 +81,11 @@ Compute_Lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_lis
       
     }
   }
-  return(Lambda)
+  
+  # Store results
+  results <- list()  
+  results[["Lambda"]] <- Lambda
+  results[["Loadings_list"]] <- Loadings_list
+  return(results)
 }
 
