@@ -34,6 +34,7 @@
 
 mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol = 1e-6, max_iter = 1000) {
   
+  # Argument checks
   if (!is.matrix(data) && !is.data.frame(data)) stop("data must be a matrix or data frame.")
   if (!is.numeric(blocks) || length(blocks) != 1) stop("blocks must be a single numeric value.")
   if (!is.numeric(r) || length(r) != (2^blocks - 1)) stop("r must be a numeric vector of length 2^blocks - 1.")

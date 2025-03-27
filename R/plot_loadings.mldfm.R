@@ -33,8 +33,6 @@ plot_loadings.mldfm <- function(MLDFM_result, var_names = NULL,...) {
   Lambda <- MLDFM_result$Lambda
   Residuals <- MLDFM_result$Residuals
   
-  print(dim(Lambda))
-  
   # MSE CI
   t<-nrow(Residuals)
   N<-ncol(Residuals)
