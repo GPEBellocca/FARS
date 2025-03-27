@@ -37,6 +37,7 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol 
   # Argument checks
   if (!is.matrix(data) && !is.data.frame(data)) stop("data must be a matrix or data frame.")
   if (!is.numeric(blocks) || length(blocks) != 1) stop("blocks must be a single numeric value.")
+  if (is.null(block_ind) || length(block_ind) != blocks) stop("block_ind must be provided and must have length equal to the number of blocks.")
   if (!is.numeric(r) || length(r) != (2^blocks - 1)) stop("r must be a numeric vector of length 2^blocks - 1.")
   if (!is.numeric(tol) || tol <= 0) stop("tol must be a positive numeric value.")
   if (!is.numeric(max_iter) || max_iter < 1) stop("max_iter must be a positive integer.")
@@ -48,7 +49,6 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol 
   if (blocks == 1) {
     result <- single_block(data, r = r)
   } else if (blocks > 1) {
-    if (is.null(block_ind)) stop("block_ind must be provided when blocks > 1.")
     result <- multiple_blocks(data, r = r, block_ind = block_ind, tol = tol, max_iter = max_iter, method = method)
   } else {
     stop("Invalid number of blocks.")

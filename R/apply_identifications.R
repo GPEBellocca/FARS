@@ -1,6 +1,6 @@
 #' Apply Identification Constraints to Factors and Loadings
 #' 
-#' #' @keywords internal
+#' @keywords internal
 
 
 apply_identifications <- function(Yorig, num_blocks, ranges, num_factors, r, 

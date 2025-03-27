@@ -1,19 +1,57 @@
+
+library(ellipse)
+library(SyScSelection)
+
+# Help function 
 beta_ols <- function(X, Y) {
   solve(t(X) %*% X) %*% t(X) %*% Y
 }
 
 
-CreateScenario <- function(MLDFM_result, Sub_sampling_result,data,block_ind ,n_samples,alpha=0.95) {
+#' Create Stressed Scenarios
+#'
+#' Constructs confidence regions (hyperellipsoids) for the factor space based on a central MLDFM estimate
+#' and a set of subsampled estimates. These regions capture estimation uncertainty and are used to simulate
+#' stresses scenarios.
+#'
+#' @param model An object of class \code{mldfm}, containing the factor estimates.
+#' @param subsamples A list of \code{mldfm} objects returned from \code{mldfm_subsampling}.
+#' @param data A numeric matrix or data frame containing the time series data. Rows represent time points; columns represent observed variables.
+#' @param block_ind A vector of integers indicating the end index of each block. Must be of length \code{blocks} and in increasing order. Required if \code{blocks > 1}.
+#' @param n_samples Number of subsamples to generate.
+#' @param alpha Numeric. Confidence level (level of stress) for the hyperellipsoid (e.g., 0.95).
+#'
+#' @return A list of matrices representing the hyperellipsoid points (or ellipses if 2D) for each time observation.
+#' @export
+create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=0.95) {
+  
+  
+  if (!inherits(model, "mldfm")) stop("model must be an object of class 'mldfm'.")
+  if (!is.list(subsamples)) stop("subsamples must be a list of 'mldfm' objects.")
+  if (!all(sapply(subsamples, function(obj) inherits(obj, "mldfm")))) {
+    stop("All elements in subsamples must be of class 'mldfm'.")
+  }
+  if (!is.matrix(data) && !is.data.frame(data)) stop("data must be a matrix or data frame.")
+  if (is.null(block_ind)) stop("block_ind must be provided when blocks.")
+  if (!is.numeric(n_samples) || n_samples < 1) stop("n_samples must be a positive integer.")
+  if (length(subsamples) < n_sampless) {
+    stop("The length of 'subsamples' is less than the requested 'n_sampless'.")
+  }
+  if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1) {
+    stop("alpha must be a numeric value in (0, 1).")
+  }
   
   data <- scale(data,TRUE,TRUE)
   
-  # Extract factors
-  Factors <- MLDFM_result$Factors
-  Factors_hat <- MLDFM_result$Factors_hat
-  Factors_list <- MLDFM_result$Factors_list
+  # Extract model factors
+  Factors <- model$Factors
+  Factors_list <- model$Factors_list
   
-  Factors_samples <- Sub_sampling_result$Factors_samples
-  Factors_hat_samples <- Sub_sampling_result$Factors_hat_samples
+  #Extraxt subsample (factors and factors_hat)
+  Factors_samples <- lapply(subsamples, function(obj) obj$Factors) 
+  Factors_hat_samples <- lapply(subsamples, function(obj) obj$Factors_hat)
+  
+  
   
   n_obs <- nrow(Factors)
   tot_n_factors <-  ncol(Factors)
@@ -47,7 +85,6 @@ CreateScenario <- function(MLDFM_result, Sub_sampling_result,data,block_ind ,n_s
   for (obs in 1:n_obs) {
     
     # initialize Sigma diagonal for current obs
-    
     Sigma_diag <- c()
     factor_index <- 1
     
@@ -90,7 +127,7 @@ CreateScenario <- function(MLDFM_result, Sub_sampling_result,data,block_ind ,n_s
       
       # Compute Sigma
       term2 <- matrix(0, nrow = ncol(Facts_hat), ncol = ncol(Facts_hat))
-      for(s in 1:n_samples){
+      for(s in 1:n_sampless){
         # Extract sample's Factors
         Factors_hat_s <- Factors_hat_samples[[s]]
         Facts_hat_s <- Factors_hat_s[,factor_index:(factor_index+n_factors-1)]
@@ -106,7 +143,7 @@ CreateScenario <- function(MLDFM_result, Sub_sampling_result,data,block_ind ,n_s
         
       }
       
-      Sig <- inv_Loads %*% ((term2/n_samples)+Gamma) %*% inv_Loads
+      Sig <- inv_Loads %*% ((term2/n_sampless)+Gamma) %*% inv_Loads
       size <- ncol(Sig)
       
       Sigma[factor_index:(factor_index + size - 1), factor_index:(factor_index + size - 1)] <- Sig
@@ -135,7 +172,8 @@ CreateScenario <- function(MLDFM_result, Sub_sampling_result,data,block_ind ,n_s
     sigma_obs <- Sigma_list[[obs]]     
     
     calpha <- sizeparam_normal_distn(alpha, d=n_factors)  # Size parameter 
-   
+    #calpha <- qchisq(alpha, df = tot_n_factors)
+    
     
     if(tot_n_factors > 2){
       # more than 2 dimensions

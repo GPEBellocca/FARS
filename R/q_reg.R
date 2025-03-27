@@ -1,14 +1,19 @@
-# QReg
-
-
-QReg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario = scenario, min = TRUE) {
+#' Quantile Regression with Stressed Scenario Projection
+#'
+#' Estimates quantile regressions of a dependent variable on dynamic factors.
+#' If a \code{scenario} is provided (e.g., a list of ellipsoids from \code{create_scenario()}),
+#' the function computes the minimum (or maximum) projected quantile values under stress.
+#'
+#' @keywords internal
+#' 
+q_reg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario = NULL, min = TRUE) {
   
   
-  t<- dim(factors)[1]
-  r <- dim(factors)[2]
+  t <- nrow(factors)
+  r <- ncol(factors)
 
   
-  # prepare regression data
+  # Prepare regression data
   Y <- dep_variable
   LagY<-shift(Y,h)
   
@@ -17,38 +22,27 @@ QReg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario
     shifted_factors[,i] <- shift( factors[,i],h)
   }
 
-  
+  # Build regression dataset
   reg_data <- data.frame(Y = Y, LagY = LagY)
   reg_data <- cbind(reg_data, shifted_factors)  
-  
-  
   names(reg_data)[1:2] <- c("Y", "LagY")
   new_factor_names <- paste("factor", 1:r, sep = "")  
-  
-  
-  
-  # keys <- names(Factors_list)
-  # new_factor_names <- paste0("F", gsub("-", "", keys))
   names(reg_data)[3:(2 + r)] <- new_factor_names  
   factor_names_concat <- paste(new_factor_names, collapse = " + ")
   
-  # build formula
-  formula_str <- paste("Y ~ LagY", factor_names_concat, sep = " + ")
-  formula <- as.formula(formula_str)
+  # Build formula
+  formula <- as.formula(paste("Y ~ LagY", factor_names_concat, sep = " + "))
 
   # qreg
   fit_q <- rq(formula, tau = QTAU, data = reg_data)
-  #coefficients <- coef(fit_q)
-  
-  
   summary_fit <- summary(fit_q, se = "ker",covariance=TRUE)
   coefficients <- summary_fit$coefficients[, 1]
   pvalues <- summary_fit$coefficients[, 4] 
+  std_errors <- summary_fit$coefficients[, 2]
+  
   
  
-  
-  
-    
+  # Predict quantile with estimated factors
   Pred_q <- as.numeric(coefficients[1])
   Pred_q <- Pred_q + as.numeric(coefficients[2]) * Y[] 
   for (i in 1:r) {
@@ -56,9 +50,9 @@ QReg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario
   }
     
   
-  # return here is scenario quantiles are not needed
+  # Return here is scenario quantiles are not needed
   if (is.null(scenario)) {
-    return(list(Pred_q = Pred_q, Coeff = coefficients, Pvalues = pvalues))
+    return(list(Pred_q = Pred_q, Coeff = coefficients, Pvalues = pvalues, StdError = std_errors))
   }
   
   
@@ -90,12 +84,13 @@ QReg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario
     
  
   # return
-  return(list(Pred_q = Pred_q, Coeff = coefficients, Pvalues = pvalues, Scenario_Pred_q = Scenario_Pred_q))
+  return(list(Pred_q = Pred_q, Coeff = coefficients, Pvalues = pvalues, 
+              StdError = std_errors, Scenario_Pred_q = Scenario_Pred_q))
 
 }
 
 
-# shift function
+#' Shift a time series vector
 shift <- function(x, lag) {
   n <- length(x)
   xnew <- rep(NA, n)

@@ -16,5 +16,6 @@ apply_identifications(
 )
 }
 \description{
-#' @keywords internal
+Apply Identification Constraints to Factors and Loadings
 }
+\keyword{internal}

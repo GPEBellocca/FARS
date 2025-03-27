@@ -9,7 +9,7 @@
 #' @param method Integer. The method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).
 #' @param tol Numeric. The tolerance level for the residual sum of squares (RSS) minimization process. Used as a convergence criterion.
 #' @param max_iter Integer. The maximum number of iterations allowed for the RSS minimization process.
-#' @param n_sample Number of subsamples to generate.
+#' @param n_samples Number of subsamples to generate.
 #' @param sample_size Proportion of the original sample to retain (e.g., 0.9 for 90%).
 #' @param seed Optional integer. Seed for reproducibility of the subsampling process. If \code{NULL}, random draws will differ each run.
 #'
@@ -18,27 +18,27 @@
 
 mldfm_subsampling <- function(data, blocks = 1, block_ind = NULL, r = c(1), 
                               method = 0, tol = 1e-6, max_iter = 1000, 
-                              n_sample = 10, sample_size = 1, seed = NULL) {
+                              n_samples = 10, sample_size = 1, seed = NULL) {
   
   
   
   # Argument checks
   if (!is.matrix(data) && !is.data.frame(data)) stop("data must be a matrix or data frame.")
   if (!is.numeric(blocks) || length(blocks) != 1) stop("blocks must be a single numeric value.")
+  if (is.null(block_ind) || length(block_ind) != blocks) stop("block_ind must be provided and must have length equal to the number of blocks.")
   if (!is.numeric(r) || length(r) != (2^blocks - 1)) stop("r must be a numeric vector of length 2^blocks - 1.")
   if (!is.numeric(tol) || tol <= 0) stop("tol must be a positive numeric value.")
   if (!is.numeric(max_iter) || max_iter < 1) stop("max_iter must be a positive integer.")
   if (!method %in% c(0, 1)) stop("method must be 0 (CCA) or 1 (PCA).")
-  if (blocks > 1 && is.null(block_ind)) stop("block_ind must be provided when blocks > 1.")
-  if (!is.numeric(n_sample) || n_sample < 1) stop("n_sample must be a positive integer.")
+  if (!is.numeric(n_samples) || n_samples < 1) stop("n_samples must be a positive integer.")
   if (!is.numeric(sample_size) || sample_size <= 0 || sample_size > 1) stop("sample_size must be a number in (0, 1].")
   
   
   n_obs <- nrow(data)
-  result <- vector("list", n_sample)
+  result <- vector("list", n_samples)
   
  
-  for (i in 1:n_sample) {
+  for (i in 1:n_samples) {
     
     # Compute subsample 
     sub_sample_result <- compute_subsample(data, 
