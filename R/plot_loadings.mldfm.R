@@ -1,7 +1,6 @@
-library(ggplot2)
-library(dplyr)
-library(forcats)
-
+#' Generate Loadings for a Single Factor
+#'
+#' @keywords internal
 generate_loadings_plot <- function(factor_name, data_plot, y_min, y_max) {
   
   data_plot <- data_plot %>%
@@ -24,13 +23,17 @@ generate_loadings_plot <- function(factor_name, data_plot, y_min, y_max) {
     ggtitle(factor_name)
 }
 
-
-plot_loadings <- function(MLDFM_result, var_names = NULL) {
- 
+#' Plot Loadings from MLDFM
+#'
+#' @export
+plot_loadings.mldfm <- function(MLDFM_result, var_names = NULL,...) {
+  
   
   Factors <- MLDFM_result$Factors
   Lambda <- MLDFM_result$Lambda
   Residuals <- MLDFM_result$Residuals
+  
+  print(dim(Lambda))
   
   # MSE CI
   t<-nrow(Residuals)
@@ -39,9 +42,6 @@ plot_loadings <- function(MLDFM_result, var_names = NULL) {
   # Create loadings data frame 
   loadings <- as.data.frame(Lambda)
   
-  # keys <- names(MLDFM_result$Factors_list)
-  # transformed_keys <- paste0("F", gsub("-", "", keys))
-  # colnames(loadings)<-transformed_keys
   
   # Extract Factors names
   keys <- names(MLDFM_result$Factors_list)
@@ -60,7 +60,7 @@ plot_loadings <- function(MLDFM_result, var_names = NULL) {
   }
   colnames(loadings)<-transformed_keys
   
-
+  
   # Set variables' names
   if (is.null(var_names)) {
     loadings$Variables <- paste0("Var", 1:nrow(loadings))
@@ -74,23 +74,22 @@ plot_loadings <- function(MLDFM_result, var_names = NULL) {
   loadings_long <- loadings %>%
     pivot_longer(cols = -Variables, names_to = "Factor", values_to = "Loading")
   
-  # Calculate standard errors 
+  # Add standard errors and confidence intervals 
   loadings_se <- apply(Residuals, 2, sd) / sqrt(nrow(Residuals))
   
-  # Add standard errors and confidence intervals 
   loadings_long <- loadings_long %>%
     mutate(SE = rep(loadings_se, times = length(unique(Factor)))) %>%
     mutate(Loading_lower = Loading - 1.96 * SE,
            Loading_upper = Loading + 1.96 * SE)
   
- 
   
- 
+  
+  
   # Create the list of plots
   plot_list <- list()
-  unique_factors <- unique(loadings_long$Factor)  # Get the unique factor names
+  unique_factors <- unique(loadings_long$Factor)  
   
-  # Define y-axis limits
+  # Define axis limits
   y_min <- -1
   y_max <- 1
   
@@ -101,7 +100,7 @@ plot_loadings <- function(MLDFM_result, var_names = NULL) {
   
   return(plot_list)
   
-
+  
   
   
 }

@@ -109,8 +109,13 @@ multiple_blocks<-function(Yorig, r, block_ind, tol, max_iter, method){
   results$Factors_hat <- Factors_hat
   results$Lambda <- t(Lambda)
   results$Residuals <- Residuals
-  results$Factors_list <- Final_list
+  if(method == 0){
+    results$Method <- "CCA"
+  }else{
+    results$Method <- "PCA"
+  }
   results$Iterations <- iteration
+  results$Factors_list <- Final_list
   
  
   return(results)

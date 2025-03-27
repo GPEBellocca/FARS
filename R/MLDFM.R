@@ -58,6 +58,7 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol 
     Factors_hat = result$Factors_hat,
     Lambda = result$Lambda,
     Residuals = result$Residuals,
+    Method = result$Method,
     Iterations = result$Iterations,
     Factors_list = result$Factors_list
   )

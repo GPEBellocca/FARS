@@ -29,7 +29,7 @@ single_block <- function(data, r) {
   
   # Save factor structure 
   Factors_list <- list()
-  Factors_list[[1]] <- r  # list index must be numeric for proper iteration later
+  Factors_list[["1"]] <- r  # list index must be numeric for proper iteration later
   
   
   iteration <- 0
@@ -37,8 +37,9 @@ single_block <- function(data, r) {
   return(list(
     Factors = Factors,
     Factors_hat = F_hat,
-    Lambda = Lambda,
+    Lambda = t(Lambda),
     Residuals = Residuals,
+    Method = "PCA",
     Iterations = iteration,
     Factors_list = Factors_list
   ))
