@@ -1,0 +1,14 @@
+install.packages("Rcmdr", dependencies = TRUE)
+library(Rcmdr)
+library(rcmdr)
+library(Rcmdr)
+install.packages("Rcmdr", dependencies=TRUE)
+library(Rcmdr)
+ls
+clear
+devtools::check()
+setwd(./FARS)
+checkwd()
+getwd()
+setwd("./Desktop/PhD/projects/Second chapter/FARS")
+devtools::check()
