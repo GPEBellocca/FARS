@@ -1,5 +1,8 @@
 #' Generate Loadings for a Single Factor
 #'
+#' @importFrom tidyr pivot_longer
+#' @import ggplot2
+#' @importFrom forcats fct_rev
 #' @keywords internal
 generate_loadings_plot <- function(factor_name, data_plot, y_min, y_max) {
   

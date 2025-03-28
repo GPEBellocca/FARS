@@ -4,7 +4,7 @@
 \alias{create_scenario}
 \title{Create Stressed Scenarios}
 \usage{
-create_scenario(model, subsamples, data, block_ind, n_sampless, alpha = 0.95)
+create_scenario(model, subsamples, data, block_ind, alpha = 0.95)
 }
 \arguments{
 \item{model}{An object of class \code{mldfm}, containing the factor estimates.}
@@ -16,14 +16,18 @@ create_scenario(model, subsamples, data, block_ind, n_sampless, alpha = 0.95)
 \item{block_ind}{A vector of integers indicating the end index of each block. Must be of length \code{blocks} and in increasing order. Required if \code{blocks > 1}.}
 
 \item{alpha}{Numeric. Confidence level (level of stress) for the hyperellipsoid (e.g., 0.95).}
-
-\item{n_samples}{Number of subsamples to generate.}
 }
 \value{
-A list of matrices representing the hyperellipsoid points (or ellipses if 2D) for each time observation.
+A list of matrices representing the hyperellipsoid points for each time observation.
 }
 \description{
 Constructs confidence regions (hyperellipsoids) for the factor space based on a central MLDFM estimate
 and a set of subsampled estimates. These regions capture estimation uncertainty and are used to simulate
 stresses scenarios.
+}
+\examples{
+\dontrun{
+scenario <- create_scenario(mldfm_result, mldfm_subsampling_result, data, block_ind, alpha = 0.95)
+}
+
 }

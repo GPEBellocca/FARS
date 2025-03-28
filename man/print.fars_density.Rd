@@ -15,5 +15,5 @@
 Invisibly returns the input object.
 }
 \description{
-Displays a brief summary of the density estimation object produced by the `density()` or `nl_density()` function.
+Displays a brief summary of the density estimation object produced by the \code{density()} or \code{nl_density()} function.
 }

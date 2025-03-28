@@ -1,3 +1,5 @@
+#' @import ggplot2
+#' @method plot fars
 #' @export
 plot.fars <- function(x, dates = NULL, ...) {
   if (!inherits(x, "fars")) stop("Object must be of class 'fars'.")
@@ -33,7 +35,7 @@ plot.fars <- function(x, dates = NULL, ...) {
     df_s_long <- reshape2::melt(df_s, id.vars = "Time", variable.name = "Quantile", value.name = "Value")
     
     p_stress <- ggplot(df_s_long, aes(x = Time, y = Value, color = Quantile)) +
-      geom_line(size = 1, linetype = "dashed") +
+      geom_line(size = 1) +
       labs(title = "Scenario Quantiles",
            y = "Predicted Value", x = "Time") +
       theme_minimal()

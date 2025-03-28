@@ -1,3 +1,4 @@
+#' @method summary fars
 #' @export
 summary.fars <- function(object, ...) {
   cat("Factor-Augmented Quantile Regressions (FARS)\n")

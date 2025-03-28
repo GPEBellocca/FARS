@@ -10,7 +10,7 @@
 #' @return A numeric vector of conditional quantiles (one observation for each time period).
 #'
 #' @examples
-#' GiS <- quantile_risk(scenario_density, QTAU = 0.05)
+#' GaR <- quantile_risk(fars_density, QTAU = 0.05)
 #'
 #' @export
 quantile_risk <- function(density, QTAU = 0.05) {

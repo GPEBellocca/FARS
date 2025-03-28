@@ -2,8 +2,6 @@
 #'
 #' @keywords internal
 #' 
-
-
 get_factors <- function(Factor_list, combination, level) {
 
   matched <- list()

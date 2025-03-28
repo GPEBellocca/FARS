@@ -4,8 +4,6 @@
 #' for each combination of blocks in the multilevel structure.
 #'
 #' @keywords internal
-
-
 compute_factors_hat<- function(Yorig, ranges, Final_list,Loadings_list) {
   
   # Initialize

@@ -1,5 +1,7 @@
 #' Plot Residuals from MLDFM
 #'
+#' @import ggplot2
+#' 
 #' @export
 plot_residuals.mldfm <- function(x, var_names = NULL, ...) {
   Residuals <- x$Residuals

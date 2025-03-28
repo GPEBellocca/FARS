@@ -9,7 +9,6 @@
 #' r_global: number of global factor to be extracted (final output)
 #' r_reg: vector which specify the number of regional factors to be extracted in each node
 #' 
-
 canonical_correlation_analysis <- function(y, Nregio,r_glob,r_reg){
   
   

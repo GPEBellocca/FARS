@@ -3,6 +3,7 @@
 #' @param x An object of class \code{fars_quantiles}.
 #' @param ... Additional arguments (ignored).
 #'
+#'@method print fars
 #' @export
 print.fars <- function(x, ...) {
   cat("Factor-Augmented Quantile Regressions (FARS)\n")

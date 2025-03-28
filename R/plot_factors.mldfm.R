@@ -1,5 +1,7 @@
 #' Generate Plot for a Single Factor
 #'
+#' @import dplyr
+#' @import ggplot2
 #' @keywords internal
 generate_factor_plot <- function(factor_name, data_plot, ymin, ymax) {
   data_plot %>%
@@ -75,4 +77,3 @@ plot_factors.mldfm <- function(x, dates = NULL) {
   names(plot_list) <- factor_names
   return(plot_list)
 }
-

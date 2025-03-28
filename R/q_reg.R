@@ -4,9 +4,11 @@
 #' If a \code{scenario} is provided (e.g., a list of ellipsoids from \code{create_scenario()}),
 #' the function computes the minimum (or maximum) projected quantile values under stress.
 #'
+#' @import quantreg
+#'
 #' @keywords internal
 #' 
-q_reg <- function(dep_variable, factors, Factors_list, h=1,  QTAU=0.05,  scenario = NULL, min = TRUE) {
+q_reg <- function(dep_variable, factors, h=1,  QTAU=0.05,  scenario = NULL, min = TRUE) {
   
   
   t <- nrow(factors)

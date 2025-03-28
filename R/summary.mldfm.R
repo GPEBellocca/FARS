@@ -5,7 +5,9 @@
 #' @param object An object of class \code{mldfm}.
 #' @param ... Additional arguments (ignored).
 #'
+#' @method summary mldfm
 #' @export
+#' 
 summary.mldfm <- function(object, ...) {
   cat("Summary of Multilevel Dynamic Factor Model (MLDFM)\n")
   cat("===================================================\n")

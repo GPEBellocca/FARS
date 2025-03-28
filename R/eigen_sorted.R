@@ -4,7 +4,6 @@
 #'
 #' @keywords internal
 #' 
-
 eigen_sorted <- function(matrix_y) {
   # Compute eigenvalues and eigenvectors
   eigen_result <- eigen(matrix_y)

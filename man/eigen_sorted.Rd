@@ -7,6 +7,6 @@
 eigen_sorted(matrix_y)
 }
 \description{
-Computes the eigenvalues and eigenvectors of a symmetric matrix, returning them in descending order (default behavior of `eigen()`).
+Computes the eigenvalues and eigenvectors of a symmetric matrix, returning them in descending order (default behavior of \code{eigen()}).
 }
 \keyword{internal}

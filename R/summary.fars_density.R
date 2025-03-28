@@ -7,6 +7,8 @@
 #' @param ... Additional arguments (ignored).
 #'
 #' @return A data frame summarizing the distribution for each time observation.
+#' 
+#' @method summary fars_density
 #' @export
 summary.fars_density <- function(object, ...) {
   means <- rowMeans(object$distribution)

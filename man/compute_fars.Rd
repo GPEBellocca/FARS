@@ -20,8 +20,7 @@ compute_fars(
 
 \item{h}{Integer. Forecast horizon (in time steps) for the quantile regression. Default is \code{1}.}
 
-\item{edge}{Numeric. Trimming amount applied to the outermost quantiles (default \code{0.05}).
-Quantile levels are adjusted to avoid extreme values (i.e., [0.05, 0.25, 0.5, 0.75, 0.95] by default).}
+\item{edge}{Numeric. Trimming amount applied to the outermost quantiles (default \code{0.05}).}
 
 \item{scenario}{Optional list of matrices representing a stressed scenario, as returned by \code{create_scenario()}.}
 
@@ -30,14 +29,22 @@ Quantile levels are adjusted to avoid extreme values (i.e., [0.05, 0.25, 0.5, 0.
 \value{
 A list containing:
 \describe{
-  \item{\code{Quantiles}}{Matrix of forecasted quantiles (rows = time, cols = quantile levels).}
-  \item{\code{Scenario_Quantiles}}{Matrix of stressed scenario quantiles (same format), returned only if \code{scenario} is provided.}
-  \item{\code{Coeff}}{Matrix of quantile regression coefficients for each quantile.}
-  \item{\code{Std. Error}}{Matrix of Std. Error for each regression coefficient.}
-  \item{\code{Pvalue}}{Matrix of p-values for each regression coefficient.}
+\item{\code{Quantiles}}{Matrix of forecasted quantiles (rows = time, cols = quantile levels).}
+\item{\code{Scenario_Quantiles}}{Matrix of stressed scenario quantiles (same format), returned only if \code{scenario} is provided.}
+\item{\code{Coeff}}{Matrix of quantile regression coefficients for each quantile.}
+\item{\code{Std. Error}}{Matrix of Std. Error for each regression coefficient.}
+\item{\code{Pvalue}}{Matrix of p-values for each regression coefficient.}
 }
 }
 \description{
 Performs quantile regressions of a dependent variable on MLDFM-extracted factors.
 Optionally generates quantile forecasts under stressed scenarios using hyperellipsoids.
+}
+\examples{
+\dontrun{
+fars_result <- compute_fars(dep_variable, mldfm_result$Factors, 
+scenario, h = 1, edge = 0.05, min = TRUE)
+}
+ 
+ 
 }

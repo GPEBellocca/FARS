@@ -14,11 +14,20 @@
 #' @param seed Optional integer. Seed for reproducibility of the subsampling process. If \code{NULL}, random draws will differ each run.
 #'
 #' @return A list of \code{mldfm} objects, one for each subsample.
+#' 
+#' @examples
+#' \dontrun{
+#' data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
+#' block_ind <- c(63, 311, 519)  # Defines 3 blocks
+#' r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
+#' result <- mldfm_subsampling(data, blocks = 3, block_ind = block_ind, r = r, 
+#' n_samples = 100, sample_size = 0.9)
+#' }
+#' 
 #' @export
-
 mldfm_subsampling <- function(data, blocks = 1, block_ind = NULL, r = c(1), 
                               method = 0, tol = 1e-6, max_iter = 1000, 
-                              n_samples = 10, sample_size = 1, seed = NULL) {
+                              n_samples = 10, sample_size = 0.9, seed = NULL) {
   
   
   
@@ -37,7 +46,8 @@ mldfm_subsampling <- function(data, blocks = 1, block_ind = NULL, r = c(1),
   n_obs <- nrow(data)
   result <- vector("list", n_samples)
   
- 
+  message(paste0("Generating ", n_samples, " subsamples..."))
+  
   for (i in 1:n_samples) {
     
     # Compute subsample 
@@ -55,12 +65,16 @@ mldfm_subsampling <- function(data, blocks = 1, block_ind = NULL, r = c(1),
                           r = r, 
                           method = method, 
                           tol = tol, 
-                          max_iter = max_iter)
+                          max_iter = max_iter,
+                          verbose = FALSE)
     
     # Store results
     result[[i]] <- mldfm_result
   }
   
+  # Final recap message
+  message("\nSubsampling completed.")
+  message(paste("Number of subsamples generated:", n_samples))
   
   return(result)
 }

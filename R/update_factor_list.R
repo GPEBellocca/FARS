@@ -1,8 +1,6 @@
 #' Update Factor List from a given Factor Matrix
 #' 
 #' @keywords internal
-
-
 update_factor_list <- function(Factor_list, FinalFactors, r) {
   
   r_index <- 1

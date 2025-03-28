@@ -7,7 +7,6 @@
 #' @param factors A matrix of factor estimates from a \code{mldfm} model.
 #' @param h Integer. Forecast horizon (in time steps) for the quantile regression. Default is \code{1}.
 #' @param edge Numeric. Trimming amount applied to the outermost quantiles (default \code{0.05}).
-#'   Quantile levels are adjusted to avoid extreme values (i.e., [0.05, 0.25, 0.5, 0.75, 0.95] by default).
 #' @param scenario Optional list of matrices representing a stressed scenario, as returned by \code{create_scenario()}.
 #' @param min Logical. If \code{TRUE} (default), implement a stepwise minimization. If \code{FALSE}, implement a stepwise maximization. 
 #'
@@ -19,10 +18,21 @@
 #'   \item{\code{Std. Error}}{Matrix of Std. Error for each regression coefficient.}
 #'   \item{\code{Pvalue}}{Matrix of p-values for each regression coefficient.}
 #' }
-#'
+#' 
+#' @examples
+#' \dontrun{
+#' fars_result <- compute_fars(dep_variable, mldfm_result$Factors, 
+#' scenario, h = 1, edge = 0.05, min = TRUE)
+#' }
+#'  
+#'  
 #' @export
-
-compute_fars <- function(dep_variable, factors , h = 1, edge = 0.05, scenario = NULL, min = TRUE) {
+compute_fars <- function(dep_variable, 
+                         factors, 
+                         h = 1, 
+                         edge = 0.05, 
+                         scenario = NULL, 
+                         min = TRUE) {
  
   if (!is.numeric(dep_variable)) stop("dep_variable must be a numeric vector.")
   if (!is.matrix(factors) && !is.data.frame(factors)) stop("factors must be a matrix or data frame.")
@@ -30,24 +40,25 @@ compute_fars <- function(dep_variable, factors , h = 1, edge = 0.05, scenario = 
   if (!is.numeric(edge) || edge < 0 || edge > 0.5) stop("edge must be a number between 0 and 0.5.")
   if (!is.null(scenario) && !is.list(scenario)) stop("scenario must be a list of matrices, as returned by create_scenario().")
   
-  # Prepare quantiles
-  quantiles <- c(0.00, 0.25, 0.50, 0.75, 1)
-  quantiles[1] <- quantiles[1]+edge # adjust left edge
-  quantiles[5] <- quantiles[5]-edge # adjust right edge
+  # Prepare levels
+  levels <- c(0.00, 0.25, 0.50, 0.75, 1)
+  levels[1] <- levels[1]+edge # adjust left edge
+  levels[5] <- levels[5]-edge # adjust right edge
   
   # Output structures
-  Quantiles <- matrix(nrow = length(dep_variable), ncol = length(quantiles))
-  Scenario_Quantiles <- if (!is.null(scenario)) matrix(nrow = length(dep_variable), ncol = length(quantiles)) else NULL
+  Quantiles <- matrix(nrow = length(dep_variable), ncol = length(levels))
+  Scenario_Quantiles <- if (!is.null(scenario)) matrix(nrow = length(dep_variable), ncol = length(levels)) else NULL
   coeff_df <- NULL
   pvalue_df <- NULL
   stderr_df <- NULL
   
+  message("Running Factor-Augmented Quantile Regressions (FARS)...")
   
   # Loop through each quantile and compute Qreg
-  for (i in seq_along(quantiles)) {
-    q <- quantiles[i]
+  for (i in seq_along(levels)) {
+    q <- levels[i]
 
-    QReg_result <- q_reg(dep_variable, factors = factors, MLDFM_result$Factors_list, scenario = scenario, h=h, QTAU = q, min = min)
+    QReg_result <- q_reg(dep_variable, factors = factors, scenario = scenario, h=h, QTAU = q, min = min)
 
     if (!is.null(scenario)) {
       Scenario_Quantiles[, i] <- QReg_result$Scenario_Pred_q
@@ -60,12 +71,12 @@ compute_fars <- function(dep_variable, factors , h = 1, edge = 0.05, scenario = 
     
   }
 
-  colnames(coeff_df) <- paste0("q", quantiles)
-  colnames(pvalue_df) <- paste0("q", quantiles)
+  colnames(coeff_df) <- paste0("q", levels)
+  colnames(pvalue_df) <- paste0("q", levels)
   
   
   # Store result
-  quantile_levels <- quantiles  # store adjusted quantiles (with edge)
+  quantile_levels <- levels  # store adjusted quantiles (with edge)
   
   
   result <- list(
@@ -81,6 +92,7 @@ compute_fars <- function(dep_variable, factors , h = 1, edge = 0.05, scenario = 
   }
   
   class(result) <- "fars"
+  print(result)
   return(result)
 
 }

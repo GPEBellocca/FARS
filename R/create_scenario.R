@@ -1,13 +1,7 @@
-
-library(ellipse)
-library(SyScSelection)
-
 # Help function 
 beta_ols <- function(X, Y) {
   solve(t(X) %*% X) %*% t(X) %*% Y
 }
-
-
 #' Create Stressed Scenarios
 #'
 #' Constructs confidence regions (hyperellipsoids) for the factor space based on a central MLDFM estimate
@@ -18,12 +12,20 @@ beta_ols <- function(X, Y) {
 #' @param subsamples A list of \code{mldfm} objects returned from \code{mldfm_subsampling}.
 #' @param data A numeric matrix or data frame containing the time series data. Rows represent time points; columns represent observed variables.
 #' @param block_ind A vector of integers indicating the end index of each block. Must be of length \code{blocks} and in increasing order. Required if \code{blocks > 1}.
-#' @param n_samples Number of subsamples to generate.
 #' @param alpha Numeric. Confidence level (level of stress) for the hyperellipsoid (e.g., 0.95).
 #'
-#' @return A list of matrices representing the hyperellipsoid points (or ellipses if 2D) for each time observation.
+#' @return A list of matrices representing the hyperellipsoid points for each time observation.
+#' 
+#' @examples
+#' \dontrun{
+#' scenario <- create_scenario(mldfm_result, mldfm_subsampling_result, data, block_ind, alpha = 0.95)
+#' }
+#'
+#' @import ellipse
+#' @import SyScSelection
+#'
 #' @export
-create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=0.95) {
+create_scenario <- function(model, subsamples, data, block_ind, alpha=0.95) {
   
   
   if (!inherits(model, "mldfm")) stop("model must be an object of class 'mldfm'.")
@@ -33,10 +35,6 @@ create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=
   }
   if (!is.matrix(data) && !is.data.frame(data)) stop("data must be a matrix or data frame.")
   if (is.null(block_ind)) stop("block_ind must be provided when blocks.")
-  if (!is.numeric(n_samples) || n_samples < 1) stop("n_samples must be a positive integer.")
-  if (length(subsamples) < n_sampless) {
-    stop("The length of 'subsamples' is less than the requested 'n_sampless'.")
-  }
   if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1) {
     stop("alpha must be a numeric value in (0, 1).")
   }
@@ -55,6 +53,7 @@ create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=
   
   n_obs <- nrow(Factors)
   tot_n_factors <-  ncol(Factors)
+  n_samples <- length(subsamples)
   
   
   # Define block ranges and count the number of variables in each range
@@ -73,11 +72,12 @@ create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=
   }
   
   
+  message(paste0("Constructing scenario using ", length(subsamples), 
+                 " subsamples and alpha = ", alpha, "..."))
   
   
   # Set ellipsoid center for each obs
   CenterHE_matrix <- Factors
-
   
   # Initialize sigma 
   Sigma_list <- list()
@@ -127,7 +127,7 @@ create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=
       
       # Compute Sigma
       term2 <- matrix(0, nrow = ncol(Facts_hat), ncol = ncol(Facts_hat))
-      for(s in 1:n_sampless){
+      for(s in 1:n_samples){
         # Extract sample's Factors
         Factors_hat_s <- Factors_hat_samples[[s]]
         Facts_hat_s <- Factors_hat_s[,factor_index:(factor_index+n_factors-1)]
@@ -143,7 +143,7 @@ create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=
         
       }
       
-      Sig <- inv_Loads %*% ((term2/n_sampless)+Gamma) %*% inv_Loads
+      Sig <- inv_Loads %*% ((term2/n_samples)+Gamma) %*% inv_Loads
       size <- ncol(Sig)
       
       Sigma[factor_index:(factor_index + size - 1), factor_index:(factor_index + size - 1)] <- Sig
@@ -185,6 +185,6 @@ create_scenario <- function(model, subsamples, data,block_ind ,n_sampless,alpha=
     }
     
   }
-  
+  message("Scenario construction completed.")
   return(Hyperellipsoids)
 }

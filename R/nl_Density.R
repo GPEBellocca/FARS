@@ -13,17 +13,22 @@
 #'   \item{density}{A matrix of estimated densities for each time period (rows) across estimation points (columns).}
 #'   \item{distribution}{A matrix of random draws from the fitted skew-t distribution for each time period.}
 #'   \item{x_vals}{The sequence of evaluation points used to compute the density. Useful for plotting.}
-#'   
+#'}
+#'
 #' @examples
-#' Density_result <- density(fars_result$Quantiles,
+#' \dontrun{
+#' density_result <- nl_density(fars_result$Quantiles,
 #'                           levels = fars_result$Levels,
 #'                           est_points = 512,
 #'                           random_samples = 100000,
 #'                           seed = 42)
+#'}
+#'
+#' @import sn
+#' @import nloptr
+#' @importFrom stats prcomp qnorm optim
 #'
 #' @export
-
-
 nl_density <- function(quantiles, 
                     levels = c(0.05, 0.25, 0.50, 0.75, 0.95), 
                     est_points = 512, 
@@ -46,6 +51,7 @@ nl_density <- function(quantiles,
   density_matrix <- matrix(NA, nrow = n_obs, ncol = est_points) # density matrix
   distribution <- matrix(NA, nrow = n_obs, ncol = random_samples) # skew-t distribution 
 
+  message("Estimating skew-t densities from forecasted quantiles...")
   
   for (tt in 1:n_obs) {
     
@@ -103,6 +109,7 @@ nl_density <- function(quantiles,
     x_vals = x_vals)
   
   class(output) <- "fars_density"
+  print(output)
   
   return(output)
 }

@@ -7,10 +7,13 @@
 #' @param dates Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis. If not provided, a simple index (1:N) is used.
 #' @param var_names Optional vector of variable names to label loadings and residual axis.
 #'
+#' @method plot mldfm
 #' @export
 plot.mldfm <- function(x, which = "factors", ...) {
-  which <- match.arg(tolower(which), c("factors", "loadings", "residuals"))
   
+ 
+  which <- match.arg(tolower(which), c("factors", "loadings", "residuals"))
+
   switch(which,
          "factors"   = plot_factors.mldfm(x, ...),
          "loadings"  = plot_loadings.mldfm(x, ...),

@@ -6,9 +6,11 @@
 #' @param ... Additional arguments (ignored).
 #'
 #' @return Invisibly returns the input object.
+#' 
+#' @method print fars_density
 #' @export
 print.fars_density <- function(x, ...) {
-  cat("FARS Density Object\n")
+  cat("FARS Density\n")
   cat("====================\n")
   cat("Time observations  :", nrow(x$density), "\n")
   cat("Estimation points  :", ncol(x$density), "\n")

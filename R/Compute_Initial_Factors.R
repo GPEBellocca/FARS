@@ -1,9 +1,11 @@
 #' Compute Initial Factors (Multilevel Dynamic Factor Model)
 #'
+#' @importFrom utils combn
+#' @importFrom stats prcomp
+#'
 #' @keywords internal
+#ì
 #' 
-#' 
-
 compute_initial_factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges, num_factors, r, method) {
   
   # Initialize

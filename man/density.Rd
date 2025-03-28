@@ -24,17 +24,23 @@ density(
 \item{seed}{Optional integer to set the random seed for reproducibility (default: NULL).}
 }
 \value{
-
+An object of class \code{"fars_density"}, which is a list containing the following components:
+\describe{
+\item{density}{A matrix of estimated densities for each time period (rows) across estimation points (columns).}
+\item{distribution}{A matrix of random draws from the fitted skew-t distribution for each time period.}
+\item{x_vals}{The sequence of evaluation points used to compute the density. Useful for plotting.}
+}
 }
 \description{
-Fits a skew-t distribution to a set of quantile forecasts using moment matching,
-and generates density estimates and random samples.
+Fits a skew-t distribution to a set of quantile forecasts using linear optimization
 }
 \examples{
-Density_result <- density(fars_result$Quantiles,
+\dontrun{
+density_result <- density(fars_result$Quantiles,
                           levels = fars_result$Levels,
                           est_points = 512,
                           random_samples = 100000,
                           seed = 42)
+}
 
 }

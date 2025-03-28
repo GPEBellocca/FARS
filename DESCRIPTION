@@ -1,11 +1,25 @@
 Package: FARS
 Type: Package
-Title: Factor-augmented regression scenarios
+Title: Factor-Augmented Regression Scenarios
 Version: 0.1.0
-Author: Gian Pietro Bellocca [aut, cre]
-Maintainer: Gian Pietro Bellocca <gbellocc@est-econ.uc3m.es>
-Description: A brief description of your package.
-License: GPL-3
+Authors@R: c(person("Gian Pietro", "Bellocca", email = "gbellocc@est-econ.uc3m.es", role = c("aut", "cre")),
+             person("Ignacio", "Garrón", role = c("aut")),
+             person("Vladimir", "Rodríguez-Caballero", role = c("aut")),
+             person("Esther", "Ruiz", role = c("aut")))
+Description: The fars package provides a comprehensive framework in R for modeling and forecasting economic scenarios based on multi-level dynamic factor model (MLDFM). The package enables users to: (i) extract global and block-specific factors using a flexible multilevel factor structure; (ii) compute asymptotically valid confidence regions for the estimated factors, accounting for uncertainty in the factor loadings; (iii) estimate factor-augmented quantile regressions; (iv) recover full predictive densities from these quantile forecasts; and (v) estimate the density when the factors are stressed.
+Depends: R (>= 3.5.0)
+Imports: 
+    ggplot2,
+    plotly,
+    sn,
+    nloptr,
+    ellipse,
+    SyScSelection,
+    quantreg,
+    tidyr,
+    dplyr,
+    forcats
+License: GPL (>= 2)
 Encoding: UTF-8
-LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

@@ -4,9 +4,11 @@
 #' including global and lower-level block-specific loadings, by regressing observed data
 #' on previously extracted factors.
 #'
+#'
+#' @importFrom utils combn
+#'
+#'
 #' @keywords internal
-
-
 compute_lambda <- function(Yorig, num_blocks, ranges, num_factors, r, Factor_list,Loadings_list) {
   
   # Initialize 

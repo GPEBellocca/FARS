@@ -9,6 +9,7 @@
 #' @param method Integer. The method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).
 #' @param tol Numeric. The tolerance level for the residual sum of squares (RSS) minimization process. Used as a convergence criterion.
 #' @param max_iter Integer. The maximum number of iterations allowed for the RSS minimization process.
+#' @param varbose Logical. If \code{TRUE} (default), print a summary of the mldfm.
 #'
 #' @return An object of class \code{"mldfm"}, which is a list containing the following components:
 #' \describe{
@@ -24,15 +25,14 @@
 #' \dontrun{
 #' data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
 #' block_ind <- c(63, 311, 519)  # Defines 3 blocks
-#' r <- c(1, 0, 1, 0, 1, 1, 1)   # 2^3 - 1 = 7 nodes
+#' r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
 #' result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
 #' summary(result)
 #' }
 #'
+#'
 #' @export
-
-
-mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol = 1e-6, max_iter = 1000) {
+mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol = 1e-6, max_iter = 1000, verbose = TRUE) {
   
   # Argument checks
   if (!is.matrix(data) && !is.data.frame(data)) stop("data must be a matrix or data frame.")
@@ -65,6 +65,9 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol 
   )
   
   class(output) <- "mldfm"
+  if (verbose) {
+    summary(output)
+  }
   return(output)
   
 }

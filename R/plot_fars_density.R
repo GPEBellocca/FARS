@@ -7,6 +7,10 @@
 #' @param ... Additional arguments passed to the plot function. (ignored)
 #'
 #' @return A plotly interactive plot.
+#' 
+#' @import ggplot2
+#' 
+#' @method plot fars_density
 #' @export
 plot.fars_density <- function(x, time_index = NULL, ...) {
   if (!requireNamespace("plotly", quietly = TRUE)) {

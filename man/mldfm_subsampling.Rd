@@ -13,7 +13,7 @@ mldfm_subsampling(
   tol = 1e-06,
   max_iter = 1000,
   n_samples = 10,
-  sample_size = 1,
+  sample_size = 0.9,
   seed = NULL
 )
 }
@@ -34,7 +34,7 @@ mldfm_subsampling(
 
 \item{n_samples}{Number of subsamples to generate.}
 
-\item{sample_size}{Proportion of the original sample to retain (e.g., 0.9 for 90%).}
+\item{sample_size}{Proportion of the original sample to retain (e.g., 0.9 for 90\%).}
 
 \item{seed}{Optional integer. Seed for reproducibility of the subsampling process. If \code{NULL}, random draws will differ each run.}
 }
@@ -43,4 +43,14 @@ A list of \code{mldfm} objects, one for each subsample.
 }
 \description{
 Repeatedly applies the MLDFM estimation to randomly drawn subsamples of the input data.
+}
+\examples{
+\dontrun{
+data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
+block_ind <- c(63, 311, 519)  # Defines 3 blocks
+r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
+result <- mldfm_subsampling(data, blocks = 3, block_ind = block_ind, r = r, 
+n_samples = 100, sample_size = 0.9)
+}
+
 }

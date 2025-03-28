@@ -11,7 +11,8 @@ mldfm(
   r = c(1),
   method = 0,
   tol = 1e-06,
-  max_iter = 1000
+  max_iter = 1000,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -28,16 +29,18 @@ mldfm(
 \item{tol}{Numeric. The tolerance level for the residual sum of squares (RSS) minimization process. Used as a convergence criterion.}
 
 \item{max_iter}{Integer. The maximum number of iterations allowed for the RSS minimization process.}
+
+\item{varbose}{Logical. If \code{TRUE} (default), print a summary of the mldfm.}
 }
 \value{
 An object of class \code{"mldfm"}, which is a list containing the following components:
 \describe{
-  \item{Factors}{Matrix of estimated factors.}
-  \item{Factors_hat}{Matrix of estimated hat factors.}
-  \item{Lambda}{Matrix of factor loadings.}
-  \item{Residuals}{Matrix of residuals.}
-  \item{Iterations}{Number of iterations before convergence.}
-  \item{Factors_list}{List of estimated factors for each node.}
+\item{Factors}{Matrix of estimated factors.}
+\item{Factors_hat}{Matrix of estimated hat factors.}
+\item{Lambda}{Matrix of factor loadings.}
+\item{Residuals}{Matrix of residuals.}
+\item{Iterations}{Number of iterations before convergence.}
+\item{Factors_list}{List of estimated factors for each node.}
 }
 }
 \description{
@@ -47,9 +50,10 @@ Applies the Multilevel Dynamic Factor Model (MLDFM) to the input dataset, allowi
 \dontrun{
 data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
 block_ind <- c(63, 311, 519)  # Defines 3 blocks
-r <- c(1, 0, 1, 0, 1, 1, 1)   # 2^3 - 1 = 7 nodes
+r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
 result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
 summary(result)
 }
+
 
 }

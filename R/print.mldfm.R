@@ -3,6 +3,7 @@
 #' @param x An object of class \code{mldfm}.
 #' @param ... Additional arguments (ignored).
 #'
+#' @method print mldfm
 #' @export
 print.mldfm <- function(x, ...) {
   cat("Multilevel Dynamic Factor Model (MLDFM)\n")
