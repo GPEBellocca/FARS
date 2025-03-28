@@ -1,59 +1,97 @@
-# Density
-library(sn)
+#' Compute Skew-t Densities from Forecasted Quantiles
+#'
+#' Fits a skew-t distribution to a set of quantile forecasts using linear optimization
+#'
+#' @param quantiles A matrix of forecasted quantiles. Each row is a time observation; each column a quantile level.
+#' @param levels A numeric vector of the quantile levels corresponding to the columns of the quantile matrix (default: c(0.05, 0.25, 0.50, 0.75, 0.95)).
+#' @param est_points Integer. Number of evaluation points for the estimated density (default: 512).
+#' @param random_samples Integer. Number of random samples to draw from the fitted skew-t distribution (default: 5000).
+#' @param seed Optional integer to set the random seed for reproducibility (default: NULL).
+#' 
+#' @return An object of class \code{"fars_density"}, which is a list containing the following components:
+#' \describe{
+#'   \item{density}{A matrix of estimated densities for each time period (rows) across estimation points (columns).}
+#'   \item{distribution}{A matrix of random draws from the fitted skew-t distribution for each time period.}
+#'   \item{x_vals}{The sequence of evaluation points used to compute the density. Useful for plotting.}
+#'   
+#' @examples
+#' Density_result <- density(fars_result$Quantiles,
+#'                           levels = fars_result$Levels,
+#'                           est_points = 512,
+#'                           random_samples = 100000,
+#'                           seed = 42)
+#'
+#' @export
 
-Density <- function(All_q_matrix,  edge = 0.05, est_points = 512, random_samples = 5000) {
+
+density <- function(quantiles, 
+                    levels = c(0.05, 0.25, 0.50, 0.75, 0.95), 
+                    est_points = 512, 
+                    random_samples = 5000,
+                    seed = NULL) {
  
+  # Argument checks
+  if (!is.matrix(quantiles)) stop("'quantiles' must be a matrix.")
+  if (!is.numeric(levels) || length(levels) != ncol(quantiles)) stop("'levels' must be a numeric vector of same length as number of quantile columns.")
+  if (!is.numeric(est_points) || est_points < 1) stop("'est_points' must be a positive integer.")
+  if (!is.numeric(random_samples) || random_samples < 1) stop("'random_samples' must be a positive integer.")
   
-  # prepare quantiles
-  quantiles <- c(0.00, 0.25, 0.50, 0.75, 1)
-  quantiles[1] <- quantiles[1]+edge # adjust left edge
-  quantiles[5] <- quantiles[5]-edge # adjust right edge
+  # Set seed if provided
+  if (!is.null(seed)) set.seed(seed)
   
-  
-  # extract number of observations
-  n_obs = nrow(All_q_matrix) 
- 
   # Initialize variables
-  density<-c() # density array
+  n_obs = nrow(quantiles) 
   density_matrix <- matrix(NA, nrow = n_obs, ncol = est_points) # density matrix
-  distribution=matrix(0,n_obs,random_samples) # skew-t distribution 
+  distribution <- matrix(NA, nrow = n_obs, ncol = random_samples) # skew-t distribution 
   
   for (tt in 1:n_obs){
     
+    
     # Initial values
-    iqn=qnorm(0.75)-qnorm(0.25) # Interquartile range of standard normal distr
-    l0=All_q_matrix[tt,3]  # Location
-    s0=(All_q_matrix[tt,4] - All_q_matrix[tt,2]) / iqn # Scale
-    sh0=0 # Shape
+    iqn <- qnorm(0.75)-qnorm(0.25) # Interquartile range of standard normal distr
+    l0 <- quantiles[tt,3]  # Location
+    s0 <- (quantiles[tt,4] - quantiles[tt,2]) / iqn # Scale
+    sh0 <- 0 # Shape
     
     
-    LB = c(   -10+l0,     1,   -100) 
-    UB = c(   +20+l0,    50,    100)
+    LB = c(l0-10, 1, -100) 
+    UB = c(l0+20, 50, 100)
     
-   
-    skewt<-optim(c(l0, s0, sh0),fn=function(x){
-      sum((as.numeric(All_q_matrix[tt,])-qst(quantiles,xi=x[1],omega=x[2],alpha=x[3]))^2)
-    }, lower=LB,upper=UB,  method="L-BFGS-B")
+    fit <- optim(
+      par = c(l0, s0, sh0),
+      fn=function(x) {
+        sum((quantiles[tt,] - qst(levels, xi = x[1], omega = x[2], alpha = x[3]))^2)
+      }, 
+      method = "L-BFGS-B",
+      lower = LB,
+      upper = UB
+      )
     
-    
-    
-    # generate n random sample from skew-t distribution 
-    skt<-rst(n=random_samples, xi=skewt$par[1], omega=skewt$par[2], alpha= skewt$par[3], dp=NULL) 
-   
-    # store samples 
-    distribution[tt,]<-skt
+
+    # Generate and store samples from skew-t
+    distribution[tt,] <- rst(n = random_samples, 
+                             xi = fit$par[1], 
+                             omega = fit$par[2], 
+                             alpha = fit$par[3])  # dp = NULL
   
-    # compute density of generated samples
-    fit<-dst(seq(-30,10,length.out = est_points),xi=skewt$par[1],omega=skewt$par[2],alpha=skewt$par[3])
+    # Evaluate density
+    x_vals <- seq(-30, 10, length.out = est_points)
+    density_matrix[tt, ] <- dst(x_vals, 
+                                xi = fit$par[1], 
+                                omega = fit$par[2], 
+                                alpha = fit$par[3])
     
-    # fit density
-    density<-c(density,fit)
-    density_matrix[tt, ] <- fit
     
   }
   
+  output <- list(
+    density = density_matrix, 
+    distribution = distribution,
+    x_vals = x_vals)
   
-  return(list(density = density, density_matrix = density_matrix, distribution = distribution))
+  class(output) <- "fars_density"
+  
+  return(output)
   
 }
 
