@@ -4,8 +4,9 @@
 \alias{plot_factors.mldfm}
 \title{Plot Extracted Factors from MLDFM}
 \usage{
-plot_factors.mldfm(x, dates = NULL)
+plot_factors.mldfm(x, dates = NULL, ...)
 }
 \description{
 Plot Extracted Factors from MLDFM
 }
+\keyword{internal}

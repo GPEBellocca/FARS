@@ -9,3 +9,4 @@ shift(x, lag)
 \description{
 Shift a time series vector
 }
+\keyword{internal}

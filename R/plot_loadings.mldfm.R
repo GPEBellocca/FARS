@@ -1,35 +1,13 @@
-#' Generate Loadings for a Single Factor
+
+#' Plot Loadings from MLDFM
 #'
 #' @importFrom tidyr pivot_longer
 #' @import ggplot2
 #' @importFrom forcats fct_rev
-#' @keywords internal
-generate_loadings_plot <- function(factor_name, data_plot, y_min, y_max) {
-  
-  data_plot <- data_plot %>%
-    filter(Factor == factor_name & Loading != 0) %>%
-    mutate(Variables = factor(Variables, levels = unique(Variables)))  
-  
-  ggplot(data = data_plot, aes(x = fct_rev(Variables), y = Loading)) +
-    geom_bar(stat = "identity", alpha = 0.7, aes(fill = "bar")) +
-    geom_hline(yintercept = 0, color = "red") +
-    geom_errorbar(aes(ymin = Loading_lower, ymax = Loading_upper),
-                  width = 0.5, color = "black", alpha = 1, size = 0.2) +
-    coord_flip() +
-    theme_bw() +
-    theme(legend.position = "none",
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          plot.title = element_text(hjust = 0.5)) +
-    scale_y_continuous(limits = c(y_min, y_max)) +
-    scale_fill_manual(values = c("grey")) +
-    ggtitle(factor_name)
-}
-
-#' Plot Loadings from MLDFM
 #'
-#' @export
-plot_loadings.mldfm <- function(MLDFM_result, var_names = NULL,...) {
+#'
+#' @keywords internal
+plot_loadings.mldfm <- function(MLDFM_result, var_names = NULL, ...) {
   
   
   Factors <- MLDFM_result$Factors
@@ -70,6 +48,7 @@ plot_loadings.mldfm <- function(MLDFM_result, var_names = NULL,...) {
   }
   loadings <- loadings[, c("Variables", setdiff(names(loadings), "Variables"))]
   
+  Variables <- Factor <- Loading <- SE <- Loading_lower <- Loading_upper <- NULL
   
   # Pivot
   loadings_long <- loadings %>%
@@ -94,13 +73,36 @@ plot_loadings.mldfm <- function(MLDFM_result, var_names = NULL,...) {
   y_min <- -1
   y_max <- 1
   
+  
+
   for (factor_name in unique_factors) {
-    p <- generate_loadings_plot(factor_name, loadings_long, y_min, y_max)
-    plot_list[[length(plot_list) + 1]] <- p
+    data_plot <- loadings_long
+    
+    data_plot <- data_plot %>%
+      filter(Factor == factor_name & Loading != 0) %>%
+      mutate(Variables = factor(Variables, levels = unique(Variables)))  
+    
+    p <- ggplot(data = data_plot, aes(x = fct_rev(Variables), y = Loading)) +
+      geom_bar(stat = "identity", alpha = 0.7, aes(fill = "bar")) +
+      geom_hline(yintercept = 0, color = "red") +
+      geom_errorbar(aes(ymin = Loading_lower, ymax = Loading_upper),
+                    width = 0.5, color = "black", alpha = 1, size = 0.2) +
+      coord_flip() +
+      theme_bw() +
+      theme(legend.position = "none",
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank(),
+            plot.title = element_text(hjust = 0.5)) +
+      scale_y_continuous(limits = c(y_min, y_max)) +
+      scale_fill_manual(values = c("grey")) +
+      ggtitle(factor_name)
+    
+      plot_list[[length(plot_list) + 1]] <- p
   }
   
-  return(plot_list)
   
+  
+  return(plot_list)
   
   
   

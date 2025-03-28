@@ -1,8 +1,9 @@
 #' Plot Residuals from MLDFM
 #'
 #' @import ggplot2
-#' 
-#' @export
+#' @importFrom stats cov
+#'
+#' @keywords internal
 plot_residuals.mldfm <- function(x, var_names = NULL, ...) {
   Residuals <- x$Residuals
   n_vars <- ncol(Residuals)
@@ -22,6 +23,8 @@ plot_residuals.mldfm <- function(x, var_names = NULL, ...) {
   # Convert to long format
   cov_df <- as.data.frame(as.table(cov_matrix))
   colnames(cov_df) <- c("Country1", "Country2", "Covariance")
+  
+  Country1 <- Country2 <- Covariance <- NULL # Setting the variables to NULL first
   
   # Plot
   g <- ggplot(cov_df, aes(x = Country1, y = Country2, fill = Covariance)) +

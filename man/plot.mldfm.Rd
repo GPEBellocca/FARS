@@ -4,7 +4,7 @@
 \alias{plot.mldfm}
 \title{Plot method for MLDFM object}
 \usage{
-\method{plot}{mldfm}(x, which = "factors", ...)
+\method{plot}{mldfm}(x, which = "factors", dates = NULL, var_names = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{mldfm}.}
@@ -14,6 +14,8 @@
 \item{dates}{Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis. If not provided, a simple index (1:N) is used.}
 
 \item{var_names}{Optional vector of variable names to label loadings and residual axis.}
+
+\item{\dots}{Additional arguments (ignored)}
 }
 \description{
 Dispatches to specific plot functions for factors, loadings, or residuals.

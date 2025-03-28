@@ -30,7 +30,7 @@ mldfm(
 
 \item{max_iter}{Integer. The maximum number of iterations allowed for the RSS minimization process.}
 
-\item{varbose}{Logical. If \code{TRUE} (default), print a summary of the mldfm.}
+\item{verbose}{Logical. If \code{TRUE} (default), print a summary of the mldfm.}
 }
 \value{
 An object of class \code{"mldfm"}, which is a list containing the following components:

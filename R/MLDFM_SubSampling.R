@@ -53,7 +53,7 @@ mldfm_subsampling <- function(data, blocks = 1, block_ind = NULL, r = c(1),
     # Compute subsample 
     sub_sample_result <- compute_subsample(data, 
                                    block_ind = block_ind, 
-                                   n = n_blocks,
+                                   n = blocks,
                                    r = r,
                                    sample_size,
                                    seed = if (!is.null(seed)) seed + i - 1 else NULL )

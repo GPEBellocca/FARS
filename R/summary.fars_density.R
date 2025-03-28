@@ -8,6 +8,9 @@
 #'
 #' @return A data frame summarizing the distribution for each time observation.
 #' 
+#' @importFrom stats median
+#' 
+#' 
 #' @method summary fars_density
 #' @export
 summary.fars_density <- function(object, ...) {

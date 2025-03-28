@@ -9,3 +9,4 @@ plot_residuals.mldfm(x, var_names = NULL, ...)
 \description{
 Plot Residuals from MLDFM
 }
+\keyword{internal}

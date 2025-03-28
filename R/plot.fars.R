@@ -1,4 +1,6 @@
 #' @import ggplot2
+#' @importFrom reshape2 melt
+#' 
 #' @method plot fars
 #' @export
 plot.fars <- function(x, dates = NULL, ...) {
@@ -18,6 +20,9 @@ plot.fars <- function(x, dates = NULL, ...) {
   colnames(df) <- paste0("Q", levels)
   df$Time <- dates
   df_long <- reshape2::melt(df, id.vars = "Time", variable.name = "Quantile", value.name = "Value")
+  
+  
+  Time <- Value <- Quantile <- NULL
   
   p_main <- ggplot(df_long, aes(x = Time, y = Value, color = Quantile)) +
     geom_line(size = 1) +

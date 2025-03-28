@@ -1,27 +1,12 @@
-#' Generate Plot for a Single Factor
+#' Plot Extracted Factors from MLDFM
+#'
 #'
 #' @import dplyr
 #' @import ggplot2
-#' @keywords internal
-generate_factor_plot <- function(factor_name, data_plot, ymin, ymax) {
-  data_plot %>%
-    filter(Factors == factor_name) %>%
-    ggplot(aes(x = Date, y = value)) +
-    geom_line(color = "blue", alpha = 0.5) +
-    geom_ribbon(aes(ymin = LB, ymax = UB), alpha = 0.3) +
-    facet_wrap(vars(Factors), nrow = 3) +
-    coord_cartesian(ylim = c(ymin, ymax)) +
-    theme_bw() +
-    theme(
-      legend.position = "none",
-      axis.title = element_blank()
-    )
-}
-
-#' Plot Extracted Factors from MLDFM
+#' @importFrom MASS ginv
 #'
-#' @export
-plot_factors.mldfm <- function(x, dates = NULL) {
+#' @keywords internal
+plot_factors.mldfm <- function(x, dates = NULL, ...) {
   Factors <- x$Factors
   Lambda <- x$Lambda
   Residuals <- x$Residuals
@@ -57,6 +42,8 @@ plot_factors.mldfm <- function(x, dates = NULL) {
   # Add date
   if (is.null(dates)) dates <- 1:nrow(factor_df)
   
+  index <- NULL
+  
   df_long <- factor_df %>%
     mutate(Date = as.Date(dates)) %>%
     pivot_longer(cols = -Date, names_to = "Factors", values_to = "value") %>%
@@ -69,11 +56,28 @@ plot_factors.mldfm <- function(x, dates = NULL) {
   y_min <- min(df_long$LB, na.rm = TRUE)
   y_max <- max(df_long$UB, na.rm = TRUE)
   
-  # Create plots
-  plot_list <- lapply(factor_names, function(fname) {
-    generate_factor_plot(fname, df_long, y_min, y_max)
-  })
+  # Loop through factor names to generate and plot each one
+  plot_list <- list()
+  Factors <- LB <- UB <- Date <- value <- NULL
+  for (factor_name in factor_names) {
+    
+    
+    
+    p <- ggplot(df_long %>%
+                  filter(Factors == factor_name), aes(x = Date, y = value)) +
+      geom_line(color = "blue", alpha = 0.5) +
+      geom_ribbon(aes(ymin = LB, ymax = UB), alpha = 0.3) +
+      facet_wrap(~Factors, nrow = 3) +
+      coord_cartesian(ylim = c(y_min, y_max)) +
+      theme_bw() +
+      theme(
+        legend.position = "none",
+        axis.title = element_blank()
+      ) 
+    
+    plot_list[[factor_name]] <- p
+  }
   
-  names(plot_list) <- factor_names
+ 
   return(plot_list)
 }

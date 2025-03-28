@@ -4,15 +4,7 @@
 \alias{q_reg}
 \title{Quantile Regression with Stressed Scenario Projection}
 \usage{
-q_reg(
-  dep_variable,
-  factors,
-  Factors_list,
-  h = 1,
-  QTAU = 0.05,
-  scenario = NULL,
-  min = TRUE
-)
+q_reg(dep_variable, factors, h = 1, QTAU = 0.05, scenario = NULL, min = TRUE)
 }
 \description{
 Estimates quantile regressions of a dependent variable on dynamic factors.

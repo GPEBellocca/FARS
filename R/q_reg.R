@@ -5,7 +5,8 @@
 #' the function computes the minimum (or maximum) projected quantile values under stress.
 #'
 #' @import quantreg
-#'
+#' @importFrom stats as.formula
+#' 
 #' @keywords internal
 #' 
 q_reg <- function(dep_variable, factors, h=1,  QTAU=0.05,  scenario = NULL, min = TRUE) {
@@ -93,6 +94,7 @@ q_reg <- function(dep_variable, factors, h=1,  QTAU=0.05,  scenario = NULL, min 
 
 
 #' Shift a time series vector
+#' @keywords internal
 shift <- function(x, lag) {
   n <- length(x)
   xnew <- rep(NA, n)

@@ -9,7 +9,7 @@
 #' @param method Integer. The method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).
 #' @param tol Numeric. The tolerance level for the residual sum of squares (RSS) minimization process. Used as a convergence criterion.
 #' @param max_iter Integer. The maximum number of iterations allowed for the RSS minimization process.
-#' @param varbose Logical. If \code{TRUE} (default), print a summary of the mldfm.
+#' @param verbose Logical. If \code{TRUE} (default), print a summary of the mldfm.
 #'
 #' @return An object of class \code{"mldfm"}, which is a list containing the following components:
 #' \describe{

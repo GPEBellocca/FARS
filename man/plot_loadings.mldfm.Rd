@@ -9,3 +9,4 @@ plot_loadings.mldfm(MLDFM_result, var_names = NULL, ...)
 \description{
 Plot Loadings from MLDFM
 }
+\keyword{internal}
