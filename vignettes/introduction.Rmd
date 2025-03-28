@@ -2,6 +2,10 @@
 title: "Introduction to FARS"
 author: "Gian Pietro Bellocca"
 output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 vignettes: true
 ---
 

@@ -1,3 +1,6 @@
+.RData
 .Rapp.history
 .Rhistory
 .DS_Store
+/doc/
+/Meta/

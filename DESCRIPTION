@@ -20,7 +20,16 @@ Imports:
     dplyr,
     forcats,
     MASS,
-    reshape2
+    reshape2,
+Suggests: 
+    devtools,
+    knitr,
+    rmarkdown,
+    openxlsx,
+    readxl,
+    zoo
+VignetteBuilder: knitr
+VignetteEngine: knitr::rmarkdown
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
