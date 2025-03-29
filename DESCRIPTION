@@ -7,7 +7,7 @@ Authors@R: c(person("Gian Pietro", "Bellocca", email = "gbellocc@est-econ.uc3m.e
              person("Vladimir", "Rodríguez-Caballero", role = c("aut")),
              person("Esther", "Ruiz", role = c("aut")))
 Maintainer: Gian Pietro Bellocca <gbellocc@est-econ.uc3m.es>
-Description: The fars package provides a comprehensive framework in R for modeling and forecasting economic scenarios based on multi-level dynamic factor model (MLDFM). The package enables users to: (i) extract global and block-specific factors using a flexible multilevel factor structure; (ii) compute asymptotically valid confidence regions for the estimated factors, accounting for uncertainty in the factor loadings; (iii) estimate factor-augmented quantile regressions; (iv) recover full predictive densities from these quantile forecasts; and (v) estimate the density when the factors are stressed.
+Description: The 'FARS' package provides a comprehensive framework in R for modeling and forecasting economic scenarios based on multi-level dynamic factor model. The package enables users to: (i) extract global and block-specific factors using a flexible multilevel factor structure; (ii) compute asymptotically valid confidence regions for the estimated factors, accounting for uncertainty in the factor loadings; (iii) estimate factor-augmented quantile regressions; (iv) recover full predictive densities from these quantile forecasts; and (v) estimate the density when the factors are stressed.
 Depends: R (>= 3.5.0)
 Imports: 
     ggplot2,
@@ -30,7 +30,6 @@ Suggests:
     readxl,
     zoo
 VignetteBuilder: knitr
-VignetteEngine: knitr::rmarkdown
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

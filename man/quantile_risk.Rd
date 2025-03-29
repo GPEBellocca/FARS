@@ -22,7 +22,7 @@ risk measure (e.g., Growth-at-Risk, Inflation-at-Risk, Groth-in-Stress etc.).
 \examples{
 Quantiles <- matrix(rnorm(500), ncol = 5)
 fars_density <- density(Quantiles,  levels = c(0.05,0.25,0.50,0.75,0.95),  
-est_points = 512, random_samples = 100000)
+est_points = 512, random_samples = 1000)
 GaR <- quantile_risk(fars_density, QTAU = 0.05)
 
 }

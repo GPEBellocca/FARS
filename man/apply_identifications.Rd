@@ -16,11 +16,6 @@ apply_identifications(
 )
 }
 \description{
-#' @return A list containing the following components:
-\describe{
-\item{Factor_list}{Updated factor list}
-\item{FinalFactors}{Updated factors matrix}
-\item{Lambda}{Updated lambda matrix.}
-}
+Apply Identification Constraints to Factors and Loadings
 }
 \keyword{internal}
