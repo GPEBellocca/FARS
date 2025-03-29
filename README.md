@@ -11,4 +11,4 @@ The `fars` package provides a comprehensive framework in R for modeling and fore
 # Installation and Usage
 For  detailed usage and examples, including stress testing, quantile regression, and more, please refer to the [FARS Vignette](./vignettes/introduction.Rmd).
 The Vignette example is based on: 
-Gloria González-Rivera, Vladimir Rodríguez-Caballero, and Esther Ruiz (2023). "Expecting the Unexpected: Stressed Scenarios for Economic Growth," Working Papers 202314, University of California at Riverside, Department of Economics.
+González-Rivera, G., Rodríguez-Caballero, C. V., & Ruiz, E. (2024). Expecting the unexpected: Stressed scenarios for economic growth. Journal of Applied Econometrics, 39(5), 926–942. https://doi.org/10.1002/jae.3060
