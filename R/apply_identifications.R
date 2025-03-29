@@ -1,14 +1,5 @@
 #' Apply Identification Constraints to Factors and Loadings
 #' 
-#' 
-#' #' @return A list containing the following components:
-#' \describe{
-#'   \item{Factor_list}{Updated factor list}
-#'   \item{FinalFactors}{Updated factors matrix}
-#'   \item{Lambda}{Updated lambda matrix.}
-#' }
-#' 
-#' 
 #' @keywords internal
 apply_identifications <- function(Yorig, num_blocks, ranges, num_factors, r, 
                                   currentFactors, Factor_list, Loadings_list) {
