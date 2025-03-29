@@ -10,10 +10,12 @@
 #' @return A numeric vector of conditional quantiles (one observation for each time period).
 #'
 #' @examples
+#' \donttest{
 #' Quantiles <- matrix(rnorm(500), ncol = 5)
 #' fars_density <- density(Quantiles,  levels = c(0.05,0.25,0.50,0.75,0.95),  
 #' est_points = 512, random_samples = 1000)
 #' GaR <- quantile_risk(fars_density, QTAU = 0.05)
+#' }
 #'
 #' @importFrom stats quantile
 #'
