@@ -1,3 +1,12 @@
+#' Summary Method for fars Object
+#'
+#' @description Prints a complete summary of the fars object.
+#'
+#' @param object An object of class \code{fars_quantiles}.
+#' @param ... Additional arguments (ignored).
+#'
+#' @return The input object \code{object}, returned invisibly.
+#'
 #' @method summary fars
 #' @export
 summary.fars <- function(object, ...) {

@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments (ignored).}
 }
+\value{
+The input object \code{x}, returned invisibly.
+}
 \description{
-Print method for fars object
+Prints a short summary of the fars object
 }

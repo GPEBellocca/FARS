@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments (ignored).}
 }
+\value{
+The input object \code{x}, invisibly.
+}
 \description{
-Print Method for MLDFM Object
+Prints a short summary of the multilevel dynamic factor model
 }

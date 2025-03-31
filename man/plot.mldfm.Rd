@@ -17,6 +17,9 @@
 
 \item{\dots}{Additional arguments (ignored)}
 }
+\value{
+No return value. Called for plots generation.
+}
 \description{
 Dispatches to specific plot functions for factors, loadings, or residuals.
 }

@@ -8,6 +8,8 @@
 #' @param var_names Optional vector of variable names to label loadings and residual axis.
 #' @param \dots Additional arguments (ignored)
 #' 
+#' @return No return value. Called for plots generation.
+#' 
 #' @method plot mldfm
 #' @export
 plot.mldfm <- function(x, which = "factors", dates = NULL, var_names = NULL, ...) {

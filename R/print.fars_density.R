@@ -1,11 +1,11 @@
 #' Print method for fars_density objects
 #'
-#' Displays a brief summary of the density estimation object produced by the `density()` or `nl_density()` function.
+#' @description Displays a brief summary of the density estimation object produced by the \code{density()} or \code{nl_density()} function.
 #'
 #' @param x An object of class \code{fars_density}.
 #' @param ... Additional arguments (ignored).
 #'
-#' @return Invisibly returns the input object.
+#' @return The input object \code{x}, returned invisibly.
 #' 
 #' @method print fars_density
 #' @export

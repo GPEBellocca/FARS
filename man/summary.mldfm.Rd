@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments (ignored).}
 }
+\value{
+The input object \code{object}, invisibly.
+}
 \description{
-Provides a compact summary of a fitted multilevel dynamic factor model.
+Provides a complete summary of the multilevel dynamic factor model
 }

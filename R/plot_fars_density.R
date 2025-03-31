@@ -6,7 +6,7 @@
 #' @param time_index Optional vector for the time axis (default is 1:nrow).
 #' @param ... Additional arguments passed to the plot function. (ignored)
 #'
-#' @return A plotly interactive plot.
+#' @return An interactive plot of class \code{plotly}. 
 #' 
 #' @import ggplot2
 #' 

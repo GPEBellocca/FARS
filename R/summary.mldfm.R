@@ -1,13 +1,14 @@
 #' Summary Method for MLDFM Object
 #'
-#' Provides a compact summary of a fitted multilevel dynamic factor model.
+#' @description Provides a complete summary of the multilevel dynamic factor model 
 #'
 #' @param object An object of class \code{mldfm}.
 #' @param ... Additional arguments (ignored).
 #'
+#' @return The input object \code{object}, invisibly. 
+#'
 #' @method summary mldfm
 #' @export
-#' 
 summary.mldfm <- function(object, ...) {
   cat("Summary of Multilevel Dynamic Factor Model (MLDFM)\n")
   cat("===================================================\n")

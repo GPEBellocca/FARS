@@ -12,7 +12,7 @@
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-Invisibly returns the input object.
+The input object \code{x}, returned invisibly.
 }
 \description{
 Displays a brief summary of the density estimation object produced by the \code{density()} or \code{nl_density()} function.

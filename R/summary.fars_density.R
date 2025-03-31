@@ -6,10 +6,11 @@
 #' @param object An object of class \code{fars_density}.
 #' @param ... Additional arguments (ignored).
 #'
-#' @return A data frame summarizing the distribution for each time observation.
+#' @return A data frame with one row per time observation and columns:
+#' \code{Observation}, \code{Mean}, \code{Median}, and \code{StdDev}. 
+#' The object is also printed to the console and returned invisibly.
 #' 
 #' @importFrom stats median
-#' 
 #' 
 #' @method summary fars_density
 #' @export

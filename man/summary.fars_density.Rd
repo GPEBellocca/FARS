@@ -12,7 +12,9 @@
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-A data frame summarizing the distribution for each time observation.
+A data frame with one row per time observation and columns:
+\code{Observation}, \code{Mean}, \code{Median}, and \code{StdDev}.
+The object is also printed to the console and returned invisibly.
 }
 \description{
 Provides summary statistics of the density estimation for each time observation,

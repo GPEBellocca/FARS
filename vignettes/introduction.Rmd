@@ -22,7 +22,7 @@ The `FARS` package provides a comprehensive framework for modeling and forecasti
 
 # Install FARS from GitHub
 #install.packages("devtools")
-devtools::install_github("GPEBellocca/FARS")
+#devtools::install_github("GPEBellocca/FARS")
 
 library(FARS)
 ```

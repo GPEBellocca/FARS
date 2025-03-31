@@ -1,7 +1,11 @@
 #' Print Method for MLDFM Object
 #'
+#' @description Prints a short summary of the multilevel dynamic factor model 
+#' 
 #' @param x An object of class \code{mldfm}.
 #' @param ... Additional arguments (ignored).
+#'
+#' @return The input object \code{x}, invisibly. 
 #'
 #' @method print mldfm
 #' @export

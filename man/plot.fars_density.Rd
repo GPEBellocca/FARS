@@ -14,7 +14,7 @@
 \item{...}{Additional arguments passed to the plot function. (ignored)}
 }
 \value{
-A plotly interactive plot.
+An interactive plot of class \code{plotly}.
 }
 \description{
 Plots the evolution of the estimated density over time as a 3D surface.

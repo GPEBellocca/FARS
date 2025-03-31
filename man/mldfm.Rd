@@ -2,7 +2,7 @@
 % Please edit documentation in R/mldfm.R
 \name{mldfm}
 \alias{mldfm}
-\title{Multilevel Dynamic Factor Model (mldfm)}
+\title{Estimate Multilevel Dynamic Factor Model}
 \usage{
 mldfm(
   data,
@@ -18,13 +18,13 @@ mldfm(
 \arguments{
 \item{data}{A numeric matrix or data frame containing the time series data. Rows represent time points; columns represent observed variables.}
 
-\item{blocks}{Integer. The number of blocks into which the data is divided.}
+\item{blocks}{Integer. Number of blocks into which the data is divided.}
 
-\item{block_ind}{A vector of integers indicating the end index of each block. Must be of length \code{blocks} and in increasing order. Required if \code{blocks > 1}.}
+\item{block_ind}{Integer vector. End column indices for each block. Must be of length \code{blocks} and in increasing order.}
 
-\item{r}{A vector of integers specifying the number of factors to extract for each node in the block hierarchy. Its length must equal \code{2^blocks - 1}, corresponding to all nodes in the hierarchical tree.}
+\item{r}{Integer vector of length \code{2^blocks - 1}. Specifies the number of factors for each node in the hierarchical structure.}
 
-\item{method}{Integer. The method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).}
+\item{method}{Integer.  Method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).}
 
 \item{tol}{Numeric. The tolerance level for the residual sum of squares (RSS) minimization process. Used as a convergence criterion.}
 
@@ -33,7 +33,7 @@ mldfm(
 \item{verbose}{Logical. If \code{TRUE} (default), print a summary of the mldfm.}
 }
 \value{
-An object of class \code{"mldfm"}, which is a list containing the following components:
+An object of class \code{mldfm}, which is a list containing the following components:
 \describe{
 \item{Factors}{Matrix of estimated factors.}
 \item{Factors_hat}{Matrix of estimated hat factors.}
@@ -44,16 +44,14 @@ An object of class \code{"mldfm"}, which is a list containing the following comp
 }
 }
 \description{
-Applies the Multilevel Dynamic Factor Model (MLDFM) to the input dataset, allowing for both single-block and multi-block hierarchical factor structures.
+Estimates a multilevel dynamic factor model from time series data.
+Supports both single-block and hierarchical multi-block structures with customizable factor extraction settings.
 }
 \examples{
-\dontrun{
 data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
 block_ind <- c(63, 311, 519)  # Defines 3 blocks
 r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
 result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
 summary(result)
-}
-
 
 }

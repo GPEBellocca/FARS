@@ -1,17 +1,18 @@
-#' Multilevel Dynamic Factor Model (mldfm)
+#' @title Estimate Multilevel Dynamic Factor Model 
 #'
-#' Applies the Multilevel Dynamic Factor Model (MLDFM) to the input dataset, allowing for both single-block and multi-block hierarchical factor structures.
+#' @description Estimates a multilevel dynamic factor model from time series data. 
+#' Supports both single-block and hierarchical multi-block structures with customizable factor extraction settings.
 #'
 #' @param data A numeric matrix or data frame containing the time series data. Rows represent time points; columns represent observed variables.
-#' @param blocks Integer. The number of blocks into which the data is divided.
-#' @param block_ind A vector of integers indicating the end index of each block. Must be of length \code{blocks} and in increasing order. Required if \code{blocks > 1}.
-#' @param r A vector of integers specifying the number of factors to extract for each node in the block hierarchy. Its length must equal \code{2^blocks - 1}, corresponding to all nodes in the hierarchical tree.
-#' @param method Integer. The method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).
+#' @param blocks Integer. Number of blocks into which the data is divided.
+#' @param block_ind Integer vector. End column indices for each block. Must be of length \code{blocks} and in increasing order.
+#' @param r Integer vector of length \code{2^blocks - 1}. Specifies the number of factors for each node in the hierarchical structure.
+#' @param method Integer.  Method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).
 #' @param tol Numeric. The tolerance level for the residual sum of squares (RSS) minimization process. Used as a convergence criterion.
 #' @param max_iter Integer. The maximum number of iterations allowed for the RSS minimization process.
 #' @param verbose Logical. If \code{TRUE} (default), print a summary of the mldfm.
 #'
-#' @return An object of class \code{"mldfm"}, which is a list containing the following components:
+#' @return An object of class \code{mldfm}, which is a list containing the following components:
 #' \describe{
 #'   \item{Factors}{Matrix of estimated factors.}
 #'   \item{Factors_hat}{Matrix of estimated hat factors.}
@@ -22,14 +23,11 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
 #' data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
 #' block_ind <- c(63, 311, 519)  # Defines 3 blocks
 #' r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
 #' result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
 #' summary(result)
-#' }
-#'
 #'
 #' @export
 mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol = 1e-6, max_iter = 1000, verbose = TRUE) {

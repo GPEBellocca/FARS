@@ -1,9 +1,13 @@
 #' Print method for fars object
 #'
+#' @description Prints a short summary of the fars object
+#'
 #' @param x An object of class \code{fars_quantiles}.
 #' @param ... Additional arguments (ignored).
 #'
-#'@method print fars
+#' @return The input object \code{x}, returned invisibly. 
+#'
+#' @method print fars
 #' @export
 print.fars <- function(x, ...) {
   cat("Factor-Augmented Quantile Regressions (FARS)\n")

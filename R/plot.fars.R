@@ -1,6 +1,17 @@
+#' Plot Method for fars Object
+#'
+#' @description Generates line plots of forecasted quantiles from a FARS object. 
+#' If a stressed scenario is available, it is plotted in a separate panel.
+#'
+#' @param x An object of class \code{fars}.
+#' @param dates Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis. 
+#' If not provided, a simple index is used.
+#' @param ... Additional arguments (currently ignored).
+#'
+#' @return No return value. Called for plot generation.
+#'
 #' @import ggplot2
 #' @importFrom reshape2 melt
-#' 
 #' @method plot fars
 #' @export
 plot.fars <- function(x, dates = NULL, ...) {
