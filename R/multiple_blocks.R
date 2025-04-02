@@ -6,6 +6,8 @@
 # Internal helper function to compute beta OLS
 beta_ols <- function(X, Y) {
   solve(t(X) %*% X) %*% t(X) %*% Y
+  # inv_X <- ginv(t(X) %*% X)
+  # inv_X %*% t(X) %*% Y
 }
 
 # Internal function: Multiple-blocks MLDFM computation
@@ -62,6 +64,8 @@ multiple_blocks<-function(Yorig, r, block_ind, tol, max_iter, method){
     
     # Update factors
     FinalFactors <- t(solve(Lambda %*% t(Lambda)) %*% Lambda %*% t(Yorig))
+    # inv_LtL <- ginv(Lambda %*% t(Lambda))
+    # FinalFactors <- t(inv_LtL %*% Lambda %*% t(Yorig))
     
     # Update factor list
     Factor_list <- update_factor_list(Factor_list, FinalFactors, r)

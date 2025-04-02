@@ -16,7 +16,7 @@
 #' @return A list of \code{mldfm} objects, one for each subsample.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
 #' block_ind <- c(63, 311, 519)  # Defines 3 blocks
 #' r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes

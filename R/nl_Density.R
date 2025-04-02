@@ -16,9 +16,11 @@
 #'}
 #'
 #' @examples
-#' \dontrun{
-#' density_result <- nl_density(fars_result$Quantiles,
-#'                           levels = fars_result$Levels,
+#' \donttest{
+#' Quantiles <- matrix(rnorm(500, mean = 0, sd = 1), nrow = 100, ncol = 5)
+#' Levels <- c(0.05, 0.25, 0.5, 0.75, 0.95)
+#' density_result <- nl_density(Quantiles,
+#'                           levels = Levels,
 #'                           est_points = 512,
 #'                           random_samples = 100000,
 #'                           seed = 42)

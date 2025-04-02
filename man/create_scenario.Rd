@@ -26,7 +26,13 @@ and a set of subsampled estimates. These regions capture estimation uncertainty 
 stresses scenarios.
 }
 \examples{
-\dontrun{
+\donttest{
+data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
+block_ind <- c(63, 311, 519)  # Defines 3 blocks
+r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
+mldfm_result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
+mldfm_subsampling_result <- mldfm_subsampling(data, blocks = 3, block_ind = block_ind, r = r, 
+n_samples = 100, sample_size = 0.9)
 scenario <- create_scenario(mldfm_result, mldfm_subsampling_result, data, block_ind, alpha = 0.95)
 }
 

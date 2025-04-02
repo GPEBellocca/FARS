@@ -20,9 +20,13 @@
 #' }
 #' 
 #' @examples
-#' \dontrun{
-#' fars_result <- compute_fars(dep_variable, mldfm_result$Factors, 
-#' scenario, h = 1, edge = 0.05, min = TRUE)
+#' \donttest{
+#' data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
+#' dep_variable <- rnorm(100)  # A numeric vector
+#' block_ind <- c(63, 311, 519)  # Defines 3 blocks
+#' r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
+#' mldfm_result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
+#' fars_result <- compute_fars(dep_variable, mldfm_result$Factors, h = 1, edge = 0.05, min = TRUE)
 #' }
 #'  
 #'  
