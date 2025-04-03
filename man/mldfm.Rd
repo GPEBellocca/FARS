@@ -48,10 +48,12 @@ Estimates a multilevel dynamic factor model from time series data.
 Supports both single-block and hierarchical multi-block structures with customizable factor extraction settings.
 }
 \examples{
+\donttest{
 data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
 block_ind <- c(63, 311, 519)  # Defines 3 blocks
 r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
 result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
 summary(result)
+}
 
 }
