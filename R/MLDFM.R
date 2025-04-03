@@ -23,11 +23,13 @@
 #' }
 #'
 #' @examples
+#' \donttest{
 #' data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
 #' block_ind <- c(63, 311, 519)  # Defines 3 blocks
 #' r <- c(1, 1, 1, 1, 1, 1, 1)   # 2^3 - 1 = 7 nodes
 #' result <- mldfm(data, blocks = 3, block_ind = block_ind, r = r)
 #' summary(result)
+#'}
 #'
 #' @export
 mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol = 1e-6, max_iter = 1000, verbose = TRUE) {
