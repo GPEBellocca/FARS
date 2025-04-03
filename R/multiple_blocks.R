@@ -74,6 +74,9 @@ multiple_blocks<-function(Yorig, r, block_ind, tol, max_iter, method){
     FinalResiduals <- Yorig - FinalFactors %*% Lambda
     RSS_new <- sum(FinalResiduals^2)
     
+    RSS_new <- Re(RSS_new)
+    RSS_previous <- Re(RSS_previous)
+    
     if ((log(RSS_previous) - log(RSS_new)) < tol) break  # Converged
     
     RSS_previous <- RSS_new
