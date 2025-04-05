@@ -31,7 +31,7 @@ beta_ols <- function(X, Y) {
 #' @import SyScSelection
 #'
 #' @export
-create_scenario <- function(model, subsamples, data, block_ind, alpha=0.95) {
+create_scenario3 <- function(model, subsamples, data, block_ind, alpha=0.95) {
   
   
   if (!inherits(model, "mldfm")) stop("model must be an object of class 'mldfm'.")
@@ -47,13 +47,14 @@ create_scenario <- function(model, subsamples, data, block_ind, alpha=0.95) {
   
   data <- scale(data,TRUE,TRUE)
   
-  # Extract model factors
+  # Extract model results
   Factors <- model$Factors
+  Loadings <- model$Lambda
+  Residuals <- model$Residuals
   Factors_list <- model$Factors_list
   
   #Extraxt subsample (factors and factors_hat)
-  Factors_hat_samples <- lapply(subsamples, function(obj) obj$Factors_hat)
-  #Factors_hat_samples <- lapply(subsamples, function(obj) obj$Factors) 
+  Factors_samples <- lapply(subsamples, function(obj) obj$Factors) 
   
   
   n_obs <- nrow(Factors)
