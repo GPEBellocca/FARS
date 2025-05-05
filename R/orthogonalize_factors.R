@@ -7,6 +7,8 @@
 orthogonalize_factors <- function(X) {
   n_factors <- ncol(X)  
   
+  
+  
   # Iterative orthogonalization
   for (i in 1:n_factors) {
     # Regress the i-th factor on all other factors (excluding itself)
