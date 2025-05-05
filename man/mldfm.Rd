@@ -36,7 +36,6 @@ mldfm(
 An object of class \code{mldfm}, which is a list containing the following components:
 \describe{
 \item{Factors}{Matrix of estimated factors.}
-\item{Factors_hat}{Matrix of estimated hat factors.}
 \item{Lambda}{Matrix of factor loadings.}
 \item{Residuals}{Matrix of residuals.}
 \item{Iterations}{Number of iterations before convergence.}

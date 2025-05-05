@@ -21,6 +21,8 @@
 #' corrected_data <- result$data
 #' outliers_matrix <- result$outliers
 #'
+#'@importFrom stats IQR
+#'
 #' @export
 correct_outliers <- function(data, r ) {
   

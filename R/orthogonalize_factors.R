@@ -2,6 +2,8 @@
 #' Orthogonalize factors
 #' @keywords internal
 #' 
+#'@importFrom stats lm
+#' 
 orthogonalize_factors <- function(X) {
   n_factors <- ncol(X)  
   
