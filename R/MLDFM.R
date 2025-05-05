@@ -15,7 +15,6 @@
 #' @return An object of class \code{mldfm}, which is a list containing the following components:
 #' \describe{
 #'   \item{Factors}{Matrix of estimated factors.}
-#'   \item{Factors_hat}{Matrix of estimated hat factors.}
 #'   \item{Lambda}{Matrix of factor loadings.}
 #'   \item{Residuals}{Matrix of residuals.}
 #'   \item{Iterations}{Number of iterations before convergence.}
@@ -56,7 +55,6 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, r = c(1), method = 0, tol 
   
   output <- list(
     Factors = result$Factors,
-    Factors_hat = result$Factors_hat,
     Lambda = result$Lambda,
     Residuals = result$Residuals,
     Method = result$Method,
