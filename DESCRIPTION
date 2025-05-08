@@ -1,7 +1,7 @@
 Package: FARS
 Type: Package
 Title: Factor-Augmented Regression Scenarios
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person("Gian Pietro", "Bellocca", email = "gbellocc@est-econ.uc3m.es", role = c("aut", "cre")),
              person("Ignacio", "Garrón", role = c("aut")),
              person("Vladimir", "Rodríguez-Caballero", role = c("aut")),

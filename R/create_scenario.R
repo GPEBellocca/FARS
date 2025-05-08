@@ -50,7 +50,9 @@ create_scenario <- function(model, subsamples, data, block_ind, alpha=0.95) {
   # Extract model factors
   Factors <- model$Factors
   Loadings <- model$Lambda
+  #Loadings <-t((1/nrow(Factors))*t(Factors)%*%data)
   Residuals <- model$Residuals
+  #Residuals<-data-Factors%*%t(Loadings)
   Factors_list <- model$Factors_list
   
  
@@ -151,8 +153,6 @@ create_scenario <- function(model, subsamples, data, block_ind, alpha=0.95) {
     Sigma_list[[obs]] <- Sig
   }
  
-  
-    
    
   # Hyperellipsoids 
   Hyperellipsoids <- list()
