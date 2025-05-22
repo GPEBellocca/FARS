@@ -17,7 +17,7 @@ apply_identifications <- function(Yorig, num_blocks, ranges, r_list,
 
 
   # Recompute loadings based on orthogonal factors
-  L_res <- compute_lambda(Yorig,num_blocks,ranges,num_factors,r_list,Factor_list,Loadings_list)
+  L_res <- compute_lambda(Yorig,num_blocks,ranges,r_list,Factor_list,Loadings_list)
   Loadings_list <- L_res$Loadings_list
   
   
