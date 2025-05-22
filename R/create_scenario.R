@@ -22,10 +22,13 @@ beta_ols <- function(X, Y) {
 #' block_ind <- c(150, 300)  # Defines 2 blocks
 #' global = 1
 #' local <- c(1, 1)   
-#' mldfm_result <- mldfm(data, blocks = 2, block_ind = block_ind, global = global, local = local)
-#' mldfm_subsampling_result <- mldfm_subsampling(data, blocks = 2, block_ind = block_ind, global = global, 
+#' mldfm_result <- mldfm(data, blocks = 2, block_ind = block_ind, 
+#' global = global, local = local)
+#' mldfm_subsampling_result <- mldfm_subsampling(data, blocks = 2, 
+#' block_ind = block_ind, global = global, 
 #' local = local, n_samples = 100, sample_size = 0.9)
-#' scenario <- create_scenario(mldfm_result, mldfm_subsampling_result, data, block_ind, alpha = 0.95)
+#' scenario <- create_scenario(mldfm_result, mldfm_subsampling_result, 
+#' data, block_ind, alpha = 0.95)
 #' }
 #'
 #' @import ellipse
