@@ -4,7 +4,7 @@
 #' @importFrom stats prcomp
 #'
 #' @keywords internal
-compute_initial_factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges, num_factors, r_list, method) {
+compute_initial_factors <- function(Yorig, num_vars, num_obs, num_blocks, ranges, r_list, method) {
   
   # Initialize
   Factor_list <- list()

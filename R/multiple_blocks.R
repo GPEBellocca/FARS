@@ -21,8 +21,7 @@ multiple_blocks<-function(Yorig, global, local, middle_layer, block_ind, tol, ma
   results <- list()  # List to save results
   num_blocks <- length(block_ind) # Number of blocks
   num_obs <- nrow(Yorig) # Total number of observations
-  num_factors <- sum(r) # Total number of factors
-  
+
   
   # Define block ranges and count the number of variables in each block
   ranges <- list()
@@ -49,7 +48,7 @@ multiple_blocks<-function(Yorig, global, local, middle_layer, block_ind, tol, ma
   # --- STEP 1: INITIAL FACTORS ---
   init_res <- compute_initial_factors(
     Yorig, num_vars, num_obs, num_blocks,
-    ranges, num_factors, r_list, method
+    ranges, r_list, method
   )
   InitialFactors <- init_res$InitialFactors
   Factor_list <- init_res$Factor_list
@@ -67,7 +66,7 @@ multiple_blocks<-function(Yorig, global, local, middle_layer, block_ind, tol, ma
     if (iteration > max_iter) break
     
     # Compute/Update Lambda
-    L_res <- compute_lambda(Yorig, num_blocks, ranges, num_factors, r_list, Factor_list, Loadings_list)
+    L_res <- compute_lambda(Yorig, num_blocks, ranges, r_list, Factor_list, Loadings_list)
     
     Lambda <- L_res$Lambda
     Loadings_list <- L_res$Loadings_list
@@ -99,7 +98,7 @@ multiple_blocks<-function(Yorig, global, local, middle_layer, block_ind, tol, ma
   
   # --- STEP 3: IDENTIFICATION ---
   Id_res <- apply_identifications(
-    Yorig, num_blocks, ranges, num_factors, r_list,
+    Yorig, num_blocks, ranges, r_list,
     FinalFactors, Factor_list, Loadings_list
   )
   orthogonal_FinalFactors <- Id_res$FinalFactors

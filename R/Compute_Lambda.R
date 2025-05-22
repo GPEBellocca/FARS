@@ -9,9 +9,10 @@
 #'
 #'
 #' @keywords internal
-compute_lambda <- function(Yorig, num_blocks, ranges, num_factors, r_list, Factor_list,Loadings_list) {
+compute_lambda <- function(Yorig, num_blocks, ranges, r_list, Factor_list, Loadings_list) {
   
   # Initialize 
+  num_factors <- sum(unlist(r_list))
   Lambda <- matrix(0, nrow = num_factors, ncol =  ncol(Yorig))
   
   counter <- 1
