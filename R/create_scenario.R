@@ -32,6 +32,7 @@ beta_ols <- function(X, Y) {
 #'
 #' @import ellipse
 #' @import SyScSelection
+#' @importFrom stats qnorm 
 #'
 #' @export
 create_scenario <- function(model, subsamples, alpha=0.95, atcsr = FALSE) {
@@ -154,14 +155,32 @@ create_scenario <- function(model, subsamples, alpha=0.95, atcsr = FALSE) {
     
     calpha <- sizeparam_normal_distn(alpha, d=tot_n_factors)  # Size parameter 
 
-    if(tot_n_factors > 2){
-      # more than 2 dimensions
+    # if(tot_n_factors > 2){
+    #   # more than 2 dimensions
+    #   hellip <- hyperellipsoid(center_obs, solve(sigma_obs), calpha)
+    #   Hyperellipsoids[[obs]] <- t(hypercube_mesh(8,hellip,TRUE))
+    # }else{
+    #   # 2D ellips
+    #   Hyperellipsoids[[obs]] <- ellipse(sigma_obs, centre=center_obs, level = alpha, npoints = 300)
+    # }
+    
+    if (tot_n_factors > 2) {
+      # More than 2 dimensions
       hellip <- hyperellipsoid(center_obs, solve(sigma_obs), calpha)
-      Hyperellipsoids[[obs]] <- t(hypercube_mesh(8,hellip,TRUE))
-    }else{
-      # 2D ellips
-      Hyperellipsoids[[obs]] <- ellipse(sigma_obs, centre=center_obs, level = alpha, npoints = 300)
+      Hyperellipsoids[[obs]] <- t(hypercube_mesh(8, hellip, TRUE))
+    } else if (tot_n_factors == 2) {
+      # 2D ellipse
+      Hyperellipsoids[[obs]] <- ellipse(sigma_obs, centre = center_obs, level = alpha, npoints = 300)
+    } else if (tot_n_factors == 1) {
+      # 1D confidence interval
+      se <- sqrt(sigma_obs[1, 1])  
+      z_alpha <- qnorm((1 + alpha) / 2)  
+      lower <- center_obs - z_alpha * se
+      upper <- center_obs + z_alpha * se
+      Hyperellipsoids[[obs]] <- matrix(c(lower, upper), ncol = 1)  # 2row matrix: lower and upper 
     }
+    
+    
     
   }
   message("Scenario construction completed.")
