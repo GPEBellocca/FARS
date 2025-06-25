@@ -62,7 +62,7 @@ compute_fars <- function(dep_variable,
   levels[1] <- levels[1]+edge # adjust left edge
   levels[5] <- levels[5]-edge # adjust right edge
   
-  print(length(levels))
+ 
   
   # Output structures
   Quantiles <- matrix(nrow = length(dep_variable), ncol = length(levels))
@@ -105,7 +105,7 @@ compute_fars <- function(dep_variable,
   quantile_levels <- levels  # store adjusted quantiles (with edge)
   
   
-  print(Stressed_Factors)
+ 
   
   result <- list(
     Quantiles = matrix(Quantiles,ncol = length(levels)),

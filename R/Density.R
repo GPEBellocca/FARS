@@ -55,7 +55,7 @@ density <- function(quantiles,
   for (tt in 1:n_obs){
     
     
-    # Initial values
+    # Initial restrictions
     iqn <- qnorm(0.75)-qnorm(0.25) # Interquartile range of standard normal distr
     l0 <- quantiles[tt,3]  # Location
     s0 <- (quantiles[tt,4] - quantiles[tt,2]) / iqn # Scale
