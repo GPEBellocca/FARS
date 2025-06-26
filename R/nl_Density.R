@@ -1,48 +1,17 @@
 #' Compute Skew-t Densities from Forecasted Quantiles (Nonlinear Optimization)
 #'
-#' Fits a skew-t distribution to a set of quantile forecasts using nonlinear optimization
-#'
-#' @param quantiles A matrix of forecasted quantiles. Each row is a time observation; each column a quantile level.
-#' @param levels A numeric vector of the quantile levels corresponding to the columns of the quantile matrix (default: c(0.05, 0.25, 0.50, 0.75, 0.95)).
-#' @param est_points Integer. Number of evaluation points for the estimated density (default: 512).
-#' @param random_samples Integer. Number of random samples to draw from the fitted skew-t distribution (default: 5000).
-#' @param seed Optional integer to set the random seed for reproducibility (default: NULL).
-#' 
-#' @return An object of class \code{"fars_density"}, which is a list containing the following components:
-#' \describe{
-#'   \item{density}{A matrix of estimated densities for each time period (rows) across estimation points (columns).}
-#'   \item{distribution}{A matrix of random draws from the fitted skew-t distribution for each time period.}
-#'   \item{x_vals}{The sequence of evaluation points used to compute the density. Useful for plotting.}
-#'}
-#'
-#' @examples
-#' \donttest{
-#' Quantiles <- matrix(rnorm(500, mean = 0, sd = 1), nrow = 100, ncol = 5)
-#' Levels <- c(0.05, 0.25, 0.5, 0.75, 0.95)
-#' density_result <- nl_density(Quantiles,
-#'                           levels = Levels,
-#'                           est_points = 512,
-#'                           random_samples = 100000,
-#'                           seed = 42)
-#'}
-#'
 #' @import sn
 #' @import nloptr
 #' @importFrom stats prcomp qnorm optim
 #'
-#' @export
+#' @keywords internal
 nl_density <- function(quantiles, 
                     levels = c(0.05, 0.25, 0.50, 0.75, 0.95), 
                     est_points = 512, 
                     random_samples = 5000,
+                    support = c(-30,10),
                     seed = NULL) {
   
-  
-  # Argument checks
-  if (!is.matrix(quantiles)) stop("'quantiles' must be a matrix.")
-  if (!is.numeric(levels) || length(levels) != ncol(quantiles)) stop("'levels' must be a numeric vector of same length as number of quantile columns.")
-  if (!is.numeric(est_points) || est_points < 1) stop("'est_points' must be a positive integer.")
-  if (!is.numeric(random_samples) || random_samples < 1) stop("'random_samples' must be a positive integer.")
   
   # Set seed if provided
   if (!is.null(seed)) set.seed(seed)
@@ -54,6 +23,9 @@ nl_density <- function(quantiles,
   distribution <- matrix(NA, nrow = n_obs, ncol = random_samples) # skew-t distribution 
 
   message("Estimating skew-t densities from forecasted quantiles...")
+  
+  # Support
+  x_vals <- seq(support[1], support[2], length.out = est_points)
   
   for (tt in 1:n_obs) {
     
@@ -98,7 +70,6 @@ nl_density <- function(quantiles,
                                   alpha = alpha_opt)
     
     # Evaluate density
-    x_vals <- seq(-30, 10, length.out = est_points)
     density_matrix[tt, ] <- dst(x_vals, 
                                 xi = xi_opt, 
                                 omega = omega_opt, 
@@ -106,12 +77,13 @@ nl_density <- function(quantiles,
   }
   
   output <- list(
+    optimization = "Non-linear",
     density = density_matrix, 
     distribution = distribution,
     x_vals = x_vals)
   
   class(output) <- "fars_density"
-  print(output)
+ 
   
   return(output)
 }
