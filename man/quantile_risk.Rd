@@ -17,7 +17,7 @@ A numeric vector of conditional quantiles (one observation for each time period)
 \description{
 Computes the conditional quantile (e.g., 5th percentile) from a simulated skew-t distribution,
 generated via \code{density()} or \code{nl_density()}. The result corresponds to the
-risk measure (e.g., Growth-at-Risk, Inflation-at-Risk, Groth-in-Stress etc.).
+risk measure (e.g., Growth-at-Risk, Growth-in-Stress etc.).
 }
 \examples{
 \donttest{

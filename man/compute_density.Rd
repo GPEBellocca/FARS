@@ -34,6 +34,7 @@ An object of class \code{"fars_density"}, which is a list containing the followi
 \describe{
 \item{density}{A matrix of estimated densities for each time period (rows) across estimation points (columns).}
 \item{distribution}{A matrix of random draws from the fitted skew-t distribution for each time period.}
+\item{optimization}{The optimization method implemented.}
 \item{x_vals}{The sequence of evaluation points used to compute the density. Useful for plotting.}
 }
 }

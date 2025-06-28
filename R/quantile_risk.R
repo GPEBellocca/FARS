@@ -2,7 +2,7 @@
 #'
 #' Computes the conditional quantile (e.g., 5th percentile) from a simulated skew-t distribution,
 #' generated via \code{density()} or \code{nl_density()}. The result corresponds to the
-#' risk measure (e.g., Growth-at-Risk, Inflation-at-Risk, Groth-in-Stress etc.).
+#' risk measure (e.g., Growth-at-Risk, Growth-in-Stress etc.).
 #'
 #' @param density An object of class \code{fars_density} returned by \code{density()} or \code{nl_density()}.
 #' @param QTAU A numeric value between 0 and 1 indicating the quantile to extract (e.g., 0.05 for 5th percentile).

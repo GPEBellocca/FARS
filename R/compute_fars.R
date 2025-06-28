@@ -123,7 +123,8 @@ compute_fars <- function(dep_variable,
   }
   
   class(result) <- "fars"
-  print(result)
+  message("Completed")
+  
   return(result)
 
 }

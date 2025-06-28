@@ -13,6 +13,7 @@
 #' \describe{
 #'   \item{density}{A matrix of estimated densities for each time period (rows) across estimation points (columns).}
 #'   \item{distribution}{A matrix of random draws from the fitted skew-t distribution for each time period.}
+#'   \item{optimization}{The optimization method implemented.}
 #'   \item{x_vals}{The sequence of evaluation points used to compute the density. Useful for plotting.}
 #'}
 #'
@@ -61,7 +62,7 @@ compute_density <- function(quantiles,
                         seed = seed)
   }
   
-  print(output)
+  message("Completed")
   return(output)
   
 }

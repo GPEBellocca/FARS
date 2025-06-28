@@ -77,9 +77,7 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, global = 1, local = NULL, 
   )
   
   class(output) <- "mldfm"
-  if (verbose) {
-    summary(output)
-  }
+  
   return(output)
   
 }
