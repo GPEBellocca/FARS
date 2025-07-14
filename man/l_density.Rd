@@ -9,7 +9,7 @@ l_density(
   levels = c(0.05, 0.25, 0.5, 0.75, 0.95),
   est_points = 512,
   random_samples = 5000,
-  support = c(-30, 10),
+  support = c(-10, 10),
   seed = NULL
 )
 }

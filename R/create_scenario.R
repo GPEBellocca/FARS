@@ -11,7 +11,7 @@ beta_ols <- function(X, Y) {
 #' @param model An object of class \code{mldfm}, containing the factor estimates.
 #' @param subsamples A list of \code{mldfm} objects returned from \code{mldfm_subsampling}.
 #' @param alpha Numeric. Confidence level (level of stress) for the hyperellipsoid (e.g., 0.95).
-#' @param atcsr Logical. If TRUE, uses the Adaptive Threshold Cross-Sectional Robust (AT-CSR) Gamma; otherwise, uses the standard time-varying Gamma.
+#' @param fpr Logical. If TRUE, uses the Adaptive Threshold Cross-Sectional Robust (FPR) Gamma as in Fresoli, Poncela and Ruiz (2024); otherwise, uses the standard time-varying (NG) Gamma.
 #'
 #' @return A list of matrices representing the hyperellipsoid points for each time observation.
 #' 
@@ -35,7 +35,7 @@ beta_ols <- function(X, Y) {
 #' @importFrom stats qnorm 
 #'
 #' @export
-create_scenario <- function(model, subsamples, alpha=0.95, atcsr = FALSE) {
+create_scenario <- function(model, subsamples, alpha=0.95, fpr = FALSE) {
   
   
   if (!inherits(model, "mldfm")) stop("model must be an object of class 'mldfm'.")
@@ -68,7 +68,7 @@ create_scenario <- function(model, subsamples, alpha=0.95, atcsr = FALSE) {
   
   message(paste0("Constructing scenario using ", length(subsamples), 
                  " subsamples and alpha = ", alpha))
-  message("Using ", ifelse(atcsr, "AT-CSR Gamma", "standard time-varying Gamma"))
+  message("Using ", ifelse(fpr, "FPR Gamma", "standard time-varying Gamma"))
   message("... ")
   
   
@@ -81,9 +81,9 @@ create_scenario <- function(model, subsamples, alpha=0.95, atcsr = FALSE) {
   # Initialize sigma 
   Sigma_list <- list()
   
-  # Compute atcsr Gamma
-  if(atcsr){
-    Gamma <- compute_gamma_atcsr(Residuals, Loadings)
+  # Compute FPR Gamma
+  if(fpr){
+    Gamma <- compute_gamma_FPR(Residuals, Loadings)
   }
  
   
@@ -96,7 +96,7 @@ create_scenario <- function(model, subsamples, alpha=0.95, atcsr = FALSE) {
     
     
     # Compute normal gamma Gamma
-    if(!atcsr){
+    if(!fpr){
       Gamma <- matrix(0, nrow = ncol(Factors), ncol = ncol(Factors))
       for(v in 1:n_var){
         term <- (Loadings[v,] %*% t(Loadings[v,]))*(Residuals[obs,v]^2)

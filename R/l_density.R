@@ -8,7 +8,7 @@ l_density <- function(quantiles,
                     levels = c(0.05, 0.25, 0.50, 0.75, 0.95), 
                     est_points = 512, 
                     random_samples = 5000,
-                    support = c(-30,10),
+                    support = c(-10,10),
                     seed = NULL) {
  
  
@@ -34,9 +34,14 @@ l_density <- function(quantiles,
     s0 <- (quantiles[tt,4] - quantiles[tt,2]) / iqn # Scale
     sh0 <- 0 # Shape
     
-    
-    LB = c(l0-10, 1, -100) 
+
+    LB = c(l0-10, 1, -100)
     UB = c(l0+20, 50, 100)
+    
+    # LB = c(l0 - 5 * s0, max(0.1, s0/5), -20)
+    # UB = c(l0 + 5 * s0, s0*5, 20)
+    
+    
     
     fit <- optim(
       par = c(l0, s0, sh0),

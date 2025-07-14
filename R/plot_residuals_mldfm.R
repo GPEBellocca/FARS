@@ -1,7 +1,7 @@
 #' Plot Residuals from MLDFM
 #'
 #' @import ggplot2
-#' @importFrom stats cov
+#' @importFrom stats cor
 #'
 #' @keywords internal
 plot_residuals.mldfm <- function(x, var_names = NULL, ...) {

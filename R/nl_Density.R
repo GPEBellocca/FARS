@@ -9,7 +9,7 @@ nl_density <- function(quantiles,
                     levels = c(0.05, 0.25, 0.50, 0.75, 0.95), 
                     est_points = 512, 
                     random_samples = 5000,
-                    support = c(-30,10),
+                    support = c(-10,10),
                     seed = NULL) {
   
   
@@ -34,17 +34,21 @@ nl_density <- function(quantiles,
     l0 <- quantiles[tt, 3]  # Location
     s0 <- log(max(1, (quantiles[tt, 4] - quantiles[tt, 2]) / iqn)) # Log of scale to use with exp
     sh0 <- 0 # Shape
-    
+
     # Starting parameters for optimization
     x0 <- c(l0, s0, sh0)
-    LB <- c(l0 - 10, -Inf, -Inf) 
+    LB <- c(l0 - 10, -Inf, -Inf)
     UB <- c(l0 + 20, Inf, Inf)
+
     
+   
     # Objective function
     objective_fn <- function(x) {
       transformed_values <- qst(levels, xi = x[1], omega = exp(x[2]), alpha = tanh(x[3]))
       return(sum((quantiles[tt, ] - transformed_values)^2))
     }
+    
+   
     
     # Non-linear optimization using nloptr
     result <- nloptr::nloptr(
