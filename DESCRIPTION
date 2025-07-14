@@ -27,6 +27,7 @@ Suggests:
     devtools,
     knitr,
     rmarkdown,
+    markdown,
     openxlsx,
     readxl,
     zoo
