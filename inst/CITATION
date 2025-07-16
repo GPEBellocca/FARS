@@ -1,20 +1,14 @@
-citHeader("To cite the FARS package in publications, please use:")
-
-citEntry("Article",
+bibentry(
+  bibtype = "Article",
   title = "FARS: Factor Augmented Regression Scenarios in R",
-  author = personList(
+  author = c(
     person("Gian Pietro", "Bellocca"),
     person("Ignacio", "Garrón"),
     person("Vladimir", "Rodríguez-Caballero"),
     person("Esther", "Ruiz")
   ),
   journal = "arXiv preprint",
-  year = 2025,
+  year = "2025",
   note = "arXiv:2507.10679",
-  url = "https://arxiv.org/abs/2507.10679",
-  textVersion = paste(
-    "Bellocca, G. P., Garrón, I., Rodríguez-Caballero, V., & Ruiz, E. (2025).",
-    "FARS: Factor Augmented Regression Scenarios in R. arXiv:2507.10679.",
-    "https://arxiv.org/abs/2507.10679"
-  )
+  url = "https://arxiv.org/abs/2507.10679"
 )
