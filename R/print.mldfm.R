@@ -1,28 +1,31 @@
-#' Print Method for MLDFM Object
+#' Print Method for \code{mldfm} Object
 #'
-#' @description Prints a short summary of the multilevel dynamic factor model 
+#' @description Prints a short summary of the MLDFM object.
 #' 
-#' @param x An object of class \code{mldfm}.
+#' @param object An object of class \code{mldfm}.
 #' @param ... Additional arguments (ignored).
 #'
-#' @return The input object \code{x}, invisibly. 
+#' @return The input \code{mldfm} object, invisibly.
 #'
 #' @method print mldfm
 #' @export
-print.mldfm <- function(x, ...) {
+print.mldfm <- function(object, ...) {
+  stopifnot(inherits(object, "mldfm"))
+  factors <- get_factors(object)
+  
   cat("Multilevel Dynamic Factor Model (MLDFM)\n")
   cat("=======================================\n")
-  cat("Number of periods:", nrow(x$Factors), "\n")
-  cat("Number of factors:", ncol(x$Factors), "\n")
-  cat("Number of nodes:", length(x$Factors_list), "\n\n")
+  cat("Number of periods:", nrow(factors), "\n")
+  cat("Number of factors:", ncol(factors), "\n")
+  cat("Number of nodes  :", length(object$factors_list), "\n")
   
   
   
-  cat("Number of factors per node:\n")
-  for (key in names(x$Factors_list)) {
-    cat(" -", key, ":", x$Factors_list[[key]], "factor(s)\n")
+  cat("\nFactor structure:\n")
+  for (key in names(object$factors_list)) {
+    cat(" •", key, ": ", object$factors_list[[key]], "factor(s)\n")
   }
   
   
-  invisible(x)
+  invisible(object)
 }

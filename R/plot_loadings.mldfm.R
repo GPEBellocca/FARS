@@ -1,112 +1,89 @@
-
-#' Plot Loadings from MLDFM
+#' @title Plot Loadings from \code{mldfm} Object
+#'
+#' @description Displays bar plots of the estimated factor loadings with 95% confidence intervals.
+#'
+#' @param object An object of class \code{mldfm}.
+#' @param var_names Optional vector of variable names. If NULL, default names are used.
+#' @param ... Additional arguments (ignored).
 #'
 #' @importFrom tidyr pivot_longer
-#' @import ggplot2
+#' @importFrom dplyr mutate filter
+#' @importFrom ggplot2 ggplot geom_bar geom_errorbar geom_hline theme_bw theme element_blank element_text scale_y_continuous ggtitle coord_flip
 #' @importFrom forcats fct_rev
 #'
-#'
 #' @keywords internal
-plot_loadings.mldfm <- function(MLDFM_result, var_names = NULL, ...) {
+plot_loadings.mldfm <- function(object, var_names = NULL, ...) {
+  stopifnot(inherits(object, "mldfm"))
   
+  factors   <- get_factors(object)
+  loadings  <- get_loadings(object)
+  residuals <- get_residuals(object)
   
-  Factors <- MLDFM_result$Factors
-  Lambda <- MLDFM_result$Lambda
-  Residuals <- MLDFM_result$Residuals
+  t <- nrow(residuals)
+  N <- ncol(residuals)
   
-  # MSE CI
-  t<-nrow(Residuals)
-  N<-ncol(Residuals)
+  loadings_df <- as.data.frame(loadings)
   
-  # Create loadings data frame 
-  loadings <- as.data.frame(Lambda)
+  # Factor names
+  keys   <- names(object$factors_list)
+  values <- unlist(object$factors_list)
+  factor_names <- unlist(
+    mapply(function(key, val) {
+      clean <- paste0("F", gsub("-", "", key))
+      if (val > 1) paste0(clean, "n", seq_len(val)) else clean
+    }, keys, values, SIMPLIFY = FALSE)
+  )
+  colnames(loadings_df) <- factor_names
   
-  
-  # Extract Factors names
-  keys <- names(MLDFM_result$Factors_list)
-  values <- unlist(MLDFM_result$Factors_list) 
-  transformed_keys <- c()
-  
-  for (i in seq_along(keys)) {
-    
-    clean_key <- paste0("F", gsub("-", "", keys[i]))
-    if(values[i]>1){
-      repeated_keys <- paste0(clean_key,"n",seq_len(values[i]))
-    }else{
-      repeated_keys <- clean_key
-    }
-    transformed_keys <- c(transformed_keys, repeated_keys)
+  # Variable names
+  loadings_df$Variables <- if (is.null(var_names)) {
+    paste0("Var", seq_len(nrow(loadings_df)))
+  } else {
+    var_names
   }
-  colnames(loadings)<-transformed_keys
   
+  loadings_df <- loadings_df[, c("Variables", setdiff(names(loadings_df), "Variables"))]
   
-  # Set variables' names
-  if (is.null(var_names)) {
-    loadings$Variables <- paste0("Var", 1:nrow(loadings))
-  }else{
-    loadings$Variables <- var_names
-  }
-  loadings <- loadings[, c("Variables", setdiff(names(loadings), "Variables"))]
-  
-  Variables <- Factor <- Loading <- SE <- Loading_lower <- Loading_upper <- NULL
-  
-  # Pivot
-  loadings_long <- loadings %>%
+  # Long format
+  loadings_long <- loadings_df %>%
     pivot_longer(cols = -Variables, names_to = "Factor", values_to = "Loading")
   
-  # Add standard errors and confidence intervals 
-  loadings_se <- apply(Residuals, 2, sd) / sqrt(nrow(Residuals))
+  # Standard errors and CIs
+  se_vector <- apply(residuals, 2, sd) / sqrt(t)
   
   loadings_long <- loadings_long %>%
-    mutate(SE = rep(loadings_se, times = length(unique(Factor)))) %>%
-    mutate(Loading_lower = Loading - 1.96 * SE,
+    mutate(SE = rep(se_vector, times = length(unique(Factor))),
+           Loading_lower = Loading - 1.96 * SE,
            Loading_upper = Loading + 1.96 * SE)
   
-  
-  
-  
-  # Create the list of plots
-  plot_list <- list()
-  unique_factors <- unique(loadings_long$Factor)  
-  
-  # Define axis limits
+  # Plot
+  unique_factors <- unique(loadings_long$Factor)
   y_min <- -1
   y_max <- 1
   
-  
-
   for (factor_name in unique_factors) {
-    data_plot <- loadings_long
-    
-    data_plot <- data_plot %>%
+    df_i <- loadings_long %>%
       filter(Factor == factor_name & Loading != 0) %>%
-      mutate(Variables = factor(Variables, levels = unique(Variables)))  
+      mutate(Variables = factor(Variables, levels = unique(Variables)))
     
-    p <- ggplot(data = data_plot, aes(x = fct_rev(Variables), y = Loading)) +
-      geom_bar(stat = "identity", alpha = 0.7, aes(fill = "bar")) +
+    p <- ggplot(df_i, aes(x = fct_rev(Variables), y = Loading)) +
+      geom_bar(stat = "identity", fill = "grey", alpha = 0.7) +
       geom_hline(yintercept = 0, color = "red") +
       geom_errorbar(aes(ymin = Loading_lower, ymax = Loading_upper),
                     width = 0.5, color = "black", alpha = 1, size = 0.2) +
       coord_flip() +
       theme_bw() +
-      theme(legend.position = "none",
-            axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
-            plot.title = element_text(hjust = 0.5)) +
+      theme(
+        legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title = element_text(hjust = 0.5)
+      ) +
       scale_y_continuous(limits = c(y_min, y_max)) +
-      scale_fill_manual(values = c("grey")) +
       ggtitle(factor_name)
     
-      plot_list[[length(plot_list) + 1]] <- p
+    print(p)
   }
   
-  
-  
-  return(plot_list)
-  
-  
-  
+  invisible(NULL)
 }
-
-
-

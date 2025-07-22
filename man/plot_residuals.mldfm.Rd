@@ -2,11 +2,18 @@
 % Please edit documentation in R/plot_residuals_mldfm.R
 \name{plot_residuals.mldfm}
 \alias{plot_residuals.mldfm}
-\title{Plot Residuals from MLDFM}
+\title{Plot Residuals from \code{mldfm} Object}
 \usage{
-plot_residuals.mldfm(x, var_names = NULL, ...)
+plot_residuals.mldfm(object, var_names = NULL, ...)
+}
+\arguments{
+\item{object}{An object of class \code{mldfm}.}
+
+\item{var_names}{Optional vector of variable names. If NULL, default names are used.}
+
+\item{...}{Additional arguments (ignored).}
 }
 \description{
-Plot Residuals from MLDFM
+Displays a correlation heatmap of the residuals.
 }
 \keyword{internal}

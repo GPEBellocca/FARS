@@ -6,7 +6,17 @@
 \usage{
 eigen_sorted(matrix_y)
 }
+\arguments{
+\item{matrix_y}{A symmetric numeric matrix.}
+}
+\value{
+A list with two elements:
+\describe{
+\item{eigenvalues}{A numeric vector of eigenvalues in descending order.}
+\item{eigenvectors}{A matrix whose columns are the eigenvectors corresponding to the eigenvalues.}
+}
+}
 \description{
-Computes the eigenvalues and eigenvectors of a symmetric matrix, returning them in descending order (default behavior of \code{eigen()}).
+Computes the eigenvalues and eigenvectors of a symmetric matrix using the base \code{eigen()} function.
 }
 \keyword{internal}

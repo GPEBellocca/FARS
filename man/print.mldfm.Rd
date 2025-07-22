@@ -2,18 +2,18 @@
 % Please edit documentation in R/print.mldfm.R
 \name{print.mldfm}
 \alias{print.mldfm}
-\title{Print Method for MLDFM Object}
+\title{Print Method for \code{mldfm} Object}
 \usage{
-\method{print}{mldfm}(x, ...)
+\method{print}{mldfm}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{mldfm}.}
+\item{object}{An object of class \code{mldfm}.}
 
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-The input object \code{x}, invisibly.
+The input \code{mldfm} object, invisibly.
 }
 \description{
-Prints a short summary of the multilevel dynamic factor model
+Prints a short summary of the MLDFM object.
 }

@@ -45,10 +45,16 @@ mldfm_subsampling(
 \item{seed}{Optional integer. Seed for reproducibility of the subsampling process. If \code{NULL}, random draws will differ each run.}
 }
 \value{
-A list of \code{mldfm} objects, one for each subsample.
+An object of class \code{mldfm_subsample}. This is a structured list with the following elements:
+\itemize{
+\item \code{models}: A list of \code{mldfm} objects, one for each subsample.
+\item \code{n_samples}: Number of subsamples generated.
+\item \code{sample_size}: Proportion of the sample used for each subsample.
+\item \code{seed}: Seed used for random sampling (if any).
+}
 }
 \description{
-Repeatedly applies the MLDFM estimation to randomly drawn subsamples of the input data.
+Applies the MLDFM estimation to randomly drawn subsamples of the input data.
 }
 \examples{
 \donttest{

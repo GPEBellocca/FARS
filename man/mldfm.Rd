@@ -2,7 +2,7 @@
 % Please edit documentation in R/mldfm.R
 \name{mldfm}
 \alias{mldfm}
-\title{Estimate Multilevel Dynamic Factor Model}
+\title{Multi-Level Dynamic Factor Model (MLDFM)}
 \usage{
 mldfm(
   data,
@@ -41,16 +41,17 @@ mldfm(
 \value{
 An object of class \code{mldfm}, which is a list containing the following components:
 \describe{
-\item{Factors}{Matrix of estimated factors.}
-\item{Lambda}{Matrix of factor loadings.}
-\item{Residuals}{Matrix of residuals.}
-\item{Iterations}{Number of iterations before convergence.}
-\item{Factors_list}{List of estimated factors for each node.}
+\item{factors}{Matrix of estimated factors.}
+\item{loadings}{Matrix of factor loadings.}
+\item{residuals}{Matrix of residuals.}
+\item{method}{Initialization method used (CCA or PCA).}
+\item{iterations}{Number of iterations before convergence.}
+\item{factors_list}{List of estimated factors for each node.}
 }
 }
 \description{
-Estimates a multilevel dynamic factor model from time series data.
-Supports both single-block and hierarchical multi-block structures with customizable factor extraction settings.
+Estimates a Multi-Level Dynamic Factor Modelfrom time series data.
+Supports both Single-bBlock (DFM) and hierarchical Multi-Block (MLDFM) structures with customizable factor extraction settings.
 }
 \examples{
 \donttest{

@@ -1,83 +1,79 @@
-#' Plot Extracted Factors from MLDFM
+#' @title Plot Factors from \code{mldfm} Object
 #'
+#' @description Displays time series plots of the estimated factors with 95% confidence bands.
 #'
-#' @import dplyr
-#' @import ggplot2
+#' @param object An object of class \code{mldfm}.
+#' @param dates Optional vector of dates. If NULL, uses 1:n as default.
+#' @param ... Additional arguments (ignored).
+#' 
+#' @importFrom dplyr mutate filter
+#' @importFrom tidyr pivot_longer
+#' @importFrom ggplot2 ggplot aes geom_line geom_ribbon ggtitle coord_cartesian theme_bw theme element_blank element_text scale_y_continuous
 #' @importFrom MASS ginv
+#' @importFrom magrittr %>%
 #'
 #' @keywords internal
-plot_factors.mldfm <- function(x, dates = NULL, ...) {
-  Factors <- x$Factors
-  Lambda <- x$Lambda
-  Residuals <- x$Residuals
+plot_factors.mldfm <- function(object, dates = NULL, ...) {
+  stopifnot(inherits(object, "mldfm"))
   
-  T_obs <- nrow(Residuals)
-  N_vars <- ncol(Residuals)
+  factors   <- get_factors(object)
+  loadings  <- get_loadings(object)
+  residuals <- get_residuals(object)
   
-  # Confidence intervals (assuming uncorrelated idiosyncratic components)
-  PP <- MASS::ginv((t(Lambda) %*% Lambda) / N_vars)
+  T_obs  <- nrow(residuals)
+  N_vars <- ncol(residuals)
   
-  sigma_e <- sum(diag(t(Residuals) %*% Residuals)) / (N_vars * T_obs)
-  Gamma <- sigma_e * (t(Lambda) %*% Lambda) / N_vars
-  SD <- sqrt(diag(PP %*% Gamma %*% PP) / N_vars)
+  # Compute standard deviation for confidence bands
+  PP      <- MASS::ginv((t(loadings) %*% loadings) / N_vars)
+  sigma_e <- sum(diag(t(residuals) %*% residuals)) / (N_vars * T_obs)
+  gamma   <- sigma_e * (t(loadings) %*% loadings) / N_vars
+  SD      <- sqrt(diag(PP %*% gamma %*% PP) / N_vars)
   
   # Factor names
-  factor_df <- as.data.frame(Factors)
-  keys <- names(x$Factors_list)
-  values <- unlist(x$Factors_list)
-  
+  keys         <- names(object$factors_list)
+  values       <- unlist(object$factors_list)
   factor_names <- unlist(
     mapply(function(key, val) {
       clean <- paste0("F", gsub("-", "", key))
       if (val > 1) paste0(clean, "n", seq_len(val)) else clean
     }, keys, values, SIMPLIFY = FALSE)
   )
-  
-  # Fallback: assign default column names if needed (1 factor case)
-  if (is.null(factor_names) || length(factor_names) != ncol(factor_df)) {
-    factor_names <- paste0("F", seq_len(ncol(factor_df)))
+  if (is.null(factor_names) || length(factor_names) != ncol(factors)) {
+    factor_names <- paste0("F", seq_len(ncol(factors)))
   }
-  colnames(factor_df) <- factor_names
+  colnames(factors) <- factor_names
   
-  # Add date
-  if (is.null(dates)) dates <- 1:nrow(factor_df)
+  if (is.null(dates)) {
+    dates <- seq_len(nrow(factors))
+  }
   
-  index <- NULL
-  
-  df_long <- factor_df %>%
+  df_long <- as.data.frame(factors) %>%
     mutate(Date = as.Date(dates)) %>%
-    pivot_longer(cols = -Date, names_to = "Factors", values_to = "value") %>%
-    mutate(index = as.numeric(factor(Factors, levels = factor_names)),
-           LB = value - 2 * SD[index],
-           UB = value + 2 * SD[index])
+    pivot_longer(cols = -Date, names_to = "Factor", values_to = "Value") %>%
+    mutate(index = as.numeric(factor(Factor, levels = factor_names)),
+           LB = Value - 2 * SD[index],
+           UB = Value + 2 * SD[index])
   
-  
-  # Compute global scale for ribbon
   y_min <- min(df_long$LB, na.rm = TRUE)
   y_max <- max(df_long$UB, na.rm = TRUE)
   
-  # Loop through factor names to generate and plot each one
-  plot_list <- list()
-  Factors <- LB <- UB <- Date <- value <- NULL
   for (factor_name in factor_names) {
+    df_i <- df_long %>% filter(Factor == factor_name)
     
-    
-    
-    p <- ggplot(df_long %>%
-                  filter(Factors == factor_name), aes(x = Date, y = value)) +
-      geom_line(color = "blue", alpha = 0.5) +
-      geom_ribbon(aes(ymin = LB, ymax = UB), alpha = 0.3) +
-      facet_wrap(~Factors, nrow = 3) +
+    p <- ggplot(df_i, aes(x = Date, y = Value)) +
+      geom_line(color = "blue", alpha = 0.6) +
+      geom_ribbon(aes(ymin = LB, ymax = UB), fill = "grey70", alpha = 0.3) +
+      ggtitle(factor_name) +
       coord_cartesian(ylim = c(y_min, y_max)) +
       theme_bw() +
       theme(
-        legend.position = "none",
-        axis.title = element_blank()
-      ) 
+        axis.title = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+      )
     
-    plot_list[[factor_name]] <- p
+    print(p)
   }
   
- 
-  return(plot_list)
+  invisible(NULL)
 }

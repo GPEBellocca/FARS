@@ -1,7 +1,7 @@
-#' @title Estimate Multilevel Dynamic Factor Model 
+#' @title Multi-Level Dynamic Factor Model (MLDFM)
 #'
-#' @description Estimates a multilevel dynamic factor model from time series data. 
-#' Supports both single-block and hierarchical multi-block structures with customizable factor extraction settings.
+#' @description Estimates a Multi-Level Dynamic Factor Modelfrom time series data. 
+#' Supports both Single-bBlock (DFM) and hierarchical Multi-Block (MLDFM) structures with customizable factor extraction settings.
 #'
 #' @param data A numeric matrix or data frame containing the time series data. Rows represent time points; columns represent observed variables.
 #' @param blocks Integer. Number of blocks into which the data is divided.
@@ -16,11 +16,12 @@
 #'
 #' @return An object of class \code{mldfm}, which is a list containing the following components:
 #' \describe{
-#'   \item{Factors}{Matrix of estimated factors.}
-#'   \item{Lambda}{Matrix of factor loadings.}
-#'   \item{Residuals}{Matrix of residuals.}
-#'   \item{Iterations}{Number of iterations before convergence.}
-#'   \item{Factors_list}{List of estimated factors for each node.}
+#'   \item{factors}{Matrix of estimated factors.}
+#'   \item{loadings}{Matrix of factor loadings.}
+#'   \item{residuals}{Matrix of residuals.}
+#'   \item{method}{Initialization method used (CCA or PCA).}
+#'   \item{iterations}{Number of iterations before convergence.}
+#'   \item{factors_list}{List of estimated factors for each node.}
 #' }
 #'
 #' @examples
@@ -68,12 +69,12 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, global = 1, local = NULL, 
   }
   
   output <- list(
-    Factors = result$Factors,
-    Lambda = result$Lambda,
-    Residuals = result$Residuals,
-    Method = result$Method,
-    Iterations = result$Iterations,
-    Factors_list = result$Factors_list
+    factors = result$factors,
+    loadings = result$loadings,
+    residuals = result$residuals,
+    method = result$method,
+    iterations = result$iterations,
+    factors_list = result$factors_list
   )
   
   class(output) <- "mldfm"

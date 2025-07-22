@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.mldfm.R
 \name{summary.mldfm}
 \alias{summary.mldfm}
-\title{Summary Method for MLDFM Object}
+\title{Summary Method for \code{mldfm} Object}
 \usage{
 \method{summary}{mldfm}(object, ...)
 }
@@ -12,8 +12,8 @@
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-The input object \code{object}, invisibly.
+The input object \code{x}, invisibly.
 }
 \description{
-Provides a complete summary of the multilevel dynamic factor model
+Provides a complete summary of the MLDFM object.
 }

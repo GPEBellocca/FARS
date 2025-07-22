@@ -1,6 +1,6 @@
-#' Plot method for MLDFM object
+#' @title Plot method for MLDFM object
 #'
-#' Dispatches to specific plot functions for factors, loadings, or residuals.
+#' @description Dispatches to specific plot functions for factors, loadings, or residuals.
 #'
 #' @param x An object of class \code{mldfm}.
 #' @param which What to plot: one of \code{"factors"} (default), \code{"loadings"}, or \code{"residuals"}.
@@ -11,10 +11,12 @@
 #' @return No return value. Called for plots generation.
 #' 
 #' @method plot mldfm
+#' 
 #' @export
 plot.mldfm <- function(x, which = "factors", dates = NULL, var_names = NULL, ...) {
   
- 
+  stopifnot(inherits(x, "mldfm"))
+  
   which <- match.arg(tolower(which), c("factors", "loadings", "residuals"))
 
   switch(which,

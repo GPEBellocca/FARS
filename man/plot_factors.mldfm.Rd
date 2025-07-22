@@ -2,11 +2,18 @@
 % Please edit documentation in R/plot_factors.mldfm.R
 \name{plot_factors.mldfm}
 \alias{plot_factors.mldfm}
-\title{Plot Extracted Factors from MLDFM}
+\title{Plot Factors from \code{mldfm} Object}
 \usage{
-plot_factors.mldfm(x, dates = NULL, ...)
+plot_factors.mldfm(object, dates = NULL, ...)
+}
+\arguments{
+\item{object}{An object of class \code{mldfm}.}
+
+\item{dates}{Optional vector of dates. If NULL, uses 1:n as default.}
+
+\item{...}{Additional arguments (ignored).}
 }
 \description{
-Plot Extracted Factors from MLDFM
+Displays time series plots of the estimated factors with 95\% confidence bands.
 }
 \keyword{internal}
