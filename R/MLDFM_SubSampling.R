@@ -21,6 +21,7 @@
 #'   \item \code{n_samples}: Number of subsamples generated.
 #'   \item \code{sample_size}: Proportion of the sample used for each subsample.
 #'   \item \code{seed}: Seed used for random sampling (if any).
+#'   \item{call}{Function call.}
 #' }
 #'  
 #' @examples
@@ -98,7 +99,8 @@ mldfm_subsampling <- function(data, blocks = 1, block_ind = NULL, global = 1,
       models = result,
       n_samples = n_samples,
       sample_size = sample_size,
-      seed = seed
+      seed = seed,
+      call = match.call()
     ),
     class = "mldfm_subsample"
   )

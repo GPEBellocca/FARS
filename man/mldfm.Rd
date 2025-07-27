@@ -47,6 +47,7 @@ An object of class \code{mldfm}, which is a list containing the following compon
 \item{method}{Initialization method used (CCA or PCA).}
 \item{iterations}{Number of iterations before convergence.}
 \item{factors_list}{List of estimated factors for each node.}
+\item{call}{Function call.}
 }
 }
 \description{

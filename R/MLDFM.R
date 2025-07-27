@@ -22,6 +22,7 @@
 #'   \item{method}{Initialization method used (CCA or PCA).}
 #'   \item{iterations}{Number of iterations before convergence.}
 #'   \item{factors_list}{List of estimated factors for each node.}
+#'   \item{call}{Function call.}
 #' }
 #'
 #' @examples
@@ -68,18 +69,18 @@ mldfm <- function(data, blocks = 1, block_ind = NULL, global = 1, local = NULL, 
     stop("Invalid number of blocks.")
   }
   
-  output <- list(
-    factors = result$factors,
-    loadings = result$loadings,
-    residuals = result$residuals,
-    method = result$method,
-    iterations = result$iterations,
-    factors_list = result$factors_list
+  structure(
+    list(
+      factors      = result$factors,
+      loadings     = result$loadings,
+      residuals    = result$residuals,
+      method       = result$method,
+      iterations   = result$iterations,
+      factors_list = result$factors_list,
+      call         = match.call()
+    ),
+    class = "mldfm"
   )
-  
-  class(output) <- "mldfm"
-  
-  return(output)
   
 }
 
