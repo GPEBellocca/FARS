@@ -2,18 +2,18 @@
 % Please edit documentation in R/print.fars.R
 \name{print.fars}
 \alias{print.fars}
-\title{Print method for fars object}
+\title{Print Method for \code{fars} Object}
 \usage{
-\method{print}{fars}(x, ...)
+\method{print}{fars}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{fars_quantiles}.}
+\item{object}{An object of class \code{fars}.}
 
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-The input object \code{x}, returned invisibly.
+The input \code{object}, returned invisibly.
 }
 \description{
-Prints a short summary of the fars object
+Prints a short summary of the fars object.
 }

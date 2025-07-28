@@ -16,7 +16,7 @@ create_scenario(model, subsamples, alpha = 0.95, fpr = FALSE)
 \item{fpr}{Logical. If \code{TRUE}, uses FPR Gamma (Fresoli, Poncela, Ruiz, 2024); otherwise, uses standard time-varying Gamma.}
 }
 \value{
-An object of class \code{fars_scenario}, which is a list containing the following components:
+An object of class \code{fars_scenario}, which is a list containing:
 \describe{
 \item{ellipsoids}{List of matrices defining the hyperellipsoids at each time.}
 \item{center}{Matrix of factor estimates (centers of the ellipsoids).}

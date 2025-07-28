@@ -1,6 +1,6 @@
-#' Plot Method for fars Object
+#' @title Plot Method for \code{fars} Object
 #'
-#' @description Generates line plots of forecasted quantiles from a FARS object. 
+#' @description Generates line plots of estimated quantiles from a \code{fars} object. 
 #' If a stressed scenario is available, it is plotted in a separate panel.
 #'
 #' @param x An object of class \code{fars}.
@@ -15,17 +15,16 @@
 #' @method plot fars
 #' @export
 plot.fars <- function(x, dates = NULL, ...) {
-  if (!inherits(x, "fars")) stop("Object must be of class 'fars'.")
+  stopifnot(inherits(x, "fars"))
   
   # Prepare data
-  quantiles <- x$Quantiles
-  scenario <- x$Stressed_Quantiles
-  levels <- x$Levels
+  quantiles <- x$quantiles
+  scenario <- x$stressed_quantiles
+  levels <- x$levels
   
   if (is.null(dates)) {
     dates <- 1:nrow(quantiles)
   }
-  
   
   # Compute global min and max
   y_min <- min(quantiles, na.rm = TRUE)
@@ -42,13 +41,10 @@ plot.fars <- function(x, dates = NULL, ...) {
   df$Time <- dates
   df_long <- reshape2::melt(df, id.vars = "Time", variable.name = "Quantile", value.name = "Value")
   
-  
-  Time <- Value <- Quantile <- NULL
-  
   p_main <- ggplot(df_long, aes(x = Time, y = Value, color = Quantile)) +
     geom_line(size = 1) +
     labs(title = "Quantiles",
-         y = "Predicted Value", x = "Time") +
+         y = "Value", x = "Time") +
     scale_y_continuous(limits = y_range) +
     theme_minimal()
   
@@ -64,7 +60,7 @@ plot.fars <- function(x, dates = NULL, ...) {
     p_stress <- ggplot(df_s_long, aes(x = Time, y = Value, color = Quantile)) +
       geom_line(size = 1) +
       labs(title = "Stressed Quantiles",
-           y = "Predicted Value", x = "Time") +
+           y = "Value", x = "Time") +
       scale_y_continuous(limits = y_range) +
       theme_minimal()
     

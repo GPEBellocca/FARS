@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.fars.R
 \name{plot.fars}
 \alias{plot.fars}
-\title{Plot Method for fars Object}
+\title{Plot Method for \code{fars} Object}
 \usage{
 \method{plot}{fars}(x, dates = NULL, ...)
 }
@@ -18,6 +18,6 @@ If not provided, a simple index is used.}
 No return value. Called for plot generation.
 }
 \description{
-Generates line plots of forecasted quantiles from a FARS object.
+Generates line plots of estimated quantiles from a \code{fars} object.
 If a stressed scenario is available, it is plotted in a separate panel.
 }

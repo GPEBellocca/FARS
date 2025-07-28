@@ -45,7 +45,7 @@ mldfm_subsampling(
 \item{seed}{Optional integer. Seed for reproducibility of the subsampling process. If \code{NULL}, random draws will differ each run.}
 }
 \value{
-An object of class \code{mldfm_subsample}. This is a structured list with the following elements:
+An object of class \code{mldfm_subsample}, which is a list containing:
 \itemize{
 \item \code{models}: A list of \code{mldfm} objects, one for each subsample.
 \item \code{n_samples}: Number of subsamples generated.

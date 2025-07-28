@@ -39,7 +39,7 @@ mldfm(
 \item{verbose}{Logical. If \code{TRUE} (default), print a summary of the mldfm.}
 }
 \value{
-An object of class \code{mldfm}, which is a list containing the following components:
+An object of class \code{mldfm}, which is a list containing:
 \describe{
 \item{factors}{Matrix of estimated factors.}
 \item{loadings}{Matrix of factor loadings.}

@@ -14,7 +14,7 @@
 #' @param max_iter Integer. The maximum number of iterations allowed for the RSS minimization process.
 #' @param verbose Logical. If \code{TRUE} (default), print a summary of the mldfm.
 #'
-#' @return An object of class \code{mldfm}, which is a list containing the following components:
+#' @return An object of class \code{mldfm}, which is a list containing:
 #' \describe{
 #'   \item{factors}{Matrix of estimated factors.}
 #'   \item{loadings}{Matrix of factor loadings.}

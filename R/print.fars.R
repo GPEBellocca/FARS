@@ -1,25 +1,31 @@
-#' Print method for fars object
+#' @title Print Method for \code{fars} Object
 #'
-#' @description Prints a short summary of the fars object
+#' @description Prints a short summary of the fars object.
 #'
-#' @param x An object of class \code{fars_quantiles}.
+#' @param object An object of class \code{fars}.
 #' @param ... Additional arguments (ignored).
 #'
-#' @return The input object \code{x}, returned invisibly. 
+#' @return The input \code{object}, returned invisibly. 
 #'
 #' @method print fars
 #' @export
-print.fars <- function(x, ...) {
+print.fars <- function(object, ...) {
+  stopifnot(inherits(object, "fars"))
+  
   cat("Factor-Augmented Quantile Regressions (FARS)\n")
   cat("===========================================\n")
-  cat("Forecasted quantiles:\n")
-  cat(" - Number of periods: ", nrow(x$Quantiles), "\n")
-  cat(" - Quantile levels: ", formatC(x$Levels, format = "f", digits = 2), "\n\n")
   
-  if (!is.null(x$Stressed_Quantiles)) {
+  # Summary of forecasted quantiles
+  cat("Forecasted quantiles\n")
+  cat("Number of periods: ", nrow(object$quantiles), "\n")
+  cat("Quantile levels: ", formatC(object$levels, format = "f", digits = 2), "\n")
+  
+  # Check if stressed quantiles are available
+  if (!is.null(object$stressed_quantiles)) {
     cat("Stressed quantiles: YES\n")
   } else {
     cat("Stressed quantiles: NO\n")
   }
-  invisible(x)
+  
+  invisible(object)
 }

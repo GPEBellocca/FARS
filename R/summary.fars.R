@@ -1,8 +1,9 @@
-#' Summary Method for fars Object
+#' @title Summary Method for \code{fars} Object
 #'
-#' @description Prints a complete summary of the fars object.
+#' @description Prints a complete summary of the fars object, including information on estimated quantiles, stressed quantiles,
+#' regression coefficients, standard errors, and p-values.
 #'
-#' @param object An object of class \code{fars_quantiles}.
+#' @param object An object of class \code{fars}.
 #' @param ... Additional arguments (ignored).
 #'
 #' @return The input object \code{object}, returned invisibly.
@@ -14,10 +15,10 @@ summary.fars <- function(object, ...) {
   cat("===========================================\n")
   cat("Summary of Quantile Regressions\n\n")
   
-  levels <- object$Levels
-  coeff <- object$Coeff
-  stderr <- object$StdError
-  pval <- object$Pvalue
+  levels <- object$levels
+  coeff <- object$coeff
+  stderr <- object$std_error
+  pval <- object$pvalue
   variables <- rownames(coeff)
   
   for (i in seq_along(levels)) {
