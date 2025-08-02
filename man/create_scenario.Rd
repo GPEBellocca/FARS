@@ -33,7 +33,7 @@ Constructs hyperellipsoids around MLDFM factor estimates using subsampling. Thes
 \examples{
 \donttest{
 data <- matrix(rnorm(100*300), nrow = 100, ncol = 300)
-block_ind <- c(150, 300)  # Defines 2 blocks
+block_ind <- c(150, 300)  
 global = 1
 local <- c(1, 1)   
 mldfm_result <- mldfm(data, blocks = 2, block_ind = block_ind, 

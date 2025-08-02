@@ -2,18 +2,18 @@
 % Please edit documentation in R/print.fars_density.R
 \name{print.fars_density}
 \alias{print.fars_density}
-\title{Print method for fars_density objects}
+\title{Print Method for \code{fars_density} Object}
 \usage{
-\method{print}{fars_density}(x, ...)
+\method{print}{fars_density}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{fars_density}.}
+\item{object}{An object of class \code{fars_density}.}
 
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-The input object \code{x}, returned invisibly.
+The input \code{fars_density} object, invisibly.
 }
 \description{
-Displays a brief summary of the density estimation object produced by the \code{density()} or \code{nl_density()} function.
+Displays a brief summary of the \code{fars_density} object.
 }

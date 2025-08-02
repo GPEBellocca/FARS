@@ -1,4 +1,4 @@
-#' Print Method for \code{fars_scenario} Object
+#' @title Print Method for \code{fars_scenario} Object
 #'
 #' @description Prints a short summary of the FARS scenario object.
 #' 

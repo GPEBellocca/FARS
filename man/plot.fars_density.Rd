@@ -2,19 +2,16 @@
 % Please edit documentation in R/plot_fars_density.R
 \name{plot.fars_density}
 \alias{plot.fars_density}
-\title{Plot method for fars_density objects}
+\title{Plot Method for \code{fars_density} Object}
 \usage{
-\method{plot}{fars_density}(x, time_index = NULL, ...)
+\method{plot}{fars_density}(object, time_index = NULL, ...)
 }
 \arguments{
-\item{x}{An object of class \code{fars_density}.}
+\item{object}{An object of class \code{fars_density}.}
 
 \item{time_index}{Optional vector for the time axis (default is 1:nrow).}
 
 \item{...}{Additional arguments passed to the plot function. (ignored)}
-}
-\value{
-An interactive plot of class \code{plotly}.
 }
 \description{
 Plots the evolution of the estimated density over time as a 3D surface.

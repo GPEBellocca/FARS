@@ -1,26 +1,27 @@
-#' Summary method for fars_density objects
+#' @title Summary Method for \code{fars_density} Object
 #'
-#' Provides summary statistics of the density estimation for each time observation,
-#' including the mean, median, and standard deviation of the simulated distribution.
+#' @description Displays a complete summary of the \code{fars_density} object.
 #'
 #' @param object An object of class \code{fars_density}.
 #' @param ... Additional arguments (ignored).
 #'
-#' @return A data frame with one row per time observation and columns:
-#' \code{Observation}, \code{Mean}, \code{Median}, and \code{StdDev}. 
-#' The object is also printed to the console and returned invisibly.
+#' @return The input \code{fars_density} object, invisibly.
 #' 
 #' @importFrom stats median
 #' 
 #' @method summary fars_density
 #' @export
 summary.fars_density <- function(object, ...) {
-  means <- rowMeans(object$distribution)
-  medians <- apply(object$distribution, 1, median)
-  sds <- apply(object$distribution, 1, sd)
+  stopifnot(inherits(object, "fars_density"))
+  
+  cat("FARS Density Summary\n")
+  cat("=========================\n")
+
+  means <- rowMeans(get_distribution(object))
+  medians <- apply(get_distribution(object), 1, median)
+  sds <- apply(get_distribution(object), 1, sd)
   
   summary_df <- data.frame(
-    Observation = seq_along(means),
     Mean = round(means, 4),
     Median = round(medians, 4),
     StdDev = round(sds, 4)

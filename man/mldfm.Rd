@@ -55,14 +55,6 @@ Estimates a Multi-Level Dynamic Factor Modelfrom time series data.
 Supports both Single-bBlock (DFM) and hierarchical Multi-Block (MLDFM) structures with customizable factor extraction settings.
 }
 \examples{
-\donttest{
-data <- matrix(rnorm(1000), nrow = 100, ncol = 519)
-block_ind <- c(63, 311, 519)  # Defines 3 blocks
-local <- c(1, 1, 1)           # One local factor per block
-middle_layer <- list("1-3" = 1)
-result <- mldfm(data, blocks = 3, block_ind = block_ind, global = 1, 
-local = local, middle_layer = middle_layer)
-summary(result)
-}
+mldfm_result <- mldfm(data = matrix(rnorm(100 * 5), 100, 5), blocks = 1, global = 2)
 
 }

@@ -60,7 +60,7 @@ Applies the MLDFM estimation to randomly drawn subsamples of the input data.
 \examples{
 \donttest{
 data <- matrix(rnorm(1000), nrow = 100, ncol = 100)
-block_ind <- c(50,100)  # Defines 3 blocks
+block_ind <- c(50,100)  
 local <- c(1, 1)   
 result <- mldfm_subsampling(data, blocks = 2, block_ind = block_ind, global = 1, 
 local = local, n_samples = 100, sample_size = 0.9)
