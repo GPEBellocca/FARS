@@ -4,14 +4,14 @@
 \alias{get_quantiles.fars}
 \title{Extract Quantiles from a \code{fars} Object}
 \usage{
-\method{get_quantiles}{fars}(object, stressed = FALSE, ...)
+\method{get_quantiles}{fars}(x, stressed = FALSE, ...)
 }
 \arguments{
-\item{object}{An object of class \code{fars}.}
+\item{x}{An object of class \code{fars}.}
 
 \item{stressed}{Logical. If \code{TRUE}, the function returns the stressed quantiles. If \code{FALSE} (default), it returns the non-stressed quantiles.}
 
-\item{...}{Further arguments (ignored).}
+\item{...}{Additional arguments (ignored).}
 }
 \value{
 A matrix containing either the non-stressed quantiles or the stressed quantiles, depending on the value of \code{stressed}.

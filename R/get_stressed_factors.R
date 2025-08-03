@@ -1,11 +1,11 @@
 #' @title Generic function to extract stressed factors
 #'
-#' @param object An object from which to extract the stressed factors.
-#' @param ... Additional arguments.
+#' @param x An object from which to extract the stressed factors.
+#' @param ... Additional arguments (ignored).
 #'
 #' @return A matrix of stressed factors.
 #' @export
-get_stressed_factors <- function(object, ...) {
+get_stressed_factors <- function(x, ...) {
   UseMethod("get_stressed_factors")
 }
 #' @title Extract Stressed Factors from a \code{fars} Object
@@ -13,8 +13,8 @@ get_stressed_factors <- function(object, ...) {
 #' @description Extracts the stressed factors from a \code{fars} object. If stressed factors are not available,
 #'             it returns NULL.
 #'
-#' @param object An object of class \code{fars}.
-#' @param ... Further arguments (ignored).
+#' @param x An object of class \code{fars}.
+#' @param ... Additional arguments (ignored).
 #'
 #' @return A matrix containing the stressed factors if available, otherwise NULL.
 #'
@@ -23,12 +23,12 @@ get_stressed_factors <- function(object, ...) {
 #' get_stressed_factors(fars_result)  
 #'
 #' @export
-get_stressed_factors.fars <- function(object, ...) {
-  stopifnot(inherits(object, "fars"))
+get_stressed_factors.fars <- function(x, ...) {
+  stopifnot(inherits(x, "fars"))
   
   # If stressed factors are available
-  if (!is.null(object$stressed_factors)) {
-    return(object$stressed_factors)
+  if (!is.null(x$stressed_factors)) {
+    return(x$stressed_factors)
   }
   
   # If stressed factors are not available

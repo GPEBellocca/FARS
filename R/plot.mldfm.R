@@ -6,7 +6,7 @@
 #' @param which What to plot: one of \code{"factors"} (default), \code{"loadings"}, or \code{"residuals"}.
 #' @param dates Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis. If not provided, a simple index (1:N) is used.
 #' @param var_names Optional vector of variable names to label loadings and residual axis.
-#' @param \dots Additional arguments (ignored)
+#' @param ... Additional arguments (ignored)
 #' 
 #' @return No return value. Called for plots generation.
 #' 

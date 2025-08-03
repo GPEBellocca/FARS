@@ -4,10 +4,10 @@
 \alias{get_ellipsoids}
 \title{Get Ellipsoids from \code{fars_scenario}}
 \usage{
-get_ellipsoids(object)
+get_ellipsoids(x)
 }
 \arguments{
-\item{object}{An object of class \code{fars_scenario}.}
+\item{x}{An object of class \code{fars_scenario}.}
 }
 \value{
 A list of matrices defining the ellipsoids at each time.

@@ -4,10 +4,10 @@
 \alias{get_mldfm_list}
 \title{Get List of MLDFMs from a \code{mldfm_subsample} Object}
 \usage{
-get_mldfm_list(object, ...)
+get_mldfm_list(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{mldfm_subsample}.}
+\item{x}{An object of class \code{mldfm_subsample}.}
 
 \item{...}{Additional arguments (ignored).}
 }

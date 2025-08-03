@@ -51,7 +51,7 @@ An object of class \code{mldfm_subsample}, which is a list containing:
 \item \code{n_samples}: Number of subsamples generated.
 \item \code{sample_size}: Proportion of the sample used for each subsample.
 \item \code{seed}: Seed used for random sampling (if any).
-\item{call}{Function call.}
+\item \code{call}: Function call.
 }
 }
 \description{

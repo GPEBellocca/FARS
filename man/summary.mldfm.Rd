@@ -12,7 +12,7 @@
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-The input object \code{x}, invisibly.
+The input \code{mldfm} object, invisibly.
 }
 \description{
 Provides a complete summary of the MLDFM object.

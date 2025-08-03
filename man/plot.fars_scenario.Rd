@@ -11,7 +11,7 @@
 
 \item{obs}{Integer. Time index to plot (default = 1).}
 
-\item{...}{Additional arguments passed to plotting functions.}
+\item{...}{Additional arguments (ignored).}
 }
 \description{
 Plots the hyperellipsoid for a given time observation (only for 1D or 2D cases).

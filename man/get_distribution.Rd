@@ -4,10 +4,10 @@
 \alias{get_distribution}
 \title{Generic function to extract distribution from fars_density object}
 \usage{
-get_distribution(object, ...)
+get_distribution(x, ...)
 }
 \arguments{
-\item{object}{An object from which to extract the distribution.}
+\item{x}{An object from which to extract the distribution.}
 
 \item{...}{Additional arguments.}
 }

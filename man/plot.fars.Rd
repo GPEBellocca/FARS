@@ -12,7 +12,7 @@
 \item{dates}{Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis.
 If not provided, a simple index is used.}
 
-\item{...}{Additional arguments (currently ignored).}
+\item{...}{Additional arguments (ignored).}
 }
 \value{
 No return value. Called for plot generation.

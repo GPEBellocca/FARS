@@ -6,12 +6,13 @@
 #' @param x An object of class \code{fars}.
 #' @param dates Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis. 
 #' If not provided, a simple index is used.
-#' @param ... Additional arguments (currently ignored).
+#' @param ... Additional arguments (ignored).
 #'
 #' @return No return value. Called for plot generation.
 #'
 #' @import ggplot2
 #' @importFrom reshape2 melt
+#' @importFrom rlang .data
 #' @method plot fars
 #' @export
 plot.fars <- function(x, dates = NULL, ...) {
@@ -41,7 +42,7 @@ plot.fars <- function(x, dates = NULL, ...) {
   df$Time <- dates
   df_long <- reshape2::melt(df, id.vars = "Time", variable.name = "Quantile", value.name = "Value")
   
-  p_main <- ggplot(df_long, aes(x = Time, y = Value, color = Quantile)) +
+  p_main <- ggplot(df_long, aes(x = .data$Time, y = .data$Value, color = .data$Quantile)) +
     geom_line(size = 1) +
     labs(title = "Quantiles",
          y = "Value", x = "Time") +
@@ -57,7 +58,7 @@ plot.fars <- function(x, dates = NULL, ...) {
     df_s$Time <- dates
     df_s_long <- reshape2::melt(df_s, id.vars = "Time", variable.name = "Quantile", value.name = "Value")
     
-    p_stress <- ggplot(df_s_long, aes(x = Time, y = Value, color = Quantile)) +
+    p_stress <- ggplot(df_s_long, aes(x = .data$Time, y = .data$Value, color = .data$Quantile)) +
       geom_line(size = 1) +
       labs(title = "Stressed Quantiles",
            y = "Value", x = "Time") +

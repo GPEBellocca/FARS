@@ -4,10 +4,10 @@
 \alias{get_factors}
 \title{Generic function to extract estimated factors}
 \usage{
-get_factors(object, ...)
+get_factors(x, ...)
 }
 \arguments{
-\item{object}{An object from which to extract the estimated factors.}
+\item{x}{An object from which to extract the estimated factors.}
 
 \item{...}{Additional arguments.}
 }

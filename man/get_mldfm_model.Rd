@@ -4,10 +4,10 @@
 \alias{get_mldfm_model}
 \title{Get a Single \code{mldfm} Object from a \code{mldfm_subsample} Object}
 \usage{
-get_mldfm_model(object, index, ...)
+get_mldfm_model(x, index, ...)
 }
 \arguments{
-\item{object}{An object of class \code{mldfm_subsample}.}
+\item{x}{An object of class \code{mldfm_subsample}.}
 
 \item{index}{Integer. The position of the desired model (between 1 and \code{n_samples}).}
 

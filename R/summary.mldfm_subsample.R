@@ -27,7 +27,7 @@ summary.mldfm_subsample <- function(object, ...) {
     cat("\nFactor structure:\n")
     f_list <- object$models[[1]]$factors_list
     for (key in names(f_list)) {
-      cat(" •", key, ": ", f_list[[key]], "factor(s)\n")
+      cat(" -", key, ": ", f_list[[key]], "factor(s)\n")
     }
     
     # Estimation method 

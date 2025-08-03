@@ -4,9 +4,10 @@
 #'
 #' @param x An object of class \code{fars_scenario}.
 #' @param obs Integer. Time index to plot (default = 1).
-#' @param ... Additional arguments passed to plotting functions.
+#' @param ... Additional arguments (ignored).
 #'
 #' @method plot fars_scenario
+#' @importFrom graphics segments points axis
 #' @export
 plot.fars_scenario <- function(x, obs = 1, ...) {
   stopifnot(inherits(x, "fars_scenario"))

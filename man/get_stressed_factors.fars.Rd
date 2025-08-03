@@ -4,12 +4,12 @@
 \alias{get_stressed_factors.fars}
 \title{Extract Stressed Factors from a \code{fars} Object}
 \usage{
-\method{get_stressed_factors}{fars}(object, ...)
+\method{get_stressed_factors}{fars}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{fars}.}
+\item{x}{An object of class \code{fars}.}
 
-\item{...}{Further arguments (ignored).}
+\item{...}{Additional arguments (ignored).}
 }
 \value{
 A matrix containing the stressed factors if available, otherwise NULL.

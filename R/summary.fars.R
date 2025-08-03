@@ -6,7 +6,7 @@
 #' @param object An object of class \code{fars}.
 #' @param ... Additional arguments (ignored).
 #'
-#' @return The input object \code{object}, returned invisibly.
+#' @return The input \code{fars} object, returned invisibly.
 #'
 #' @method summary fars
 #' @export

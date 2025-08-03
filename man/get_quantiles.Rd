@@ -4,12 +4,12 @@
 \alias{get_quantiles}
 \title{Generic function to extract quantiles}
 \usage{
-get_quantiles(object, ...)
+get_quantiles(x, ...)
 }
 \arguments{
-\item{object}{An object from which to extract the quantiles.}
+\item{x}{An object from which to extract the quantiles.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments (ignored).}
 }
 \value{
 A matrix of quantiles.

@@ -21,7 +21,7 @@
 #'   \item \code{n_samples}: Number of subsamples generated.
 #'   \item \code{sample_size}: Proportion of the sample used for each subsample.
 #'   \item \code{seed}: Seed used for random sampling (if any).
-#'   \item{call}{Function call.}
+#'   \item \code{call}: Function call.
 #' }
 #'  
 #' @examples

@@ -2,7 +2,7 @@
 #'
 #' @description Displays time series plots of the estimated factors with 95% confidence bands.
 #'
-#' @param object An object of class \code{mldfm}.
+#' @param x An object of class \code{mldfm}.
 #' @param dates Optional vector of dates. If NULL, uses 1:n as default.
 #' @param ... Additional arguments (ignored).
 #' 
@@ -11,14 +11,15 @@
 #' @importFrom ggplot2 ggplot aes geom_line geom_ribbon ggtitle coord_cartesian theme_bw theme element_blank element_text scale_y_continuous
 #' @importFrom MASS ginv
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #'
 #' @keywords internal
-plot_factors.mldfm <- function(object, dates = NULL, ...) {
-  stopifnot(inherits(object, "mldfm"))
+plot_factors.mldfm <- function(x, dates = NULL, ...) {
+  stopifnot(inherits(x, "mldfm"))
   
-  factors   <- get_factors(object)
-  loadings  <- get_loadings(object)
-  residuals <- get_residuals(object)
+  factors   <- get_factors(x)
+  loadings  <- get_loadings(x)
+  residuals <- get_residuals(x)
   
   T_obs  <- nrow(residuals)
   N_vars <- ncol(residuals)
@@ -30,8 +31,8 @@ plot_factors.mldfm <- function(object, dates = NULL, ...) {
   SD      <- sqrt(diag(PP %*% gamma %*% PP) / N_vars)
   
   # Factor names
-  keys         <- names(object$factors_list)
-  values       <- unlist(object$factors_list)
+  keys         <- names(x$factors_list)
+  values       <- unlist(x$factors_list)
   factor_names <- unlist(
     mapply(function(key, val) {
       clean <- paste0("F", gsub("-", "", key))
@@ -49,20 +50,20 @@ plot_factors.mldfm <- function(object, dates = NULL, ...) {
   
   df_long <- as.data.frame(factors) %>%
     mutate(Date = as.Date(dates)) %>%
-    pivot_longer(cols = -Date, names_to = "Factor", values_to = "Value") %>%
-    mutate(index = as.numeric(factor(Factor, levels = factor_names)),
-           LB = Value - 2 * SD[index],
-           UB = Value + 2 * SD[index])
+    pivot_longer(cols = - .data$Date, names_to = "Factor", values_to = "Value") %>%
+    mutate(index = as.numeric(factor(.data$Factor, levels = factor_names)),
+           LB = .data$Value - 2 * SD[.data$index],
+           UB = .data$Value + 2 * SD[.data$index])
   
   y_min <- min(df_long$LB, na.rm = TRUE)
   y_max <- max(df_long$UB, na.rm = TRUE)
   
   for (factor_name in factor_names) {
-    df_i <- df_long %>% filter(Factor == factor_name)
+    df_i <- df_long %>% filter(.data$Factor == factor_name)
     
-    p <- ggplot(df_i, aes(x = Date, y = Value)) +
+    p <- ggplot(df_i, aes(x = .data$Date, y = .data$Value)) +
       geom_line(color = "blue", alpha = 0.6) +
-      geom_ribbon(aes(ymin = LB, ymax = UB), fill = "grey70", alpha = 0.3) +
+      geom_ribbon(aes(ymin = .data$LB, ymax = .data$UB), fill = "grey70", alpha = 0.3) +
       ggtitle(factor_name) +
       coord_cartesian(ylim = c(y_min, y_max)) +
       theme_bw() +

@@ -4,10 +4,10 @@
 \alias{get_loadings.mldfm}
 \title{Extract Factor Loadings from a \code{mldfm} Object}
 \usage{
-\method{get_loadings}{mldfm}(object, ...)
+\method{get_loadings}{mldfm}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{mldfm}.}
+\item{x}{An object of class \code{mldfm}.}
 
 \item{...}{Further arguments (ignored).}
 }

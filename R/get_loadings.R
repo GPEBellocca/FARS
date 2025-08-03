@@ -1,17 +1,17 @@
 #' @title Generic function to extract factor loadings
 #'
-#' @param object An object from which to extract the factor loadings.
+#' @param x An object from which to extract the factor loadings.
 #' @param ... Additional arguments.
 #'
 #' @return A matrix of factor loadings.
 #' @export
-get_loadings <- function(object, ...) {
+get_loadings <- function(x, ...) {
   UseMethod("get_loadings")
 }
 
 #' @title Extract Factor Loadings from a \code{mldfm} Object
 #'
-#' @param object An object of class \code{mldfm}.
+#' @param x An object of class \code{mldfm}.
 #' @param ... Further arguments (ignored).
 #'
 #' @return A matrix containing the estimated factor loadings.
@@ -21,7 +21,7 @@ get_loadings <- function(object, ...) {
 #' get_loadings(mldfm_result)
 #'
 #' @export
-get_loadings.mldfm <- function(object, ...) {
-  stopifnot(inherits(object, "mldfm"))
-  object$loadings
+get_loadings.mldfm <- function(x, ...) {
+  stopifnot(inherits(x, "mldfm"))
+  x$loadings
 }

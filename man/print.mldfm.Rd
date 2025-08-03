@@ -4,10 +4,10 @@
 \alias{print.mldfm}
 \title{Print Method for \code{mldfm} Object}
 \usage{
-\method{print}{mldfm}(object, ...)
+\method{print}{mldfm}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{mldfm}.}
+\item{x}{An object of class \code{mldfm}.}
 
 \item{...}{Additional arguments (ignored).}
 }

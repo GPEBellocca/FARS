@@ -31,8 +31,6 @@ multiple_blocks(
 \item{max_iter}{Integer. The maximum number of iterations allowed for the RSS minimization process.}
 
 \item{method}{Integer.  Method used to initialize the factors: \code{0} for Canonical Correlation Analysis (CCA), \code{1} for Principal Component Analysis (PCA).}
-
-\item{blocks}{Integer. Number of blocks into which the data is divided.}
 }
 \value{
 A list with elements:

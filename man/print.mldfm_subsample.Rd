@@ -4,10 +4,10 @@
 \alias{print.mldfm_subsample}
 \title{Print Method for \code{mldfm_subsample} Object}
 \usage{
-\method{print}{mldfm_subsample}(object, ...)
+\method{print}{mldfm_subsample}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{mldfm_subsample}.}
+\item{x}{An object of class \code{mldfm_subsample}.}
 
 \item{...}{Additional arguments (ignored).}
 }

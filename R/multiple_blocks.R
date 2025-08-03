@@ -3,7 +3,6 @@
 #' @description Estimates a Multi-Level Dynamic Factor Model (MLDFM) using Sequential Least Squares Estimation approach
 #' 
 #' @param data A numeric matrix or data frame containing the time series data (T × N).
-#' @param blocks Integer. Number of blocks into which the data is divided.
 #' @param block_ind Integer vector. End column indices for each block. Must be of length \code{blocks} and in increasing order.
 #' @param global Integer. Number of global factors extracted from the entire dataset.
 #' @param local Integer vector of length \code{blocks}. Specifies the number of local factors for each block.

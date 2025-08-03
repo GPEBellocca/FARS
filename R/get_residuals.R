@@ -1,17 +1,17 @@
 #' @title Generic function to extract residuals
 #'
-#' @param object An object from which to extract the residuals.
-#' @param ... Additional arguments.
+#' @param x An object from which to extract the residuals.
+#' @param ... Additional arguments (ignored).
 #'
 #' @return A matrix of residuals.
 #' @export
-get_residuals <- function(object, ...) {
+get_residuals <- function(x, ...) {
   UseMethod("get_residuals")
 }
 
 #' @title Extract Residuals from a \code{mldfm} Object
 #'
-#' @param object An object of class \code{mldfm}.
+#' @param x An object of class \code{mldfm}.
 #' @param ... Further arguments (ignored).
 #'
 #' @return A matrix containing the residuals.
@@ -21,7 +21,7 @@ get_residuals <- function(object, ...) {
 #' get_residuals(mldfm_result)
 #'
 #' @export
-get_residuals.mldfm <- function(object, ...) {
-  stopifnot(inherits(object, "mldfm"))
-  object$residuals
+get_residuals.mldfm <- function(x, ...) {
+  stopifnot(inherits(x, "mldfm"))
+  x$residuals
 }

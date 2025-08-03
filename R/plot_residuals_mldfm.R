@@ -2,7 +2,7 @@
 #'
 #' @description Displays a correlation heatmap of the residuals.
 #' 
-#' @param object An object of class \code{mldfm}.
+#' @param x An object of class \code{mldfm}.
 #' @param var_names Optional vector of variable names. If NULL, default names are used.
 #' @param ... Additional arguments (ignored).
 #'
@@ -10,10 +10,10 @@
 #' @importFrom stats cor
 #'
 #' @keywords internal
-plot_residuals.mldfm <- function(object, var_names = NULL, ...) {
-  stopifnot(inherits(object, "mldfm"))
+plot_residuals.mldfm <- function(x, var_names = NULL, ...) {
+  stopifnot(inherits(x, "mldfm"))
   
-  residuals <- get_residuals(object)
+  residuals <- get_residuals(x)
   n_vars <- ncol(residuals)
   
   country_names <- if (is.null(var_names)) {

@@ -1,17 +1,17 @@
 #' @title Generic function to extract estimated factors
 #'
-#' @param object An object from which to extract the estimated factors.
+#' @param x An object from which to extract the estimated factors.
 #' @param ... Additional arguments.
 #'
 #' @return A matrix of estimated factors.
 #' @export
-get_factors <- function(object, ...) {
+get_factors <- function(x, ...) {
   UseMethod("get_factors")
 }
 
 #' @title Extract Estimated Factors from a \code{mldfm} Object
 #'
-#' @param object An object of class \code{mldfm}.
+#' @param x An object of class \code{mldfm}.
 #' @param ... Further arguments (ignored).
 #'
 #' @return A matrix containing the estimated factors.
@@ -21,7 +21,7 @@ get_factors <- function(object, ...) {
 #' get_factors(mldfm_result)
 #'
 #' @export
-get_factors.mldfm <- function(object, ...) {
-  stopifnot(inherits(object, "mldfm"))
-  object$factors
+get_factors.mldfm <- function(x, ...) {
+  stopifnot(inherits(x, "mldfm"))
+  x$factors
 }

@@ -4,12 +4,12 @@
 \alias{get_stressed_factors}
 \title{Generic function to extract stressed factors}
 \usage{
-get_stressed_factors(object, ...)
+get_stressed_factors(x, ...)
 }
 \arguments{
-\item{object}{An object from which to extract the stressed factors.}
+\item{x}{An object from which to extract the stressed factors.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments (ignored).}
 }
 \value{
 A matrix of stressed factors.

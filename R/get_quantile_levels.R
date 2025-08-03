@@ -2,18 +2,24 @@
 #'
 #' @description Returns the quantile levels from an object of class \code{fars}.
 #'
-#' @param object An object of class \code{fars}, typically the result of a computation such as \code{compute_fars}.
-#' @param ... Further arguments (ignored).
+#' @param x An object of class \code{fars}, typically the result of a computation such as \code{compute_fars}.
+#' @param ... Additional arguments (ignored).
 #'
 #' @return 
 #' A vector of quantile levels stored within the \code{fars} object.
 #' 
 #' @examples
-#' fars_result <- compute_fars(dep_variable = rnorm(100), factors = matrix(rnorm(100 * 3), ncol = 3))
+#' fars_result <- compute_fars(dep_variable = rnorm(100), 
+#'                             factors = matrix(rnorm(100 * 3), ncol = 3))
 #' get_quantile_levels(fars_result)  
 #'
 #' @export
-get_quantile_levels.fars <- function(object, ...) {
-  stopifnot(inherits(object, "fars"))
-  return(object$levels)
+get_quantile_levels <- function(x, ...) {
+  UseMethod("get_quantile_levels")
+}
+
+#' @export
+get_quantile_levels.fars <- function(x, ...) {
+  stopifnot(inherits(x, "fars"))
+  return(x$levels)
 }

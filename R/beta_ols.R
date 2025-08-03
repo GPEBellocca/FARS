@@ -8,12 +8,14 @@
 #'
 #' @return A numeric matrix of coefficients.
 #'
+#' @importFrom stats .lm.fit
+#'
 #' @keywords internal
 beta_ols <- function(X, Y) {
   if (is.vector(Y)) {
-    return(matrix(.lm.fit(X, Y)$coefficients, ncol = 1))
+    return(matrix(stats::.lm.fit(X, Y)$coefficients, ncol = 1))
   } else if (is.matrix(Y)) {
-    return(apply(Y, 2, function(y) .lm.fit(X, y)$coefficients))
+    return(apply(Y, 2, function(y) stats::.lm.fit(X, y)$coefficients))
   } else {
     stop("Y must be a numeric vector or matrix.")
   }

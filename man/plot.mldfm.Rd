@@ -15,7 +15,7 @@
 
 \item{var_names}{Optional vector of variable names to label loadings and residual axis.}
 
-\item{\dots}{Additional arguments (ignored)}
+\item{...}{Additional arguments (ignored)}
 }
 \value{
 No return value. Called for plots generation.

@@ -4,10 +4,10 @@
 \alias{get_sigma_list}
 \title{Get Sigma List from \code{fars_scenario}}
 \usage{
-get_sigma_list(object)
+get_sigma_list(x)
 }
 \arguments{
-\item{object}{An object of class \code{fars_scenario}.}
+\item{x}{An object of class \code{fars_scenario}.}
 }
 \value{
 A list of covariance matrices (one per period).

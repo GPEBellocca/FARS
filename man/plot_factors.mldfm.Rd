@@ -4,10 +4,10 @@
 \alias{plot_factors.mldfm}
 \title{Plot Factors from \code{mldfm} Object}
 \usage{
-plot_factors.mldfm(object, dates = NULL, ...)
+plot_factors.mldfm(x, dates = NULL, ...)
 }
 \arguments{
-\item{object}{An object of class \code{mldfm}.}
+\item{x}{An object of class \code{mldfm}.}
 
 \item{dates}{Optional vector of dates. If NULL, uses 1:n as default.}
 

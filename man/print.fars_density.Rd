@@ -4,10 +4,10 @@
 \alias{print.fars_density}
 \title{Print Method for \code{fars_density} Object}
 \usage{
-\method{print}{fars_density}(object, ...)
+\method{print}{fars_density}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{fars_density}.}
+\item{x}{An object of class \code{fars_density}.}
 
 \item{...}{Additional arguments (ignored).}
 }

@@ -4,10 +4,10 @@
 \alias{print.fars_scenario}
 \title{Print Method for \code{fars_scenario} Object}
 \usage{
-\method{print}{fars_scenario}(object, ...)
+\method{print}{fars_scenario}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{fars_scenario}.}
+\item{x}{An object of class \code{fars_scenario}.}
 
 \item{...}{Additional arguments (ignored).}
 }

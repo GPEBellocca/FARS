@@ -2,22 +2,22 @@
 #'
 #' @description Displays a brief summary of the \code{fars_density} object.
 #'
-#' @param object An object of class \code{fars_density}.
+#' @param x An object of class \code{fars_density}.
 #' @param ... Additional arguments (ignored).
 #'
 #' @return The input \code{fars_density} object, invisibly.
 #' 
 #' @method print fars_density
 #' @export
-print.fars_density <- function(object, ...) {
-  stopifnot(inherits(object, "fars_density"))
+print.fars_density <- function(x, ...) {
+  stopifnot(inherits(x, "fars_density"))
   cat("FARS Density\n")
   cat("====================\n")
-  cat("Time observations  :", nrow(object$density), "\n")
-  cat("Estimation points  :", ncol(object$density), "\n")
-  cat("Random samples     :", ncol(get_distribution(object)), "\n")
-  cat("Support range      : [", min(object$eval_points), ",", max(object$eval_points), "]\n")
-  cat("Optimization       :", object$optimization,"\n")
-  invisible(object)
+  cat("Time observations  :", nrow(x$density), "\n")
+  cat("Estimation points  :", ncol(x$density), "\n")
+  cat("Random samples     :", ncol(get_distribution(x)), "\n")
+  cat("Support range      : [", min(x$eval_points), ",", max(x$eval_points), "]\n")
+  cat("Optimization       :", x$optimization,"\n")
+  invisible(x)
 }
 

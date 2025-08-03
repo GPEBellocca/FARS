@@ -4,10 +4,10 @@
 \alias{get_distribution.fars_density}
 \title{Extract Distribution from a \code{fars_density} Object}
 \usage{
-\method{get_distribution}{fars_density}(object, ...)
+\method{get_distribution}{fars_density}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{fars_density}.}
+\item{x}{An object of class \code{fars_density}.}
 
 \item{...}{Further arguments (ignored).}
 }

@@ -4,14 +4,14 @@
 \alias{plot.fars_density}
 \title{Plot Method for \code{fars_density} Object}
 \usage{
-\method{plot}{fars_density}(object, time_index = NULL, ...)
+\method{plot}{fars_density}(x, time_index = NULL, ...)
 }
 \arguments{
-\item{object}{An object of class \code{fars_density}.}
+\item{x}{An object of class \code{fars_density}.}
 
 \item{time_index}{Optional vector for the time axis (default is 1:nrow).}
 
-\item{...}{Additional arguments passed to the plot function. (ignored)}
+\item{...}{Additional arguments (ignored).}
 }
 \description{
 Plots the evolution of the estimated density over time as a 3D surface.

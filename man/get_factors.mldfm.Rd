@@ -4,10 +4,10 @@
 \alias{get_factors.mldfm}
 \title{Extract Estimated Factors from a \code{mldfm} Object}
 \usage{
-\method{get_factors}{mldfm}(object, ...)
+\method{get_factors}{mldfm}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{mldfm}.}
+\item{x}{An object of class \code{mldfm}.}
 
 \item{...}{Further arguments (ignored).}
 }

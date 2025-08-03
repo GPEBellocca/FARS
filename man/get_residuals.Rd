@@ -4,12 +4,12 @@
 \alias{get_residuals}
 \title{Generic function to extract residuals}
 \usage{
-get_residuals(object, ...)
+get_residuals(x, ...)
 }
 \arguments{
-\item{object}{An object from which to extract the residuals.}
+\item{x}{An object from which to extract the residuals.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments (ignored).}
 }
 \value{
 A matrix of residuals.

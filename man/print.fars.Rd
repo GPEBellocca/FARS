@@ -4,15 +4,15 @@
 \alias{print.fars}
 \title{Print Method for \code{fars} Object}
 \usage{
-\method{print}{fars}(object, ...)
+\method{print}{fars}(x, ...)
 }
 \arguments{
-\item{object}{An object of class \code{fars}.}
+\item{x}{An object of class \code{fars}.}
 
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-The input \code{object}, returned invisibly.
+The input \code{fars} object, returned invisibly.
 }
 \description{
 Prints a short summary of the fars object.

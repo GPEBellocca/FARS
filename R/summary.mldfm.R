@@ -5,7 +5,7 @@
 #' @param object An object of class \code{mldfm}.
 #' @param ... Additional arguments (ignored).
 #'
-#' @return The input object \code{x}, invisibly. 
+#' @return The input \code{mldfm} object, invisibly. 
 #'
 #' @method summary mldfm
 #' @export
@@ -30,15 +30,15 @@ summary.mldfm <- function(object, ...) {
   
   cat("\nFactor structure:\n")
   for (key in names(object$factors_list)) {
-    cat(" •", key, ": ", object$factors_list[[key]], "factor(s)\n")
+    cat(" -", key, ": ", object$factors_list[[key]], "factor(s)\n")
   }
   
   if (!is.null(residuals)) {
     rss <- sum(residuals^2)
     avg_rss <- mean(rowSums(residuals^2))
     cat("\nResidual diagnostics:\n")
-    cat(" • Total residual sum of squares (RSS): ", formatC(rss, format = "f", digits = 2), "\n")
-    cat(" • Average RSS per time period        : ", formatC(avg_rss, format = "f", digits = 2), "\n")
+    cat(" - Total residual sum of squares (RSS): ", formatC(rss, format = "f", digits = 2), "\n")
+    cat(" - Average RSS per time period        : ", formatC(avg_rss, format = "f", digits = 2), "\n")
   }
   
   invisible(object)

@@ -12,7 +12,7 @@
 \item{...}{Additional arguments (ignored).}
 }
 \value{
-The input object \code{object}, returned invisibly.
+The input \code{fars} object, returned invisibly.
 }
 \description{
 Prints a complete summary of the fars object, including information on estimated quantiles, stressed quantiles,

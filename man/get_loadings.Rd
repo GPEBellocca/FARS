@@ -4,10 +4,10 @@
 \alias{get_loadings}
 \title{Generic function to extract factor loadings}
 \usage{
-get_loadings(object, ...)
+get_loadings(x, ...)
 }
 \arguments{
-\item{object}{An object from which to extract the factor loadings.}
+\item{x}{An object from which to extract the factor loadings.}
 
 \item{...}{Additional arguments.}
 }

@@ -2,7 +2,7 @@
 #'
 #' @description Displays bar plots of the estimated factor loadings with 95% confidence intervals.
 #'
-#' @param object An object of class \code{mldfm}.
+#' @param x An object of class \code{mldfm}.
 #' @param var_names Optional vector of variable names. If NULL, default names are used.
 #' @param ... Additional arguments (ignored).
 #'
@@ -10,14 +10,15 @@
 #' @importFrom dplyr mutate filter
 #' @importFrom ggplot2 ggplot geom_bar geom_errorbar geom_hline theme_bw theme element_blank element_text scale_y_continuous ggtitle coord_flip
 #' @importFrom forcats fct_rev
+#' @importFrom rlang .data
 #'
 #' @keywords internal
-plot_loadings.mldfm <- function(object, var_names = NULL, ...) {
-  stopifnot(inherits(object, "mldfm"))
+plot_loadings.mldfm <- function(x, var_names = NULL, ...) {
+  stopifnot(inherits(x, "mldfm"))
   
-  factors   <- get_factors(object)
-  loadings  <- get_loadings(object)
-  residuals <- get_residuals(object)
+  factors   <- get_factors(x)
+  loadings  <- get_loadings(x)
+  residuals <- get_residuals(x)
   
   t <- nrow(residuals)
   N <- ncol(residuals)
@@ -25,8 +26,8 @@ plot_loadings.mldfm <- function(object, var_names = NULL, ...) {
   loadings_df <- as.data.frame(loadings)
   
   # Factor names
-  keys   <- names(object$factors_list)
-  values <- unlist(object$factors_list)
+  keys   <- names(x$factors_list)
+  values <- unlist(x$factors_list)
   factor_names <- unlist(
     mapply(function(key, val) {
       clean <- paste0("F", gsub("-", "", key))
@@ -46,15 +47,16 @@ plot_loadings.mldfm <- function(object, var_names = NULL, ...) {
   
   # Long format
   loadings_long <- loadings_df %>%
-    pivot_longer(cols = -Variables, names_to = "Factor", values_to = "Loading")
+    pivot_longer(cols = - .data$Variables, names_to = "Factor", values_to = "Loading")
   
   # Standard errors and CIs
   se_vector <- apply(residuals, 2, sd) / sqrt(t)
   
   loadings_long <- loadings_long %>%
-    mutate(SE = rep(se_vector, times = length(unique(Factor))),
-           Loading_lower = Loading - 1.96 * SE,
-           Loading_upper = Loading + 1.96 * SE)
+    mutate(SE = rep(se_vector, times = length(unique(.data$Factor))),
+           Loading_lower = .data$Loading - 1.96 * .data$SE,
+           Loading_upper = .data$Loading + 1.96 * .data$SE)
+  
   
   # Plot
   unique_factors <- unique(loadings_long$Factor)
@@ -63,13 +65,13 @@ plot_loadings.mldfm <- function(object, var_names = NULL, ...) {
   
   for (factor_name in unique_factors) {
     df_i <- loadings_long %>%
-      filter(Factor == factor_name & Loading != 0) %>%
-      mutate(Variables = factor(Variables, levels = unique(Variables)))
+      filter(.data$Factor == factor_name & .data$Loading != 0) %>%
+      mutate(Variables = factor(.data$Variables, levels = unique(.data$Variables)))
     
-    p <- ggplot(df_i, aes(x = fct_rev(Variables), y = Loading)) +
+    p <- ggplot(df_i, aes(x = forcats::fct_rev(.data$Variables), y = .data$Loading)) +
       geom_bar(stat = "identity", fill = "grey", alpha = 0.7) +
       geom_hline(yintercept = 0, color = "red") +
-      geom_errorbar(aes(ymin = Loading_lower, ymax = Loading_upper),
+      geom_errorbar(aes(ymin = .data$Loading_lower, ymax = .data$Loading_upper),
                     width = 0.5, color = "black", alpha = 1, size = 0.2) +
       coord_flip() +
       theme_bw() +
@@ -81,6 +83,7 @@ plot_loadings.mldfm <- function(object, var_names = NULL, ...) {
       ) +
       scale_y_continuous(limits = c(y_min, y_max)) +
       ggtitle(factor_name)
+    
     
     print(p)
   }
