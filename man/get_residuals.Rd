@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_residuals.R
 \name{get_residuals}
 \alias{get_residuals}
-\title{Generic function to extract residuals}
+\title{Generic Function to Extract Residuals}
 \usage{
 get_residuals(x, ...)
 }
@@ -15,5 +15,5 @@ get_residuals(x, ...)
 A matrix of residuals.
 }
 \description{
-Generic function to extract residuals
+Generic Function to Extract Residuals
 }

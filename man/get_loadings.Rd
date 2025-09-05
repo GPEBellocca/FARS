@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_loadings.R
 \name{get_loadings}
 \alias{get_loadings}
-\title{Generic function to extract factor loadings}
+\title{Generic Function to Extract Factor Loadings}
 \usage{
 get_loadings(x, ...)
 }
@@ -15,5 +15,5 @@ get_loadings(x, ...)
 A matrix of factor loadings.
 }
 \description{
-Generic function to extract factor loadings
+Generic Function to Extract Factor Loadings
 }

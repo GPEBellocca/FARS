@@ -1,4 +1,4 @@
-#' @title Generic function to extract factor loadings
+#' @title Generic Function to Extract Factor Loadings
 #'
 #' @param x An object from which to extract the factor loadings.
 #' @param ... Additional arguments.

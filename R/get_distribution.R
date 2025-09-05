@@ -1,9 +1,18 @@
-#' @title Generic function to extract distribution from fars_density object
+#' @title Generic Function to Extract Distribution 
 #'
 #' @param x An object from which to extract the distribution.
-#' @param ... Additional arguments.
+#' @param ... Additional arguments (ignored).
 #'
-#' @return A matrix of random draws from the fitted skew-t distribution.
+#' @return A matrix containing the random draws from the fitted skew-t distribution.
+#'
+#' @examples
+#' \donttest{
+#' fars_density_result <- compute_density(
+#'   quantiles = matrix(rnorm(100 * 5), nrow = 100, ncol = 5)
+#' )
+#' get_distribution(fars_density_result)
+#' }
+#'
 #' @export
 get_distribution <- function(x, ...) {
   UseMethod("get_distribution")
@@ -25,10 +34,13 @@ get_distribution <- function(x, ...) {
 #'}
 #' @export
 get_distribution.fars_density <- function(x, ...) {
-  stopifnot(inherits(x, "fars_density"))
+  if (!inherits(x, "fars_density")) {
+    stop("x must be a 'fars_density' object")
+  }
   
   if (!is.null(x$distribution)) {
     return(x$distribution)
   }
-  return(NULL)
+  NULL
 }
+

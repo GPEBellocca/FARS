@@ -1,4 +1,4 @@
-#' @title Generic function to extract stressed factors
+#' @title Generic Function to Extract Stressed Factors
 #'
 #' @param x An object from which to extract the stressed factors.
 #' @param ... Additional arguments (ignored).

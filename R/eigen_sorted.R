@@ -1,4 +1,4 @@
-#' @title Eigen Decomposition (Descending Order)
+#' @title Eigen Decomposition 
 #'
 #' @description Computes the eigenvalues and eigenvectors of a symmetric matrix using the base \code{eigen()} function.
 #'

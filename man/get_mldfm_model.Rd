@@ -2,20 +2,20 @@
 % Please edit documentation in R/get_mldfm_model.R
 \name{get_mldfm_model}
 \alias{get_mldfm_model}
-\title{Get a Single \code{mldfm} Object from a \code{mldfm_subsample} Object}
+\title{Generic Function to Extract a Specific \code{mldfm} Object}
 \usage{
 get_mldfm_model(x, index, ...)
 }
 \arguments{
-\item{x}{An object of class \code{mldfm_subsample}.}
+\item{x}{An object from which to extract a \code{mldfm} Object}
 
-\item{index}{Integer. The position of the desired model (between 1 and \code{n_samples}).}
+\item{index}{Integer. The position of the desired model}
 
-\item{...}{Additional arguments (ignored).}
+\item{...}{Additional arguments.}
 }
 \value{
 A single \code{mldfm} object.
 }
 \description{
-Returns the \code{mldfm} object at the specified position in a \code{mldfm_subsample} object.
+Generic Function to Extract a Specific \code{mldfm} Object
 }

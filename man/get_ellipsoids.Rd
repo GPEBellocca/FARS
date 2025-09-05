@@ -2,16 +2,18 @@
 % Please edit documentation in R/get_ellipsoids.R
 \name{get_ellipsoids}
 \alias{get_ellipsoids}
-\title{Get Ellipsoids from \code{fars_scenario}}
+\title{Generic Function to Extract Ellipsoids}
 \usage{
-get_ellipsoids(x)
+get_ellipsoids(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{fars_scenario}.}
+\item{x}{An object from which to extract the ellipsoids}
+
+\item{...}{Additional arguments.}
 }
 \value{
 A list of matrices defining the ellipsoids at each time.
 }
 \description{
-Returns the list of ellipsoids from a \code{fars_scenario} object.
+Generic Function to Extract Ellipsoids
 }

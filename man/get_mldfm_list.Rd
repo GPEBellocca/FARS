@@ -2,18 +2,18 @@
 % Please edit documentation in R/get_mldfm_list.R
 \name{get_mldfm_list}
 \alias{get_mldfm_list}
-\title{Get List of MLDFMs from a \code{mldfm_subsample} Object}
+\title{Generic Function to Extract List of MLDFMs}
 \usage{
 get_mldfm_list(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{mldfm_subsample}.}
+\item{x}{An object from which to extract the MLDFMs.}
 
-\item{...}{Additional arguments (ignored).}
+\item{...}{Additional arguments.}
 }
 \value{
-A list of \code{mldfm} objects.
+A list of \code{mldfm} objects
 }
 \description{
-Returns the list of all \code{mldfm} stored in a \code{mldfm_subsample} object.
+Generic Function to Extract List of MLDFMs
 }

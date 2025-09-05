@@ -1,4 +1,4 @@
-#' @title Generic function to extract quantiles
+#' @title Generic Function to Extract Quantiles
 #'
 #' @param x An object from which to extract the quantiles.
 #' @param ... Additional arguments (ignored).
@@ -8,6 +8,8 @@
 get_quantiles <- function(x, ...) {
   UseMethod("get_quantiles")
 }
+
+
 #' @title Extract Quantiles from a \code{fars} Object
 #'
 #' @description Extracts either the non-stressed quantiles or the stressed quantiles from a \code{fars} object, depending on the \code{stressed} parameter.

@@ -47,7 +47,6 @@ Performs quantile regressions of a dependent variable on MLDFM factors.
 Optionally generates quantile forecasts under stressed scenarios using the ellipsoids.
 }
 \examples{
-\donttest{
 dep_variable <- rnorm(100)  # A numeric vector
 data <- matrix(rnorm(100*300), nrow = 100, ncol = 300)
 block_ind <- c(150, 300)  # Defines 2 blocks
@@ -55,6 +54,5 @@ global = 1
 local <- c(1, 1)   
 mldfm_result <- mldfm(data, blocks = 2, block_ind = block_ind, global = global , local = local)
 fars_result <- compute_fars(dep_variable, get_factors(mldfm_result), h = 1, edge = 0.05)
-}
  
 }

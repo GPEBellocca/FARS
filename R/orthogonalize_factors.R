@@ -1,5 +1,5 @@
 
-#' @title Orthogonalize factors
+#' @title Orthogonalize Factors
 #' @keywords internal
 #' 
 #'@importFrom stats lm

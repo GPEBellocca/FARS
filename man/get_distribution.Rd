@@ -2,18 +2,27 @@
 % Please edit documentation in R/get_distribution.R
 \name{get_distribution}
 \alias{get_distribution}
-\title{Generic function to extract distribution from fars_density object}
+\title{Generic Function to Extract Distribution}
 \usage{
 get_distribution(x, ...)
 }
 \arguments{
 \item{x}{An object from which to extract the distribution.}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments (ignored).}
 }
 \value{
-A matrix of random draws from the fitted skew-t distribution.
+A matrix containing the random draws from the fitted skew-t distribution.
 }
 \description{
-Generic function to extract distribution from fars_density object
+Generic Function to Extract Distribution
+}
+\examples{
+\donttest{
+fars_density_result <- compute_density(
+  quantiles = matrix(rnorm(100 * 5), nrow = 100, ncol = 5)
+)
+get_distribution(fars_density_result)
+}
+
 }

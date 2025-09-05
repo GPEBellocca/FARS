@@ -2,24 +2,18 @@
 % Please edit documentation in R/get_quantile_levels.R
 \name{get_quantile_levels}
 \alias{get_quantile_levels}
-\title{Extract Quantile Levels from a \code{fars} Object}
+\title{Generic Function to Extract Quantile Levels}
 \usage{
 get_quantile_levels(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{fars}, typically the result of a computation such as \code{compute_fars}.}
+\item{x}{An object from which to extract the quantile levels}
 
-\item{...}{Additional arguments (ignored).}
+\item{...}{Additional arguments.}
 }
 \value{
-A vector of quantile levels stored within the \code{fars} object.
+A vector of quantile levels.
 }
 \description{
-Returns the quantile levels from an object of class \code{fars}.
-}
-\examples{
-fars_result <- compute_fars(dep_variable = rnorm(100), 
-                            factors = matrix(rnorm(100 * 3), ncol = 3))
-get_quantile_levels(fars_result)  
-
+Generic Function to Extract Quantile Levels
 }

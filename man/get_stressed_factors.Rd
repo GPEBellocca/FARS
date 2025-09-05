@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_stressed_factors.R
 \name{get_stressed_factors}
 \alias{get_stressed_factors}
-\title{Generic function to extract stressed factors}
+\title{Generic Function to Extract Stressed Factors}
 \usage{
 get_stressed_factors(x, ...)
 }
@@ -15,5 +15,5 @@ get_stressed_factors(x, ...)
 A matrix of stressed factors.
 }
 \description{
-Generic function to extract stressed factors
+Generic Function to Extract Stressed Factors
 }

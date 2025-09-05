@@ -1,4 +1,16 @@
-#' @title Get a Single \code{mldfm} Object from a \code{mldfm_subsample} Object
+#' @title Generic Function to Extract a Specific \code{mldfm} Object
+#'
+#' @param x An object from which to extract a \code{mldfm} Object
+#' @param index Integer. The position of the desired model
+#' @param ... Additional arguments.
+#'
+#' @return  A single \code{mldfm} object.
+#' @export
+get_mldfm_model <- function(x, index, ...) {
+  UseMethod("get_mldfm_model")
+}
+
+#' @title Extract a Specific \code{mldfm} Object from a \code{mldfm_subsample} Object
 #'
 #' @description Returns the \code{mldfm} object at the specified position in a \code{mldfm_subsample} object.
 #'
@@ -7,11 +19,6 @@
 #' @param ... Additional arguments (ignored).
 #'
 #' @return A single \code{mldfm} object.
-#' @export
-get_mldfm_model <- function(x, index, ...) {
-  UseMethod("get_mldfm_model")
-}
-
 #' @export
 get_mldfm_model.mldfm_subsample <- function(x, index, ...) {
   stopifnot(inherits(x, "mldfm_subsample"))

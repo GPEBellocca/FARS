@@ -1,4 +1,4 @@
-#' @title Compute Optimal Delta for FPR Gamma computation.
+#' @title Compute Optimal Delta for FPR Gamma Computation
 #'
 #' @description Computes the optimal threshold level delta.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/eigen_sorted.R
 \name{eigen_sorted}
 \alias{eigen_sorted}
-\title{Eigen Decomposition (Descending Order)}
+\title{Eigen Decomposition}
 \usage{
 eigen_sorted(matrix_y)
 }

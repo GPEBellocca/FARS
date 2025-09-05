@@ -1,3 +1,14 @@
+#' @title Generic Function to Extract Quantile Levels
+#'
+#' @param x An object from which to extract the quantile levels
+#' @param ... Additional arguments.
+#'
+#' @return A vector of quantile levels.
+#' @export
+get_quantile_levels <- function(x, ...) {
+  UseMethod("get_quantile_levels")
+}
+
 #' @title Extract Quantile Levels from a \code{fars} Object
 #'
 #' @description Returns the quantile levels from an object of class \code{fars}.
@@ -13,11 +24,6 @@
 #'                             factors = matrix(rnorm(100 * 3), ncol = 3))
 #' get_quantile_levels(fars_result)  
 #'
-#' @export
-get_quantile_levels <- function(x, ...) {
-  UseMethod("get_quantile_levels")
-}
-
 #' @export
 get_quantile_levels.fars <- function(x, ...) {
   stopifnot(inherits(x, "fars"))

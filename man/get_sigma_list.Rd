@@ -2,14 +2,20 @@
 % Please edit documentation in R/get_sigma_list.R
 \name{get_sigma_list}
 \alias{get_sigma_list}
-\title{Get Sigma List from \code{fars_scenario}}
+\title{Generic Function to Get Sigma List}
 \usage{
-get_sigma_list(x)
+get_sigma_list(x, ...)
+
+get_sigma_list(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{fars_scenario}.}
+
+\item{...}{Additional arguments (ignored).}
 }
 \value{
+A list of covariance matrices.
+
 A list of covariance matrices (one per period).
 }
 \description{

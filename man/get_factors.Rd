@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_factors.R
 \name{get_factors}
 \alias{get_factors}
-\title{Generic function to extract estimated factors}
+\title{Generic Function to Extract Estimated Factors}
 \usage{
 get_factors(x, ...)
 }
@@ -15,5 +15,5 @@ get_factors(x, ...)
 A matrix of estimated factors.
 }
 \description{
-Generic function to extract estimated factors
+Generic Function to Extract Estimated Factors
 }

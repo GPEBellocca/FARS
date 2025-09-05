@@ -1,4 +1,4 @@
-#' @title Generic function to extract residuals
+#' @title Generic Function to Extract Residuals
 #'
 #' @param x An object from which to extract the residuals.
 #' @param ... Additional arguments (ignored).

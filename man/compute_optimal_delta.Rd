@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_optimal_delta.R
 \name{compute_optimal_delta}
 \alias{compute_optimal_delta}
-\title{Compute Optimal Delta for FPR Gamma computation.}
+\title{Compute Optimal Delta for FPR Gamma Computation}
 \usage{
 compute_optimal_delta(Sigma_eps, Theta, T)
 }

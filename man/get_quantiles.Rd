@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_quantiles.R
 \name{get_quantiles}
 \alias{get_quantiles}
-\title{Generic function to extract quantiles}
+\title{Generic Function to Extract Quantiles}
 \usage{
 get_quantiles(x, ...)
 }
@@ -15,5 +15,5 @@ get_quantiles(x, ...)
 A matrix of quantiles.
 }
 \description{
-Generic function to extract quantiles
+Generic Function to Extract Quantiles
 }

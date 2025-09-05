@@ -1,4 +1,4 @@
-#' @title Generic function to extract estimated factors
+#' @title Generic Function to Extract Estimated Factors
 #'
 #' @param x An object from which to extract the estimated factors.
 #' @param ... Additional arguments.
