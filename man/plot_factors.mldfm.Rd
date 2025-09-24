@@ -4,12 +4,14 @@
 \alias{plot_factors.mldfm}
 \title{Plot Factors from \code{mldfm} Object}
 \usage{
-plot_factors.mldfm(x, dates = NULL, ...)
+plot_factors.mldfm(x, dates = NULL, flip = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{mldfm}.}
 
 \item{dates}{Optional vector of dates. If NULL, uses 1:n as default.}
+
+\item{flip}{Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.}
 
 \item{...}{Additional arguments (ignored).}
 }

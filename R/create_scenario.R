@@ -66,10 +66,9 @@ create_scenario <- function(model, subsamples, alpha=0.95, fpr = FALSE) {
   n_var_sample <- nrow(get_loadings(subsamples_list[[1]]))
   
   
-  message(paste0("Constructing scenario using ", n_samples, 
-                 " subsamples and alpha = ", alpha))
-  message("Using ", ifelse(fpr, "FPR Gamma", "standard time-varying Gamma"))
-  message("... ")
+  message(paste0("Constructing scenario using ", n_samples, " subsamples, alpha = ", 
+                 alpha, " and ", ifelse(fpr, "FPR Gamma", "standard time-varying Gamma"), "..."))
+  
   
   
   # Set ellipsoid center for each obs

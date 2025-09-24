@@ -6,6 +6,7 @@
 #' @param which What to plot: one of \code{"factors"} (default), \code{"loadings"}, or \code{"residuals"}.
 #' @param dates Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis. If not provided, a simple index (1:N) is used.
 #' @param var_names Optional vector of variable names to label loadings and residual axis.
+#' @param flip Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.
 #' @param ... Additional arguments (ignored)
 #' 
 #' @return No return value. Called for plots generation.
@@ -13,15 +14,15 @@
 #' @method plot mldfm
 #' 
 #' @export
-plot.mldfm <- function(x, which = "factors", dates = NULL, var_names = NULL, ...) {
+plot.mldfm <- function(x, which = "factors", dates = NULL, var_names = NULL, flip = NULL, ...) {
   
   stopifnot(inherits(x, "mldfm"))
   
   which <- match.arg(tolower(which), c("factors", "loadings", "residuals"))
   
   switch(which,
-         "factors"   = plot_factors.mldfm(x, dates = dates, ...),
-         "loadings"  = plot_loadings.mldfm(x, var_names = var_names, ...),
+         "factors"   = plot_factors.mldfm(x, dates = dates, flip = flip, ...),
+         "loadings"  = plot_loadings.mldfm(x, var_names = var_names, flip = flip, ...),
          "residuals" = plot_residuals.mldfm(x, var_names = var_names, ...)
   )
 }
@@ -243,6 +244,7 @@ plot.fars_density <- function(x, time_index = NULL, ...) {
 #'
 #' @param x An object of class \code{mldfm}.
 #' @param dates Optional vector of dates. If NULL, uses 1:n as default.
+#' @param flip Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.
 #' @param ... Additional arguments (ignored).
 #' 
 #' @importFrom dplyr mutate filter
@@ -253,7 +255,7 @@ plot.fars_density <- function(x, time_index = NULL, ...) {
 #' @importFrom rlang .data
 #'
 #' @keywords internal
-plot_factors.mldfm <- function(x, dates = NULL, ...) {
+plot_factors.mldfm <- function(x, dates = NULL, flip = NULL, ...) {
   stopifnot(inherits(x, "mldfm"))
   
   factors   <- get_factors(x)
@@ -262,6 +264,26 @@ plot_factors.mldfm <- function(x, dates = NULL, ...) {
   
   T_obs  <- nrow(residuals)
   N_vars <- ncol(residuals)
+  r      <- ncol(factors)
+  
+  
+  
+  # handle sign flips 
+  if (!is.null(flip)) {
+    if (length(flip) != r) {
+      stop("`flip` must have length equal to the number of factors (", r, ").")
+    }
+    if (!all(flip %in% c(0,1,TRUE,FALSE))) {
+      stop("`flip` must contain only 0 or 1.")
+    }
+    
+    # build sign multipliers: -1 = flip, +1 = keep
+    s <- ifelse(as.integer(flip) == 1L, -1, 1)
+    
+    factors  <- sweep(factors,  2, s, `*`)
+    loadings <- sweep(loadings, 2, s, `*`)
+    
+  }
   
   # Compute standard deviation for confidence bands
   PP      <- MASS::ginv((t(loadings) %*% loadings) / N_vars)
@@ -325,6 +347,7 @@ plot_factors.mldfm <- function(x, dates = NULL, ...) {
 #'
 #' @param x An object of class \code{mldfm}.
 #' @param var_names Optional vector of variable names. If NULL, default names are used.
+#' @param flip Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.
 #' @param ... Additional arguments (ignored).
 #'
 #' @importFrom tidyr pivot_longer
@@ -334,7 +357,7 @@ plot_factors.mldfm <- function(x, dates = NULL, ...) {
 #' @importFrom rlang .data
 #'
 #' @keywords internal
-plot_loadings.mldfm <- function(x, var_names = NULL, ...) {
+plot_loadings.mldfm <- function(x, var_names = NULL, flip = NULL, ...) {
   stopifnot(inherits(x, "mldfm"))
   
   factors   <- get_factors(x)
@@ -343,6 +366,25 @@ plot_loadings.mldfm <- function(x, var_names = NULL, ...) {
   
   t <- nrow(residuals)
   N <- ncol(residuals)
+  r      <- ncol(factors)
+  
+  
+  # handle sign flips 
+  if (!is.null(flip)) {
+    if (length(flip) != r) {
+      stop("`flip` must have length equal to the number of factors (", r, ").")
+    }
+    if (!all(flip %in% c(0,1,TRUE,FALSE))) {
+      stop("`flip` must contain only 0 or 1.")
+    }
+    
+    # build sign multipliers: -1 = flip, +1 = keep
+    s <- ifelse(as.integer(flip) == 1L, -1, 1)
+    
+    factors  <- sweep(factors,  2, s, `*`)
+    loadings <- sweep(loadings, 2, s, `*`)
+    
+  }
   
   loadings_df <- as.data.frame(loadings)
   
@@ -393,7 +435,7 @@ plot_loadings.mldfm <- function(x, var_names = NULL, ...) {
       geom_bar(stat = "identity", fill = "grey", alpha = 0.7) +
       geom_hline(yintercept = 0, color = "red") +
       geom_errorbar(aes(ymin = .data$Loading_lower, ymax = .data$Loading_upper),
-                    width = 0.5, color = "black", alpha = 1, size = 0.2) +
+                    width = 0.5, color = "black", alpha = 1, linewidth = 0.2) +
       coord_flip() +
       theme_bw() +
       theme(

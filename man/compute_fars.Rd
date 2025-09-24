@@ -36,6 +36,7 @@ An object of class \code{fars}, which is a list containing:
 \item{\code{coeff}}{Matrix of quantile regression coefficients for each quantile.}
 \item{\code{std_error}}{Matrix of standard errors for each regression coefficient.}
 \item{\code{pvalue}}{Matrix of p-values for each regression coefficient.}
+\item{\code{levels}}{The list of estimated quantiles.}
 \item{\code{qtau}}{The quantile level used to compute stressed factors (if applicable).}
 \item{\code{stressed_quantiles}}{Matrix of quantiles under stressed scenarios (only if \code{ellipsoids} is provided).}
 \item{\code{stressed_factors}}{Matrix of selected stressed factors (only if \code{ellipsoids} is provided).}

@@ -91,8 +91,7 @@ mldfm_subsampling <- function(data, blocks = 1, block_ind = NULL, global = 1,
   }
   
   # Final recap message
-  message("\nSubsampling completed.")
-  message(paste("Number of subsamples generated:", n_samples))
+  message("Subsampling completed.")
   
   structure(
     list(
