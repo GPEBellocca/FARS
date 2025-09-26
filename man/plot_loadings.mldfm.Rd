@@ -4,12 +4,14 @@
 \alias{plot_loadings.mldfm}
 \title{Plot Loadings from \code{mldfm} Object}
 \usage{
-plot_loadings.mldfm(x, var_names = NULL, ...)
+plot_loadings.mldfm(x, var_names = NULL, flip = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{mldfm}.}
 
 \item{var_names}{Optional vector of variable names. If NULL, default names are used.}
+
+\item{flip}{Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.}
 
 \item{...}{Additional arguments (ignored).}
 }

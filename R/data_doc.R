@@ -35,3 +35,22 @@
 #' @usage data(mf_data)
 #' @keywords datasets
 "mf_data"
+
+
+#' @title European Countries Inflation Series
+#'
+#' @description Monthly inflation series for 38 European countries
+#'
+#' @details
+#' Derived from the Excel file \emph{inflation.xlsx} included in \code{inst/extdata/}.
+#' The original series contains monthly HCPI series for 38 European countries.
+#' For replication, HCPI prices are transformed into annualized month-on-month (mom)
+#' inflation, with each inflation series sequentially cleaned of seasonal effects and outliers
+#'
+#' @format A numeric matrix with 239 rows and 38 columns.
+#' @source Ha, Kose, and Ohnsorge (2023)
+#' @docType data
+#' @name inflation_data
+#' @usage data(inflation_data)
+#' @keywords datasets
+"inflation_data"

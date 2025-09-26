@@ -107,7 +107,7 @@ plot.fars <- function(x, dates = NULL, ...) {
   df_long <- reshape2::melt(df, id.vars = "Time", variable.name = "Quantile", value.name = "Value")
   
   p_main <- ggplot(df_long, aes(x = .data$Time, y = .data$Value, color = .data$Quantile)) +
-    geom_line(size = 1) +
+    geom_line(linewidth = 1) +
     labs(title = "Quantiles",
          y = "Value", x = "Time") +
     scale_y_continuous(limits = y_range) +
@@ -123,7 +123,7 @@ plot.fars <- function(x, dates = NULL, ...) {
     df_s_long <- reshape2::melt(df_s, id.vars = "Time", variable.name = "Quantile", value.name = "Value")
     
     p_stress <- ggplot(df_s_long, aes(x = .data$Time, y = .data$Value, color = .data$Quantile)) +
-      geom_line(size = 1) +
+      geom_line(linewidth = 1) +
       labs(title = "Stressed Quantiles",
            y = "Value", x = "Time") +
       scale_y_continuous(limits = y_range) +

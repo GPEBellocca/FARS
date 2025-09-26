@@ -49,7 +49,7 @@ l_density <- function(quantiles,
     # Initial restrictions
     iqn <- qnorm(0.75)-qnorm(0.25) # Interquartile range of standard normal distr
     l0 <- quantiles[tt,3]  # Location
-    s0_ <- (quantiles[tt,4] - quantiles[tt,2]) / iqn # Scale
+    s0 <- (quantiles[tt,4] - quantiles[tt,2]) / iqn # Scale
     
     sh0 <- 0 # Shape
     
