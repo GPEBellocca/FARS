@@ -7,6 +7,7 @@
 #' @param dates Optional vector of dates (as \code{Date} or \code{zoo::yearqtr}) to use for the x-axis. If not provided, a simple index (1:N) is used.
 #' @param var_names Optional vector of variable names to label loadings and residual axis.
 #' @param flip Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.
+#' @param fpr Logical. If \code{TRUE}, uses FPR Gamma (Fresoli, Poncela, Ruiz, 2024); otherwise, uses standard time-varying Gamma.
 #' @param ... Additional arguments (ignored)
 #' 
 #' @return No return value. Called for plots generation.
@@ -14,14 +15,16 @@
 #' @method plot mldfm
 #' 
 #' @export
-plot.mldfm <- function(x, which = "factors", dates = NULL, var_names = NULL, flip = NULL, ...) {
+plot.mldfm <- function(x, which = "factors", dates = NULL, var_names = NULL, flip = NULL, fpr = FALSE, ...) {
   
   stopifnot(inherits(x, "mldfm"))
+  if (!is.logical(fpr) || length(fpr) != 1) stop("fpr must be a logical value (TRUE or FALSE).")
+  
   
   which <- match.arg(tolower(which), c("factors", "loadings", "residuals"))
   
   switch(which,
-         "factors"   = plot_factors.mldfm(x, dates = dates, flip = flip, ...),
+         "factors"   = plot_factors.mldfm(x, dates = dates, flip = flip, fpr, ...),
          "loadings"  = plot_loadings.mldfm(x, var_names = var_names, flip = flip, ...),
          "residuals" = plot_residuals.mldfm(x, var_names = var_names, ...)
   )
@@ -245,6 +248,7 @@ plot.fars_density <- function(x, time_index = NULL, ...) {
 #' @param x An object of class \code{mldfm}.
 #' @param dates Optional vector of dates. If NULL, uses 1:n as default.
 #' @param flip Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.
+#' @param fpr Logical. If \code{TRUE}, uses FPR Gamma (Fresoli, Poncela, Ruiz, 2024); otherwise, uses standard time-varying Gamma.
 #' @param ... Additional arguments (ignored).
 #' 
 #' @importFrom dplyr mutate filter
@@ -255,7 +259,7 @@ plot.fars_density <- function(x, time_index = NULL, ...) {
 #' @importFrom rlang .data
 #'
 #' @keywords internal
-plot_factors.mldfm <- function(x, dates = NULL, flip = NULL, ...) {
+plot_factors.mldfm <- function(x, dates = NULL, flip = NULL, fpr = FALSE, ...) {
   stopifnot(inherits(x, "mldfm"))
   
   factors   <- get_factors(x)
@@ -286,45 +290,75 @@ plot_factors.mldfm <- function(x, dates = NULL, flip = NULL, ...) {
   }
   
   # Compute standard deviation for confidence bands
-  PP      <- MASS::ginv((t(loadings) %*% loadings) / N_vars)
-  sigma_e <- sum(diag(t(residuals) %*% residuals)) / (N_vars * T_obs)
-  gamma   <- sigma_e * (t(loadings) %*% loadings) / N_vars
-  SD      <- sqrt(diag(PP %*% gamma %*% PP) / N_vars)
+  # PP      <- MASS::ginv((t(loadings) %*% loadings) / N_vars)
+  # sigma_e <- sum(diag(t(residuals) %*% residuals)) / (N_vars * T_obs)
+  # gamma   <- sigma_e * (t(loadings) %*% loadings) / N_vars
+  # SD      <- sqrt(diag(PP %*% gamma %*% PP) / N_vars)
+  
+
+  SD <- vector("list", T_obs)
+  PP <- solve(crossprod(loadings) / N_vars)
+  
+  # Compute FPR gamma if needed
+  if(fpr){
+    gamma <- compute_fpr_gamma(residuals, loadings)
+  }
+  
+  for (t in seq_len(T_obs)) {
+    if(!fpr){
+      d <- residuals[t, ]^2
+      gamma <- crossprod(loadings, loadings * d) / N_vars
+    }
+    MSE <- PP %*% (gamma / N_vars) %*% PP
+    SD[[t]] <- sqrt(diag(MSE))
+  }
+  
+  # Convert to matrix form
+  SD_mat <- do.call(rbind, SD)                  
+  colnames(SD_mat) <- paste0("F", seq_len(ncol(SD_mat)))  
   
   # Factor names
   keys         <- names(x$factors_list)
   values       <- unlist(x$factors_list)
-  factor_names <- unlist(
-    mapply(function(key, val) {
-      clean <- paste0("F", gsub("-", "", key))
-      if (val > 1) paste0(clean, "n", seq_len(val)) else clean
-    }, keys, values, SIMPLIFY = FALSE)
-  )
+  factor_names <- unlist(mapply(function(key, val) {
+    clean <- paste0("F", gsub("-", "", key))
+    if (val > 1) paste0(clean, "n", seq_len(val)) else clean
+  }, keys, values, SIMPLIFY = FALSE))
   if (is.null(factor_names) || length(factor_names) != ncol(factors)) {
     factor_names <- paste0("F", seq_len(ncol(factors)))
   }
   colnames(factors) <- factor_names
+  colnames(SD_mat)  <- factor_names
   
-  if (is.null(dates)) {
-    dates <- seq_len(nrow(factors))
-  }
+  if (is.null(dates)) dates <- seq_len(nrow(factors))
   
-  df_long <- as.data.frame(factors) %>%
+  
+  factors_long <- as.data.frame(factors) %>%
     mutate(Date = as.Date(dates)) %>%
-    pivot_longer(cols = - .data$Date, names_to = "Factor", values_to = "Value") %>%
-    mutate(index = as.numeric(factor(.data$Factor, levels = factor_names)),
-           LB = .data$Value - 2 * SD[.data$index],
-           UB = .data$Value + 2 * SD[.data$index])
+    pivot_longer(cols = -.data$Date, names_to = "Factor", values_to = "Value")
   
+  sd_long <- as.data.frame(SD_mat) %>%
+    mutate(Date = as.Date(dates)) %>%
+    pivot_longer(cols = -.data$Date, names_to = "Factor", values_to = "SD")
+  
+  # LB UB
+  df_long <- factors_long %>%
+    dplyr::left_join(sd_long, by = c("Date","Factor")) %>%
+    mutate(LB = .data$Value - 2 * SD,
+           UB = .data$Value + 2 * SD)
+  
+  # Same range
   y_min <- min(df_long$LB, na.rm = TRUE)
   y_max <- max(df_long$UB, na.rm = TRUE)
   
+  # Plot
   for (factor_name in factor_names) {
     df_i <- df_long %>% filter(.data$Factor == factor_name)
     
     p <- ggplot(df_i, aes(x = .data$Date, y = .data$Value)) +
-      geom_line(color = "blue", alpha = 0.6) +
       geom_ribbon(aes(ymin = .data$LB, ymax = .data$UB), fill = "grey70", alpha = 0.3) +
+      geom_line(color = "blue", alpha = 0.6) +
+      geom_line(alpha = 0.8) +
       ggtitle(factor_name) +
       coord_cartesian(ylim = c(y_min, y_max)) +
       theme_bw() +
@@ -336,6 +370,7 @@ plot_factors.mldfm <- function(x, dates = NULL, flip = NULL, ...) {
     
     print(p)
   }
+  
   
   invisible(NULL)
 }

@@ -4,7 +4,15 @@
 \alias{plot.mldfm}
 \title{Plot Method for MLDFM object}
 \usage{
-\method{plot}{mldfm}(x, which = "factors", dates = NULL, var_names = NULL, flip = NULL, ...)
+\method{plot}{mldfm}(
+  x,
+  which = "factors",
+  dates = NULL,
+  var_names = NULL,
+  flip = NULL,
+  fpr = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{mldfm}.}
@@ -16,6 +24,8 @@
 \item{var_names}{Optional vector of variable names to label loadings and residual axis.}
 
 \item{flip}{Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.}
+
+\item{fpr}{Logical. If \code{TRUE}, uses FPR Gamma (Fresoli, Poncela, Ruiz, 2024); otherwise, uses standard time-varying Gamma.}
 
 \item{...}{Additional arguments (ignored)}
 }

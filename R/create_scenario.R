@@ -75,7 +75,7 @@ create_scenario <- function(model, subsamples, alpha=0.95, fpr = FALSE) {
   center_matrix <- factors
   
   # Compute the inverse of the loading matrix
-  inv_loadings <- solve((t(loadings) %*% loadings) / n_var)
+  inv_loadings <- solve(crossprod(loadings) / n_var)
   
   # Initialize sigma 
   sigma_list <- vector("list", n_obs)
@@ -85,19 +85,12 @@ create_scenario <- function(model, subsamples, alpha=0.95, fpr = FALSE) {
     gamma <- compute_fpr_gamma(residuals, loadings)
   }
  
-  
   for (obs in 1:n_obs) {
-    
     # Compute normal gamma 
     if(!fpr){
-      gamma <- matrix(0, nrow = tot_n_factors, ncol = tot_n_factors)
-      for(v in 1:n_var){
-        term <- (loadings[v,] %*% t(loadings[v,]))*(residuals[obs,v]^2)
-        gamma <- gamma + term
-      }
-      gamma <- gamma / n_var
+      d <- residuals[obs, ]^2
+      gamma <- crossprod(loadings, loadings * d) / n_var
     }
-   
       
     # Compute Sigma
     term2 <- matrix(0, nrow = tot_n_factors, ncol = tot_n_factors)

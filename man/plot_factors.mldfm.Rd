@@ -4,7 +4,7 @@
 \alias{plot_factors.mldfm}
 \title{Plot Factors from \code{mldfm} Object}
 \usage{
-plot_factors.mldfm(x, dates = NULL, flip = NULL, ...)
+plot_factors.mldfm(x, dates = NULL, flip = NULL, fpr = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{mldfm}.}
@@ -12,6 +12,8 @@ plot_factors.mldfm(x, dates = NULL, flip = NULL, ...)
 \item{dates}{Optional vector of dates. If NULL, uses 1:n as default.}
 
 \item{flip}{Optional vector of length equal to the number of factors. Set 1 to flip sign for a specific factor (and related loadings); 0 to leave unchanged.}
+
+\item{fpr}{Logical. If \code{TRUE}, uses FPR Gamma (Fresoli, Poncela, Ruiz, 2024); otherwise, uses standard time-varying Gamma.}
 
 \item{...}{Additional arguments (ignored).}
 }
