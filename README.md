@@ -16,7 +16,7 @@ The `FARS` package provides a comprehensive framework in R for modeling and fore
 - (vi) estimate the conditional density and the corresponding extreme quantiles when the factors are stressed.
 
 # Installation and Usage
-For detailed usage and examples please refer to the [FARS Vignette](./vignettes/Factor_Augmented_Regression_Scenarios_in_R.pdf).
+For detailed usage and examples please refer to the [FARS Vignette](https://arxiv.org/abs/2507.10679).
 The Vignette llustrates the functionalities of the FARS package by extracting factors, estimating conditional densities, and constructing stressed scenarios in two applications:
 
 - (i) Aggregate inflation in Europe
