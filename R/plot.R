@@ -271,7 +271,6 @@ plot_factors.mldfm <- function(x, dates = NULL, flip = NULL, fpr = FALSE, ...) {
   r      <- ncol(factors)
   
   
-  
   # handle sign flips 
   if (!is.null(flip)) {
     if (length(flip) != r) {
@@ -290,12 +289,6 @@ plot_factors.mldfm <- function(x, dates = NULL, flip = NULL, fpr = FALSE, ...) {
   }
   
   # Compute standard deviation for confidence bands
-  # PP      <- MASS::ginv((t(loadings) %*% loadings) / N_vars)
-  # sigma_e <- sum(diag(t(residuals) %*% residuals)) / (N_vars * T_obs)
-  # gamma   <- sigma_e * (t(loadings) %*% loadings) / N_vars
-  # SD      <- sqrt(diag(PP %*% gamma %*% PP) / N_vars)
-  
-
   SD <- vector("list", T_obs)
   PP <- solve(crossprod(loadings) / N_vars)
   

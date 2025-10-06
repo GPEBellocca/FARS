@@ -17,7 +17,6 @@ data(mf_data)
 Macro-financial variables used in the replication exercise.
 }
 \details{
-Derived from the Excel file \emph{DataBase.xlsx} included in \code{inst/extdata/}.
 The original dataset contains 624 variables. For replication, the first 519 variables
 are selected, converted to a numeric matrix, and outliers are corrected using
 the function \code{correct_outliers(..., threshold = 5)} provided in FARS.

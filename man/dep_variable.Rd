@@ -17,7 +17,6 @@ data(dep_variable)
 Quarterly US GDP growth series used as the dependent variable in the replication.
 }
 \details{
-Derived from the Excel file \emph{Data_IMF.xlsx} included in \code{inst/extdata/}.
 The original series contains quarterly GDP levels for 63 countries.
 For replication, all series are converted to log-differenced annualized growth rates
 (\code{diff(log(x)) * 400}). From this dataset, the U.S. series is extracted
