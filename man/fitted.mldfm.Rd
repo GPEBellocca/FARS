@@ -4,10 +4,10 @@
 \alias{fitted.mldfm}
 \title{Extract Fitted Values from a \code{mldfm} Object}
 \usage{
-fitted.mldfm(x, ...)
+\method{fitted}{mldfm}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{mldfm}.}
+\item{object}{An object of class \code{mldfm}.}
 
 \item{...}{Further arguments (ignored).}
 }

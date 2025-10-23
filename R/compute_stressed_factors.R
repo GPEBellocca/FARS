@@ -16,8 +16,8 @@
 #' T <- 100; r <- 3
 #' Y <- rnorm(T)
 #' F <- matrix(rnorm(T * r), T, r)          
-#' E <- list(matrix(rnorm(50 * r), 50, r))  
-#' stressed_factors <- compute_stressed_factors(Y, F, E, h = 1, qtau = 0.1, direction = "min")
+#' E <- replicate(T, matrix(rnorm(50 * r), nrow = 50, ncol = r), simplify = FALSE)
+#' stressed_factors <- compute_stressed_factors(Y, F, E, h = 1, qtau = 0.05, direction = "min")
 #' 
 #' @import quantreg
 #' @importFrom stats as.formula

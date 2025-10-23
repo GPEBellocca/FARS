@@ -4,10 +4,10 @@
 \alias{coef.fars}
 \title{Coefficients for \code{fars} Object}
 \usage{
-\method{coef}{fars}(x, ...)
+\method{coef}{fars}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{fars}.}
+\item{object}{An object of class \code{fars}.}
 
 \item{...}{Additional arguments (ignored).}
 }

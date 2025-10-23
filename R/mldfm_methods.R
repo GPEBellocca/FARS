@@ -54,7 +54,7 @@ loadings.mldfm <- function(x, ...) {
 
 #' @title Extract Residuals from a \code{mldfm} Object
 #'
-#' @param x An object of class \code{mldfm}.
+#' @param object An object of class \code{mldfm}.
 #' @param ... Further arguments (ignored).
 #'
 #' @return A matrix containing the residuals.
@@ -63,14 +63,16 @@ loadings.mldfm <- function(x, ...) {
 #' mldfm_result <- mldfm(data = matrix(rnorm(100 * 5), 100, 5), blocks = 1, global = 2)
 #' residuals(mldfm_result)
 #'
+#' @method residuals mldfm
+#'
 #' @export
-residuals.mldfm <- function(x, ...) {
-  x$residuals
+residuals.mldfm <- function(object, ...) {
+  object$residuals
 }
 
 #' @title Extract Fitted Values from a \code{mldfm} Object
 #'
-#' @param x An object of class \code{mldfm}.
+#' @param object An object of class \code{mldfm}.
 #' @param ... Further arguments (ignored).
 #'
 #' @return A matrix containing the fitted values.
@@ -79,7 +81,9 @@ residuals.mldfm <- function(x, ...) {
 #' mldfm_result <- mldfm(data = matrix(rnorm(100 * 5), 100, 5), blocks = 1, global = 2)
 #' fitted(mldfm_result)
 #'
+#' @method fitted mldfm
+#'
 #' @export
-fitted.mldfm <- function(x, ...) {
-  x$fitted
+fitted.mldfm <- function(object, ...) {
+  object$fitted
 }

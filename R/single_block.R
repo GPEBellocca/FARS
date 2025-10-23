@@ -51,7 +51,7 @@ single_block <- function(data, r) {
   fitted <- factors %*% loadings
   
   # Residuals 
-  residuals <- X - fitted_values
+  residuals <- X - fitted
   
   # Factor structure 
   factors_list <- list()

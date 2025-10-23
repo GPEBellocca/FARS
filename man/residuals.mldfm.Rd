@@ -4,10 +4,10 @@
 \alias{residuals.mldfm}
 \title{Extract Residuals from a \code{mldfm} Object}
 \usage{
-residuals.mldfm(x, ...)
+\method{residuals}{mldfm}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{mldfm}.}
+\item{object}{An object of class \code{mldfm}.}
 
 \item{...}{Further arguments (ignored).}
 }

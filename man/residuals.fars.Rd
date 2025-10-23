@@ -4,10 +4,10 @@
 \alias{residuals.fars}
 \title{Residuals for \code{fars} Object}
 \usage{
-\method{residuals}{fars}(x, ...)
+\method{residuals}{fars}(object, ...)
 }
 \arguments{
-\item{x}{An object of class \code{fars}.}
+\item{object}{An object of class \code{fars}.}
 
 \item{...}{Additional arguments (ignored).}
 }

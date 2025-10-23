@@ -63,8 +63,8 @@ summary.mldfm_subsample <- function(object, ...) {
   if (!is.null(object$seed)) cat("Seed used            :", object$seed, "\n")
   
   if (length(object$models) > 0 && inherits(object$models[[1]], "mldfm")) {
-    T_obs <- nrow(get_residuals(object$models[[1]]))
-    N_vars <- ncol(get_residuals(object$models[[1]]))
+    T_obs <- nrow(residuals(object$models[[1]]))
+    N_vars <- ncol(residuals(object$models[[1]]))
     cat("Data dimensions      :", T_obs, "periods,", N_vars, "variables\n")
     
     # Factor structure from first model
@@ -85,7 +85,7 @@ summary.mldfm_subsample <- function(object, ...) {
     
     # Compute RSS from residuals
     rss_vals <- sapply(object$models, function(m) {
-      res <- get_residuals(m)
+      res <- residuals(m)
       sum(res^2, na.rm = TRUE)
     })
     cat("Final RSS        : mean =", round(mean(rss_vals), 2),
@@ -116,7 +116,7 @@ summary.fars <- function(object, ...) {
   models <- object$models
   
   for (i in seq_along(models)) {
-    cat("---- Quantile τ =", formatC(levels[i], format = "f", digits = 2), "----\n")
+    cat("---- Quantile =", formatC(levels[i], format = "f", digits = 2), "----\n")
     print(summary(models[[i]], ...))
     cat("\n")
   }

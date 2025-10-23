@@ -76,27 +76,25 @@ get_rq_model.fars <- function(x, tau, ...) {
 }
 
 
-
-
-
 #' @title Fitted Values for \code{fars} Object
 #'
 #' @description Returns a matrix of fitted values from all quantile regressions stored in a \code{fars} object.
 #'
-#' @param x An object of class \code{fars}.
+#' @param object An object of class \code{fars}.
 #' @param ... Additional arguments (ignored).
 #'
 #' @return A numeric matrix with one column per quantile level and as many rows as observations used in the fit.
 #'
+#' @examples
 #' fars_result <- compute_fars(dep_variable = rnorm(100), 
 #'                             factors = matrix(rnorm(100 * 3), ncol = 3))
 #' fitted(fars_result)
 #' 
 #' @method fitted fars
 #' @export
-fitted.fars <- function(x, ...) {
-  levels <- get_quantile_levels(x)
-  models <- x$models
+fitted.fars <- function(object, ...) {
+  levels <- get_quantile_levels(object)
+  models <- object$models
   
   fitted_mat <- sapply(models, fitted)
   colnames(fitted_mat) <- formatC(levels, format = "f", digits = 2)
@@ -108,7 +106,7 @@ fitted.fars <- function(x, ...) {
 #'
 #' @description Returns a matrix of residuals from all quantile regressions stored in a \code{fars} object.
 #'
-#' @param x An object of class \code{fars}.
+#' @param object An object of class \code{fars}.
 #' @param ... Additional arguments (ignored).
 #'
 #' @return A numeric matrix with one column per quantile level and as many rows as observations used in the fit.
@@ -120,9 +118,9 @@ fitted.fars <- function(x, ...) {
 #'
 #' @method residuals fars
 #' @export
-residuals.fars <- function(x, ...) {
-  levels <- get_quantile_levels(x)
-  models <- x$models
+residuals.fars <- function(object, ...) {
+  levels <- get_quantile_levels(object)
+  models <- object$models
   
   residuals_mat <- sapply(models, residuals)
   colnames(residuals_mat) <- formatC(levels, format = "f", digits = 2)
@@ -135,7 +133,7 @@ residuals.fars <- function(x, ...) {
 #'
 #' @description Returns a matrix of estimated coefficients from all quantile regressions stored in a \code{fars} object.
 #'
-#' @param x An object of class \code{fars}.
+#' @param object An object of class \code{fars}.
 #' @param ... Additional arguments (ignored).
 #'
 #' @return A numeric matrix with one column per quantile level and one row per coefficient.
@@ -149,9 +147,9 @@ residuals.fars <- function(x, ...) {
 #'
 #' @method coef fars
 #' @export
-coef.fars <- function(x, ...) {
-  levels <- get_quantile_levels(x)
-  models <- x$models
+coef.fars <- function(object, ...) {
+  levels <- get_quantile_levels(object)
+  models <- object$models
   
   # Extract coefficients from each rq model
   coef_mat <- sapply(models, coef)
