@@ -157,7 +157,7 @@ coef.fars <- function(object, ...) {
   # Add column names for quantile levels
   colnames(coef_mat) <- formatC(levels, format = "f", digits = 2)
   
-  coef_mat
+  round(coef_mat,3)
 }
 
 #' @title Predict Method for \code{fars} Object
