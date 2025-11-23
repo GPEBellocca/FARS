@@ -77,7 +77,7 @@ compute_initial_factors <- function(data, num_vars, num_obs, num_blocks, ranges,
       factors <- canonical_correlation_analysis(residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
     }else{
       # Use PCA
-      pca_result <- prcomp(residuals, scale. = FALSE)
+      pca_result <- prcomp(residuals, center = FALSE, scale. = FALSE)
       factors <- pca_result$x[, 1:number_of_factor]
       
     }
