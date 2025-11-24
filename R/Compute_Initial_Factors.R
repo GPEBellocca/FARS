@@ -19,6 +19,7 @@
 #' @importFrom utils combn
 #' @importFrom stats prcomp
 #'
+#'
 #' @keywords internal
 compute_initial_factors <- function(data, num_vars, num_obs, num_blocks, ranges, r_list, method) {
   
@@ -94,5 +95,9 @@ compute_initial_factors <- function(data, num_vars, num_obs, num_blocks, ranges,
     initial_factors = initial_factors,
     factor_list = factor_list
   ))
+  
+  
 }
+
+
 
