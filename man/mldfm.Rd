@@ -52,8 +52,8 @@ An object of class \code{mldfm}, which is a list containing:
 }
 }
 \description{
-Estimates a Multi-Level Dynamic Factor Modelfrom time series data.
-Supports both Single-bBlock (DFM) and hierarchical Multi-Block (MLDFM) structures with customizable factor extraction settings.
+Estimates a Multi-Level Dynamic Factor Model from time series data.
+Supports both Single-Block (DFM) and hierarchical Multi-Block (MLDFM) structures with customizable factor extraction settings.
 }
 \examples{
 mldfm_result <- mldfm(data = matrix(rnorm(100 * 5), 100, 5), blocks = 1, global = 2)

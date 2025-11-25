@@ -1,7 +1,7 @@
 #' @title Multi-Level Dynamic Factor Model (MLDFM)
 #'
-#' @description Estimates a Multi-Level Dynamic Factor Modelfrom time series data. 
-#' Supports both Single-bBlock (DFM) and hierarchical Multi-Block (MLDFM) structures with customizable factor extraction settings.
+#' @description Estimates a Multi-Level Dynamic Factor Model from time series data. 
+#' Supports both Single-Block (DFM) and hierarchical Multi-Block (MLDFM) structures with customizable factor extraction settings.
 #'
 #' @param data A numeric matrix or data frame containing the time series data. Rows represent time points; columns represent observed variables.
 #' @param blocks Integer. Number of blocks into which the data is divided.

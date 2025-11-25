@@ -82,9 +82,11 @@ multiple_blocks<-function(data, global, local, middle_layer, block_ind, tol, max
     LDt <- loadings %*% t(data)                    # r x T
     #final_factors <- t(qr.solve(LtL, LDt))        # T x r
     
-    ridge <- 1e-8
-    LtL_ridge <- LtL + diag(ridge, ncol(LtL))
-    final_factors <- t(qr.solve(LtL_ridge, LDt)) 
+    # ridge <- 1e-8
+    # LtL_ridge <- LtL + diag(ridge, ncol(LtL))
+    # final_factors <- t(qr.solve(LtL_ridge, LDt)) 
+    
+    final_factors <- t(qr.solve(t(loadings), t(data)))
     
     # Update factor list
     factor_list <- update_factor_list(factor_list, final_factors, r_list)

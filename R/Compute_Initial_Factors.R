@@ -78,8 +78,16 @@ compute_initial_factors <- function(data, num_vars, num_obs, num_blocks, ranges,
       factors <- canonical_correlation_analysis(residuals, num_vars[combination], number_of_factor, rep(1, num_blocks))
     }else{
       # Use PCA
-      pca_result <- prcomp(residuals, center = FALSE, scale. = FALSE)
-      factors <- pca_result$x[, 1:number_of_factor]
+      # pca_result <- prcomp(residuals, center = FALSE, scale. = FALSE)
+      # factors <- pca_result$x[, 1:number_of_factor]
+      
+      # pca_result <- safe_prcomp(as.matrix(residuals), k = number_of_factor)
+      # factors     <- residuals %*% pca_result$rotation[, 1:number_of_factor, drop = FALSE]
+      
+      res_mat    <- as.matrix(residuals)
+      pca_result <- safe_prcomp(res_mat, k = number_of_factor)
+      rot_mat <- as.matrix(pca_result$rotation)[, 1:number_of_factor, drop = FALSE]
+      factors <- res_mat %*% rot_mat
       
     }
     
