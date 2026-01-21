@@ -256,7 +256,7 @@ logLik.fars <- function(object, tau, ...) {
 #' fars_result <- compute_fars(dep_variable = rnorm(100),
 #'                             factors = matrix(rnorm(100 * 3), ncol = 3))
 #' AIC(fars_result)
-#'
+#' @method AIC fars
 #' @export
 AIC.fars <- function(object, ..., k = 2) {
   levels <- get_quantile_levels(object)
@@ -295,13 +295,15 @@ AIC.fars <- function(object, ..., k = 2) {
 #'   h = 1
 #' )
 #' BIC(fars_result)
-#'
+#' @method BIC fars
+#' @importFrom stats BIC
 #' @export
 BIC.fars <- function(object, ...) {
   
   
   Ttot <- object$periods
   h    <- object$h
+  n    <- Ttot - h
   
   levels <- get_quantile_levels(object)
   models <- object$models

@@ -29,5 +29,4 @@ fars_result <- compute_fars(
   h = 1
 )
 BIC(fars_result)
-
 }

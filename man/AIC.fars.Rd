@@ -24,5 +24,4 @@ Computes AIC values for each quantile regression stored in a
 fars_result <- compute_fars(dep_variable = rnorm(100),
                             factors = matrix(rnorm(100 * 3), ncol = 3))
 AIC(fars_result)
-
 }
