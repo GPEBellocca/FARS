@@ -22,10 +22,8 @@
 #' @keywords internal
 single_block <- function(data, r) {
   
-  # Standardize the data 
-  X <- scale(data, center = TRUE, scale = TRUE)
-  
   # Dimensions
+  X <- data
   T <- nrow(X)
   N <- ncol(X)
   

@@ -25,9 +25,6 @@
 #' @keywords internal
 multiple_blocks<-function(data, global, local, middle_layer, block_ind, tol, max_iter, method){
  
-  # Standardize the original data
-  data <- scale(data,TRUE,TRUE)
- 
   # Initialize 
   num_blocks <- length(block_ind) # Number of blocks
   num_obs <- nrow(data) # Total number of observations
